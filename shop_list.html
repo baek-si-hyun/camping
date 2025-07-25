@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=375px, initial-scale=1.0">
+  <title>캠핑의 모든 것</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#FF7A45',
+            secondary: '#4A90E2'
+          },
+          borderRadius: {
+            'none': '0px',
+            'sm': '4px',
+            DEFAULT: '8px',
+            'md': '12px',
+            'lg': '16px',
+            'xl': '20px',
+            '2xl': '24px',
+            '3xl': '32px',
+            'full': '9999px',
+            'button': '8px'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :where([class^="ri-"])::before {
+      content: "\f3c2";
+    }
+
+    .search-input::-webkit-search-cancel-button {
+      display: none;
+    }
+
+    .tab-active {
+      color: #FF7A45;
+      border-bottom: 2px solid #FF7A45;
+    }
+
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .accordion-content.active {
+      max-height: 500px;
+    }
+
+    @keyframes bounce {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-4px);
+      }
+    }
+
+    .hover-bounce:hover {
+      animation: bounce 0.8s infinite;
+    }
+
+    .scroll-smooth {
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .scroll-smooth::-webkit-scrollbar {
+      display: none;
+    }
+  </style>
+</head>
+
+<body class="  min-h-[762px] mx-auto bg-white">
+  <header class="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
+    <div class="flex items-center justify-between px-4 py-3">
+      <div class="flex items-center gap-2">
+        <a href="./index.html" data-readdy="true" class="w-8 h-8 flex items-center justify-center cursor-pointer">
+          <i class="ri-arrow-left-s-line text-xl"></i>
+        </a>
+        <h1 class="text-lg font-medium">캠핑의 모든 것</h1>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="./search.html" class="w-8 h-8 flex items-center justify-center cursor-pointer">
+          <i class="ri-search-line text-xl"></i>
+        </a>
+        <button class="w-8 h-8 flex items-center justify-center cursor-pointer">
+          <i class="ri-heart-3-line text-xl"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+  <main class="pt-16 pb-20">
+    <!-- 캠핑 유형 필터 -->
+    <div class="px-4 py-3 overflow-x-auto scroll-smooth">
+      <div class="flex gap-3 min-w-max pb-2" id="campingTypeFilter">
+        <button
+          class="flex flex-col items-center gap-1 px-3 py-2 bg-white shadow-sm hover:shadow-md transition-all duration-300 rounded-xl cursor-pointer transform hover:scale-105"
+          data-type="normal">
+          <div
+            class="w-12 h-12 flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5 rounded-xl">
+            <i class="ri-home-8-line text-xl text-primary/80 transition-transform duration-300 hover:rotate-6"></i>
+          </div>
+          <span class="text-xs font-medium whitespace-nowrap">일반캠핑</span>
+        </button>
+        <button class="flex flex-col items-center gap-1 px-3 py-2 bg-gray-50 rounded-xl cursor-pointer">
+          <div class="w-10 h-10 flex items-center justify-center">
+            <i class="ri-hotel-line text-xl text-gray-500"></i>
+          </div>
+          <span class="text-xs whitespace-nowrap">글램핑</span>
+        </button>
+        <button class="flex flex-col items-center gap-1 px-3 py-2 bg-gray-50 rounded-xl cursor-pointer">
+          <div class="w-10 h-10 flex items-center justify-center">
+            <i class="ri-truck-line text-xl text-gray-500"></i>
+          </div>
+          <span class="text-xs whitespace-nowrap">카라반</span>
+        </button>
+        <button class="flex flex-col items-center gap-1 px-3 py-2 bg-gray-50 rounded-xl cursor-pointer">
+          <div class="w-10 h-10 flex items-center justify-center">
+            <i class="ri-car-line text-xl text-gray-500"></i>
+          </div>
+          <span class="text-xs whitespace-nowrap">오토캠핑</span>
+        </button>
+        <button class="flex flex-col items-center gap-1 px-3 py-2 bg-primary/10 rounded-xl cursor-pointer"
+          data-type="valley">
+          <div class="w-10 h-10 flex items-center justify-center">
+            <i class="ri-water-flash-line text-xl text-primary"></i>
+          </div>
+          <span class="text-xs whitespace-nowrap text-primary font-medium">계곡캠핑</span>
+        </button>
+        <button class="flex flex-col items-center gap-1 px-3 py-2 bg-gray-50 rounded-xl cursor-pointer">
+          <div class="w-10 h-10 flex items-center justify-center">
+            <i class="ri-sailboat-line text-xl text-gray-500"></i>
+          </div>
+          <span class="text-xs whitespace-nowrap">해변캠핑</span>
+        </button>
+      </div>
+    </div>
+    <!-- 계절별 추천 캠핑 -->
+    <div class="px-4 py-4">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-medium">계절별 추천</h2>
+        <a href="./recommend_result_list.html" data-readdy="true" class="text-sm text-primary cursor-pointer">더보기</a>
+      </div>
+      <div class="flex gap-3 overflow-x-auto pb-2">
+        <div class="min-w-[280px] bg-white rounded-xl overflow-hidden shadow-sm">
+          <div class="relative">
+            <img
+              src="https://readdy.ai/api/search-image?query=Spring%20camping%20in%20Korea%20with%20cherry%20blossoms%2C%20peaceful%20atmosphere%2C%20tent%20setup%20near%20flowering%20trees%2C%20beautiful%20nature%20scenery%2C%20professional%20photography&width=560&height=300&seq=101&orientation=landscape"
+              class="w-full h-36 object-cover" alt="봄 캠핑">
+            <span class="absolute top-2 left-2 bg-primary text-white text-xs px-3 py-1 rounded-full">봄</span>
+          </div>
+          <div class="p-4">
+            <h3 class="font-medium mb-1">벚꽃 캠핑 명소</h3>
+            <p class="text-sm text-gray-600 mb-2">봄바람과 함께하는 캠핑</p>
+            <div class="flex items-center gap-2 text-xs text-gray-500">
+              <i class="ri-map-pin-line"></i>
+              <span>경기도 양평, 강원도 춘천</span>
+            </div>
+          </div>
+        </div>
+        <div class="min-w-[280px] bg-white rounded-xl overflow-hidden shadow-sm">
+          <div class="relative">
+            <img
+              src="https://readdy.ai/api/search-image?query=Summer%20camping%20in%20Korea%20near%20river%20or%20lake%2C%20refreshing%20water%20activities%2C%20tents%20under%20shade%2C%20clear%20blue%20sky%2C%20professional%20photography&width=560&height=300&seq=102&orientation=landscape"
+              class="w-full h-36 object-cover" alt="여름 캠핑">
+            <span class="absolute top-2 left-2 bg-secondary text-white text-xs px-3 py-1 rounded-full">여름</span>
+          </div>
+          <div class="p-4">
+            <h3 class="font-medium mb-1">계곡 캠핑 베스트</h3>
+            <p class="text-sm text-gray-600 mb-2">시원한 물놀이와 함께</p>
+            <div class="flex items-center gap-2 text-xs text-gray-500">
+              <i class="ri-map-pin-line"></i>
+              <span>가평 계곡, 홍천 수동계곡</span>
+            </div>
+          </div>
+        </div>
+        <div class="min-w-[280px] bg-white rounded-xl overflow-hidden shadow-sm">
+          <div class="relative">
+            <img
+              src="https://readdy.ai/api/search-image?query=Autumn%20camping%20in%20Korea%20with%20colorful%20fall%20foliage%2C%20tents%20surrounded%20by%20red%20and%20orange%20trees%2C%20beautiful%20mountain%20view%2C%20professional%20photography&width=560&height=300&seq=103&orientation=landscape"
+              class="w-full h-36 object-cover" alt="가을 캠핑">
+            <span class="absolute top-2 left-2 bg-orange-500 text-white text-xs px-3 py-1 rounded-full">가을</span>
+          </div>
+          <div class="p-4">
+            <h3 class="font-medium mb-1">단풍 캠핑 명소</h3>
+            <p class="text-sm text-gray-600 mb-2">가을 정취를 느끼는 캠핑</p>
+            <div class="flex items-center gap-2 text-xs text-gray-500">
+              <i class="ri-map-pin-line"></i>
+              <span>내장산, 설악산 주변</span>
+            </div>
+          </div>
+        </div>
+        <div class="min-w-[280px] bg-white rounded-xl overflow-hidden shadow-sm">
+          <div class="relative">
+            <img
+              src="https://readdy.ai/api/search-image?query=Winter%20camping%20in%20Korea%20with%20snow%2C%20cozy%20tent%20setup%20with%20warm%20lighting%2C%20snowy%20landscape%2C%20professional%20photography&width=560&height=300&seq=104&orientation=landscape"
+              class="w-full h-36 object-cover" alt="겨울 캠핑">
+            <span class="absolute top-2 left-2 bg-blue-500 text-white text-xs px-3 py-1 rounded-full">겨울</span>
+          </div>
+          <div class="p-4">
+            <h3 class="font-medium mb-1">겨울 캠핑 추천</h3>
+            <p class="text-sm text-gray-600 mb-2">눈 내리는 캠핑의 낭만</p>
+            <div class="flex items-center gap-2 text-xs text-gray-500">
+              <i class="ri-map-pin-line"></i>
+              <span>평창, 홍천 알파인리조트</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 인기 캠핑장 -->
+    <div class="px-4 py-4">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-medium">인기 캠핑장</h2>
+        <div class="flex items-center gap-2 bg-gray-100 rounded-full p-1">
+          <button class="px-3 py-1 text-xs bg-white rounded-full shadow-sm cursor-pointer">거리순</button>
+          <button class="px-3 py-1 text-xs text-gray-500 cursor-pointer">평점순</button>
+        </div>
+      </div>
+      <div class="space-y-4">
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+          <img
+            src="https://readdy.ai/api/search-image?query=Luxury%20glamping%20site%20in%20Korea%20with%20modern%20dome%20tents%2C%20outdoor%20furniture%2C%20beautiful%20forest%20surroundings%2C%20professional%20photography&width=800&height=400&seq=105&orientation=landscape"
+            class="w-full h-48 object-cover" alt="글램핑">
+          <div class="p-4">
+            <div class="flex justify-between items-start mb-2">
+              <div>
+                <h3 class="font-medium">가평 더 글램 글램핑</h3>
+                <div class="flex items-center gap-1 mt-1">
+                  <div class="flex text-yellow-400">
+                    <i class="ri-star-fill text-sm"></i>
+                    <i class="ri-star-fill text-sm"></i>
+                    <i class="ri-star-fill text-sm"></i>
+                    <i class="ri-star-fill text-sm"></i>
+                    <i class="ri-star-half-fill text-sm"></i>
+                  </div>
+                  <span class="text-xs text-gray-500">(128)</span>
+                </div>
+              </div>
+              <button class="w-8 h-8 flex items-center justify-center text-gray-400 cursor-pointer">
+                <i class="ri-heart-line text-xl"></i>
+              </button>
+            </div>
+            <p class="text-sm text-gray-600 mb-3">프라이빗 온수풀, 바베큐장 완비</p>
+            <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
+              <i class="ri-map-pin-line"></i>
+              <span>경기도 가평군 청평면</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-primary font-medium">₩150,000~</span>
+              <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/b17e06a2-c8bb-4255-901e-710cba572e47"
+                data-readdy="true"
+                class="px-4 py-2 bg-primary text-white !rounded-button text-sm cursor-pointer">예약하기</a>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+          <img
+            src="https://readdy.ai/api/search-image?query=Korean%20forest%20camping%20site%20with%20wooden%20deck%20platforms%20for%20tents%2C%20natural%20surroundings%2C%20professional%20photography&width=800&height=400&seq=106&orientation=landscape"
+            class="w-full h-48 object-cover" alt="캠핑장">
+          <div class="p-4">
+            <div class="flex justify-between items-start mb-2">
+              <div>
+                <h3 class="font-medium">양평 숲속의 아침</h3>
+                <div class="flex items-center gap-1 mt-1">
+                  <div class="flex text-yellow-400">
+                    <i class="ri-star-fill text-sm"></i>
+                    <i class="ri-star-fill text-sm"></i>
+                    <i class="ri-star-fill text-sm"></i>
+                    <i class="ri-star-fill text-sm"></i>
+                    <i class="ri-star-line text-sm"></i>
+                  </div>
+                  <span class="text-xs text-gray-500">(96)</span>
+                </div>
+              </div>
+              <button class="w-8 h-8 flex items-center justify-center text-gray-400 cursor-pointer">
+                <i class="ri-heart-line text-xl"></i>
+              </button>
+            </div>
+            <p class="text-sm text-gray-600 mb-3">남한강 뷰, 데크 사이트, 반려동물 동반 가능</p>
+            <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
+              <i class="ri-map-pin-line"></i>
+              <span>경기도 양평군 강하면</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-primary font-medium">₩80,000~</span>
+              <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/b17e06a2-c8bb-4255-901e-710cba572e47"
+                data-readdy="true"
+                class="px-4 py-2 bg-primary text-white !rounded-button text-sm cursor-pointer">예약하기</a>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+          <img
+            src="https://readdy.ai/api/search-image?query=Riverside%20camping%20in%20Korea%20with%20modern%20caravan%20facilities%2C%20beautiful%20water%20view%2C%20professional%20photography&width=800&height=400&seq=107&orientation=landscape"
+            class="w-full h-48 object-cover" alt="카라반">
+          <div class="p-4">
+            <div class="flex justify-between items-start mb-2">
+              <div>
+                <h3 class="font-medium">춘천 호반 카라반</h3>
+                <div class="flex items-center gap-1 mt-1">
+                  <div class="flex text-yellow-400">
+                    <i class="ri-star-fill text-sm"></i>
+                    <i class="ri-star-fill text-sm"></i>
+                    <i class="ri-star-fill text-sm"></i>
+                    <i class="ri-star-fill text-sm"></i>
+                    <i class="ri-star-fill text-sm"></i>
+                  </div>
+                  <span class="text-xs text-gray-500">(215)</span>
+                </div>
+              </div>
+              <button class="w-8 h-8 flex items-center justify-center text-gray-400 cursor-pointer">
+                <i class="ri-heart-line text-xl"></i>
+              </button>
+            </div>
+            <p class="text-sm text-gray-600 mb-3">의암호 전망, 프리미엄 카라반, 수상레저 가능</p>
+            <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
+              <i class="ri-map-pin-line"></i>
+              <span>강원도 춘천시 서면</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-primary font-medium">₩180,000~</span>
+              <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/b17e06a2-c8bb-4255-901e-710cba572e47"
+                data-readdy="true"
+                class="px-4 py-2 bg-primary text-white !rounded-button text-sm cursor-pointer">예약하기</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 캠핑 필수 아이템 -->
+    <div class="px-4 py-4 bg-gray-50">
+      <h2 class="text-lg font-medium mb-4">캠핑 필수 아이템</h2>
+      <div class="grid grid-cols-3 gap-3">
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+          <img
+            src="https://readdy.ai/api/search-image?query=Modern%20camping%20tent%2C%20lightweight%20and%20waterproof%2C%20product%20photography%20on%20white%20background&width=200&height=200&seq=108&orientation=squarish"
+            class="w-full h-24 object-cover" alt="텐트">
+          <div class="p-2">
+            <h4 class="text-xs font-medium">방수 텐트</h4>
+            <p class="text-[10px] text-gray-500">2-4인용</p>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+          <img
+            src="https://readdy.ai/api/search-image?query=Camping%20sleeping%20bag%2C%20warm%20and%20comfortable%2C%20product%20photography%20on%20white%20background&width=200&height=200&seq=109&orientation=squarish"
+            class="w-full h-24 object-cover" alt="침낭">
+          <div class="p-2">
+            <h4 class="text-xs font-medium">동계용 침낭</h4>
+            <p class="text-[10px] text-gray-500">방한 기능</p>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+          <img
+            src="https://readdy.ai/api/search-image?query=Portable%20camping%20stove%2C%20compact%20and%20efficient%2C%20product%20photography%20on%20white%20background&width=200&height=200&seq=110&orientation=squarish"
+            class="w-full h-24 object-cover" alt="버너">
+          <div class="p-2">
+            <h4 class="text-xs font-medium">캠핑 버너</h4>
+            <p class="text-[10px] text-gray-500">휴대용</p>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+          <img
+            src="https://readdy.ai/api/search-image?query=Camping%20chair%2C%20foldable%20and%20comfortable%2C%20product%20photography%20on%20white%20background&width=200&height=200&seq=111&orientation=squarish"
+            class="w-full h-24 object-cover" alt="의자">
+          <div class="p-2">
+            <h4 class="text-xs font-medium">접이식 의자</h4>
+            <p class="text-[10px] text-gray-500">경량 소재</p>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+          <img
+            src="https://readdy.ai/api/search-image?query=Camping%20lantern%2C%20LED%20and%20rechargeable%2C%20product%20photography%20on%20white%20background&width=200&height=200&seq=112&orientation=squarish"
+            class="w-full h-24 object-cover" alt="랜턴">
+          <div class="p-2">
+            <h4 class="text-xs font-medium">LED 랜턴</h4>
+            <p class="text-[10px] text-gray-500">충전식</p>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+          <img
+            src="https://readdy.ai/api/search-image?query=Camping%20cookware%20set%2C%20compact%20and%20durable%2C%20product%20photography%20on%20white%20background&width=200&height=200&seq=113&orientation=squarish"
+            class="w-full h-24 object-cover" alt="취사도구">
+          <div class="p-2">
+            <h4 class="text-xs font-medium">취사 도구</h4>
+            <p class="text-[10px] text-gray-500">세트</p>
+          </div>
+        </div>
+      </div>
+      <div class="mt-4">
+        <button class="w-full py-3 bg-white border border-gray-200 text-sm !rounded-button cursor-pointer">더 많은 아이템
+          보기</button>
+      </div>
+    </div>
+    <!-- 캠핑 팁과 가이드 -->
+    <div class="px-4 py-4">
+      <h2 class="text-lg font-medium mb-4">캠핑 가이드</h2>
+      <div class="space-y-3">
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+          <button class="w-full flex justify-between items-center p-4 cursor-pointer accordion-toggle">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                <i class="ri-user-star-line text-primary"></i>
+              </div>
+              <span class="font-medium">초보자 캠핑 가이드</span>
+            </div>
+            <i class="ri-arrow-down-s-line text-gray-400"></i>
+          </button>
+          <div class="accordion-content px-4 pb-4">
+            <div class="pl-11 text-sm text-gray-600 space-y-2">
+              <p>1. 첫 캠핑은 시설이 잘 갖춰진 오토캠핑장을 선택하세요.</p>
+              <p>2. 텐트 설치 연습은 집에서 미리 해보는 것이 좋습니다.</p>
+              <p>3. 날씨 예보를 꼭 확인하고 우천 대비책을 마련하세요.</p>
+              <p>4. 음식은 가능한 간단하게 준비하고, 일회용품 사용을 줄이세요.</p>
+              <p>5. 체크리스트를 만들어 필수 장비를 빠뜨리지 않도록 하세요.</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+          <button class="w-full flex justify-between items-center p-4 cursor-pointer accordion-toggle">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                <i class="ri-shield-check-line text-primary"></i>
+              </div>
+              <span class="font-medium">캠핑 안전 수칙</span>
+            </div>
+            <i class="ri-arrow-down-s-line text-gray-400"></i>
+          </button>
+          <div class="accordion-content px-4 pb-4">
+            <div class="pl-11 text-sm text-gray-600 space-y-2">
+              <p>1. 화재 위험이 있는 장비는 항상 주의해서 사용하세요.</p>
+              <p>2. 일산화탄소 중독 예방을 위해 텐트 내 취사를 금지하세요.</p>
+              <p>3. 야생동물이 출몰할 수 있는 지역에서는 음식물 보관에 주의하세요.</p>
+              <p>4. 응급처치 키트를 항상 구비하고 사용법을 숙지하세요.</p>
+              <p>5. 캠핑장 주변 지형과 비상 연락처를 미리 확인하세요.</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+          <button class="w-full flex justify-between items-center p-4 cursor-pointer accordion-toggle">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                <i class="ri-fire-line text-primary"></i>
+              </div>
+              <span class="font-medium">캠핑 요리 팁</span>
+            </div>
+            <i class="ri-arrow-down-s-line text-gray-400"></i>
+          </button>
+          <div class="accordion-content px-4 pb-4">
+            <div class="pl-11 text-sm text-gray-600 space-y-2">
+              <p>1. 집에서 미리 손질하고 양념해온 재료를 사용하면 편리합니다.</p>
+              <p>2. 알루미늄 호일을 활용한 요리는 설거지가 간편합니다.</p>
+              <p>3. 다용도 조리도구를 준비해 짐을 줄이세요.</p>
+              <p>4. 냉장이 필요한 식재료는 아이스박스에 보관하세요.</p>
+              <p>5. 간단한 원팬 요리 레시피를 미리 준비하세요.</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+          <button class="w-full flex justify-between items-center p-4 cursor-pointer accordion-toggle">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                <i class="ri-recycle-line text-primary"></i>
+              </div>
+              <span class="font-medium">친환경 캠핑 방법</span>
+            </div>
+            <i class="ri-arrow-down-s-line text-gray-400"></i>
+          </button>
+          <div class="accordion-content px-4 pb-4">
+            <div class="pl-11 text-sm text-gray-600 space-y-2">
+              <p>1. 일회용품 사용을 최소화하고 다회용 식기를 사용하세요.</p>
+              <p>2. 생분해성 세제를 사용하여 자연을 보호하세요.</p>
+              <p>3. 쓰레기는 분리수거하고 캠핑장을 떠날 때 깨끗이 정리하세요.</p>
+              <p>4. 태양광 충전기 등 친환경 에너지를 활용하세요.</p>
+              <p>5. 자연 그대로의 상태를 존중하고 식물이나 돌을 채집하지 마세요.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <nav class="fixed bottom-0 left-0 right-0 bg-white border-t">
+    <div class="grid grid-cols-5 py-1">
+      <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/f0337728-efa7-4fab-800c-adcdbba971c8"
+        data-readdy="true" class="flex flex-col items-center gap-1 cursor-pointer">
+        <div class="w-6 h-6 flex items-center justify-center">
+          <i class="ri-home-5-line text-lg"></i>
+        </div>
+        <span class="text-[10px]">홈</span>
+      </a>
+      <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/78d7c18b-1946-4a61-a851-1f9c44029f8e"
+        data-readdy="true" class="flex flex-col items-center gap-1 cursor-pointer">
+        <div class="w-6 h-6 flex items-center justify-center">
+          <i class="ri-search-line text-lg"></i>
+        </div>
+        <span class="text-[10px]">검색</span>
+      </a>
+      <button class="flex flex-col items-center gap-1 cursor-pointer">
+        <div class="w-6 h-6 flex items-center justify-center">
+          <i class="ri-heart-3-line text-lg"></i>
+        </div>
+        <span class="text-[10px]">찜목록</span>
+      </button>
+      <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/1cf0d814-6ea9-40e4-9232-9102e310c481"
+        data-readdy="true" class="flex flex-col items-center gap-1 cursor-pointer">
+        <div class="w-6 h-6 flex items-center justify-center">
+          <i class="ri-calendar-check-line text-lg"></i>
+        </div>
+        <span class="text-[10px]">예약내역</span>
+      </a>
+      <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/90342344-0b95-4aa6-8759-a6c9bc513e09"
+        data-readdy="true" class="flex flex-col items-center gap-1 cursor-pointer">
+        <div class="w-6 h-6 flex items-center justify-center">
+          <i class="ri-user-3-line text-lg"></i>
+        </div>
+        <span class="text-[10px]">마이페이지</span>
+      </a>
+    </div>
+  </nav>
+  <script id="accordionScript">
+    document.addEventListener('DOMContentLoaded', function () {
+      const accordionToggles = document.querySelectorAll('.accordion-toggle');
+      accordionToggles.forEach(toggle => {
+        toggle.addEventListener('click', function () {
+          const content = this.nextElementSibling;
+          const icon = this.querySelector('i.ri-arrow-down-s-line');
+          if (content.classList.contains('active')) {
+            content.classList.remove('active');
+            icon.classList.remove('ri-arrow-up-s-line');
+            icon.classList.add('ri-arrow-down-s-line');
+          } else {
+            content.classList.add('active');
+            icon.classList.remove('ri-arrow-down-s-line');
+            icon.classList.add('ri-arrow-up-s-line');
+          }
+        });
+      });
+    });
+  </script>
+  <script id="filterTabScript">
+    document.addEventListener('DOMContentLoaded', function () {
+      const filterContainer = document.getElementById('campingTypeFilter');
+      const filterButtons = filterContainer.querySelectorAll('button');
+      const contentSections = document.querySelectorAll('.content-section');
+      let isDragging = false;
+      let startX;
+      let scrollLeft;
+      filterContainer.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        startX = e.pageX - filterContainer.offsetLeft;
+        scrollLeft = filterContainer.scrollLeft;
+      });
+      filterContainer.addEventListener('mouseleave', () => {
+        isDragging = false;
+      });
+      filterContainer.addEventListener('mouseup', () => {
+        isDragging = false;
+      });
+      filterContainer.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+        const x = e.pageX - filterContainer.offsetLeft;
+        const walk = (x - startX) * 2;
+        filterContainer.scrollLeft = scrollLeft - walk;
+      });
+      function updateContent(campingType) {
+        contentSections.forEach(section => {
+          if (campingType === 'valley') {
+            if (section.classList.contains('valley-content')) {
+              section.classList.remove('hidden');
+            } else {
+              section.classList.add('hidden');
+            }
+          } else {
+            section.classList.remove('hidden');
+          }
+        });
+      }
+      filterButtons.forEach(button => {
+        button.addEventListener('click', function () {
+          const campingType = this.dataset.type;
+          filterButtons.forEach(btn => {
+            btn.classList.remove('bg-primary/10');
+            btn.classList.add('bg-gray-50');
+            const btnText = btn.querySelector('span');
+            btnText.classList.remove('text-primary', 'font-medium');
+            const btnIcon = btn.querySelector('i');
+            btnIcon.classList.remove('text-primary');
+            btnIcon.classList.add('text-gray-500');
+          });
+          this.classList.remove('bg-gray-50');
+          this.classList.add('bg-primary/10');
+          const text = this.querySelector('span');
+          text.classList.add('text-primary', 'font-medium');
+          const icon = this.querySelector('i');
+          icon.classList.remove('text-gray-500');
+          icon.classList.add('text-primary');
+          updateContent(campingType);
+        });
+      });
+      const valleyButton = filterContainer.querySelector('[data-type="valley"]');
+      if (valleyButton) {
+        valleyButton.click();
+      }
+    });
+  </script>
+</body>
+
+</html>

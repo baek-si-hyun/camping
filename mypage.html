@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=375px, initial-scale=1.0">
+  <title>마이페이지</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#7F3DFF',
+            secondary: '#00D6B3'
+          },
+          borderRadius: {
+            'none': '0px',
+            'sm': '4px',
+            DEFAULT: '8px',
+            'md': '12px',
+            'lg': '16px',
+            'xl': '20px',
+            '2xl': '24px',
+            '3xl': '32px',
+            'full': '9999px',
+            'button': '8px'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :where([class^="ri-"])::before {
+      content: "\f3c2";
+    }
+  </style>
+</head>
+
+<body class="  min-h-[762px] mx-auto bg-white">
+  <header class="fixed top-0 left-0 right-0 z-50 bg-white border-b">
+    <div class="flex items-center justify-between px-4 py-3">
+      <h1 class="text-lg font-medium">마이페이지</h1>
+      <button class="w-8 h-8 flex items-center justify-center">
+        <i class="ri-settings-3-line text-xl"></i>
+      </button>
+    </div>
+  </header>
+  <main class="pt-[52px] pb-20">
+    <div class="px-4 py-8 bg-gradient-to-b from-primary/10 to-white">
+      <div class="flex items-center gap-4 mb-8">
+        <div
+          class="w-20 h-20 rounded-[28px] bg-gradient-to-br from-primary/20 to-primary/40 flex items-center justify-center shadow-2xl">
+          <i class="ri-user-smile-fill text-4xl text-primary"></i>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold mb-1">박지민 님</h2>
+          <p class="text-sm font-medium text-primary/80">VIP 회원</p>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="bg-white rounded-[20px] p-5 shadow-2xl hover:shadow-2xl transition-all hover:-translate-y-1">
+          <div class="flex items-center gap-3 mb-3">
+            <i class="ri-coins-fill text-2xl text-primary"></i>
+            <span class="text-base font-bold">포인트</span>
+          </div>
+          <p class="text-2xl font-extrabold">3,500 P</p>
+        </div>
+        <div class="bg-white rounded-xl p-4 shadow-lg hover:shadow-xl transition-shadow">
+          <div class="flex items-center gap-2 mb-2">
+            <i class="ri-coupon-3-fill text-xl text-primary"></i>
+            <span class="text-sm">쿠폰</span>
+          </div>
+          <p class="text-lg font-medium">2장</p>
+        </div>
+      </div>
+    </div>
+    <div class="px-4 space-y-5">
+      <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/b17e06a2-c8bb-4255-901e-710cba572e47"
+        data-readdy="true"
+        class="flex items-center justify-between p-5 bg-white rounded-[24px] shadow-2xl hover:shadow-2xl transition-all transform hover:-translate-y-1">
+        <div class="flex items-center gap-4">
+          <div
+            class="w-12 h-12 rounded-[16px] bg-gradient-to-br from-primary/30 to-primary/50 flex items-center justify-center">
+            <i class="ri-calendar-2-fill text-xl text-primary"></i>
+          </div>
+          <div>
+            <h3 class="font-medium mb-1">예약 내역</h3>
+            <p class="text-sm text-gray-500">진행중인 예약 2건</p>
+          </div>
+        </div>
+        <i class="ri-arrow-right-s-line text-xl text-gray-400"></i>
+      </a>
+      <button
+        class="w-full flex items-center justify-between p-4 bg-white rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5">
+        <div class="flex items-center gap-3">
+          <div
+            class="w-10 h-10 rounded-lg bg-gradient-to-br from-primary/20 to-primary/30 flex items-center justify-center">
+            <i class="ri-heart-3-fill text-xl text-primary"></i>
+          </div>
+          <div>
+            <h3 class="font-medium mb-1">찜한 숙소</h3>
+            <p class="text-sm text-gray-500">5개의 숙소</p>
+          </div>
+        </div>
+        <i class="ri-arrow-right-s-line text-xl text-gray-400"></i>
+      </button>
+      <button
+        class="w-full flex items-center justify-between p-4 bg-white rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5">
+        <div class="flex items-center gap-3">
+          <div
+            class="w-10 h-10 rounded-lg bg-gradient-to-br from-primary/20 to-primary/30 flex items-center justify-center">
+            <i class="ri-star-fill text-xl text-primary"></i>
+          </div>
+          <div>
+            <h3 class="font-medium mb-1">리뷰 관리</h3>
+            <p class="text-sm text-gray-500">작성 가능한 리뷰 1건</p>
+          </div>
+        </div>
+        <i class="ri-arrow-right-s-line text-xl text-gray-400"></i>
+      </button>
+      <button
+        class="w-full flex items-center justify-between p-4 bg-white rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5">
+        <div class="flex items-center gap-3">
+          <div
+            class="w-10 h-10 rounded-lg bg-gradient-to-br from-primary/20 to-primary/30 flex items-center justify-center">
+            <i class="ri-message-3-fill text-xl text-primary"></i>
+          </div>
+          <div>
+            <h3 class="font-medium mb-1">1:1 문의내역</h3>
+            <p class="text-sm text-gray-500">답변 대기 1건</p>
+          </div>
+        </div>
+        <i class="ri-arrow-right-s-line text-xl text-gray-400"></i>
+      </button>
+    </div>
+    <div class="mt-10 px-4">
+      <h3 class="text-xl font-bold mb-6">설정</h3>
+      <div class="space-y-5">
+        <button
+          class="w-full flex items-center justify-between p-5 bg-white rounded-[24px] shadow-2xl hover:shadow-2xl transition-all transform hover:-translate-y-1">
+          <div class="flex items-center gap-3">
+            <div
+              class="w-10 h-10 rounded-lg bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+              <i class="ri-notification-4-fill text-xl text-gray-500"></i>
+            </div>
+            <span class="font-medium">알림 설정</span>
+          </div>
+          <i class="ri-arrow-right-s-line text-xl text-gray-400"></i>
+        </button>
+        <button class="w-full flex items-center justify-between p-4 bg-white rounded-xl shadow-sm">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
+              <i class="ri-user-settings-line text-xl text-gray-500"></i>
+            </div>
+            <span class="font-medium">개인정보 수정</span>
+          </div>
+          <i class="ri-arrow-right-s-line text-xl text-gray-400"></i>
+        </button>
+        <button class="w-full flex items-center justify-between p-4 bg-white rounded-xl shadow-sm">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
+              <i class="ri-customer-service-2-line text-xl text-gray-500"></i>
+            </div>
+            <span class="font-medium">고객센터</span>
+          </div>
+          <i class="ri-arrow-right-s-line text-xl text-gray-400"></i>
+        </button>
+      </div>
+    </div>
+    <div class="mt-8 px-4">
+      <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+        <span>앱 버전</span>
+        <span>2.0.1</span>
+      </div>
+      <div class="space-y-4">
+        <button class="w-full py-3 text-gray-600">로그아웃</button>
+        <button class="w-full py-3 text-gray-400">회원탈퇴</button>
+      </div>
+    </div>
+    <div id="calendar-modal"
+      class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50 backdrop-blur-sm">
+      <div class="bg-white rounded-[28px] p-6 w-[340px] mx-4 shadow-2xl">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-xl font-bold">예약 일정</h3>
+          <button onclick="closeCalendar()"
+            class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100">
+            <i class="ri-close-line text-xl"></i>
+          </button>
+        </div>
+        <div id="calendar-content" class="mb-4">
+          <div class="bg-primary/5 rounded-lg p-4 mb-4">
+            <div class="flex items-center gap-2 mb-2">
+              <i class="ri-calendar-2-fill text-primary"></i>
+              <span class="font-medium">현재 예약</span>
+            </div>
+            <p class="text-sm text-gray-600">2025년 7월 15일 - 7월 17일</p>
+            <p class="text-sm text-gray-500 mt-1">서울 신라호텔</p>
+          </div>
+          <div class="bg-gray-50 rounded-lg p-4">
+            <div class="flex items-center gap-2 mb-2">
+              <i class="ri-calendar-2-fill text-gray-400"></i>
+              <span class="font-medium">다음 예약</span>
+            </div>
+            <p class="text-sm text-gray-600">2025년 8월 1일 - 8월 3일</p>
+            <p class="text-sm text-gray-500 mt-1">제주 롯데호텔</p>
+          </div>
+        </div>
+        <button onclick="addToCalendar()"
+          class="w-full py-3 bg-primary text-white rounded-lg flex items-center justify-center gap-2">
+          <i class="ri-calendar-2-fill"></i>
+          <span>캘린더에 추가</span>
+        </button>
+      </div>
+    </div>
+  </main>
+  <script id="calendar-interaction">
+    document.addEventListener('DOMContentLoaded', function () {
+      const reservationButton = document.querySelector('a[href*="readdy.ai"]');
+      const calendarModal = document.getElementById('calendar-modal');
+      reservationButton.addEventListener('click', function (e) {
+        e.preventDefault();
+        calendarModal.classList.remove('hidden');
+        calendarModal.classList.add('flex');
+      });
+      window.closeCalendar = function () {
+        calendarModal.classList.add('hidden');
+        calendarModal.classList.remove('flex');
+      };
+      window.addToCalendar = function () {
+        if (window.confirm('iOS 캘린더에 예약 일정을 추가하시겠습니까?')) {
+          alert('캘린더 앱과 연동이 필요합니다.');
+        }
+      };
+      document.addEventListener('click', function (e) {
+        if (e.target === calendarModal) {
+          closeCalendar();
+        }
+      });
+    });
+  </script>
+  <nav class="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg">
+    <div class="grid grid-cols-6 py-2">
+      <button class="flex flex-col items-center gap-1">
+        <div class="w-6 h-6 flex items-center justify-center">
+          <i class="ri-map-pin-2-line text-lg"></i>
+        </div>
+        <span class="text-[10px]">내주변</span>
+      </button>
+      <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/f0337728-efa7-4fab-800c-adcdbba971c8"
+        data-readdy="true" class="flex flex-col items-center gap-1">
+        <div class="w-6 h-6 flex items-center justify-center">
+          <i class="ri-home-5-line text-lg"></i>
+        </div>
+        <span class="text-[10px]">홈</span>
+      </a>
+      <button class="flex flex-col items-center gap-1">
+        <div class="w-6 h-6 flex items-center justify-center">
+          <i class="ri-heart-3-line text-lg"></i>
+        </div>
+        <span class="text-[10px]">찜</span>
+      </button>
+      <button class="flex flex-col items-center gap-1">
+        <div class="w-6 h-6 flex items-center justify-center">
+          <i class="ri-user-3-fill text-lg text-primary"></i>
+        </div>
+        <span class="text-[10px] text-primary">마이</span>
+      </button>
+      <button class="flex flex-col items-center gap-1">
+        <div class="w-6 h-6 flex items-center justify-center">
+          <i class="ri-wallet-3-line text-lg"></i>
+        </div>
+        <span class="text-[10px]">페이</span>
+      </button>
+      <button class="flex flex-col items-center gap-1">
+        <div class="w-6 h-6 flex items-center justify-center">
+          <i class="ri-menu-line text-lg"></i>
+        </div>
+        <span class="text-[10px]">전체</span>
+      </button>
+    </div>
+  </nav>
+</body>
+
+</html>

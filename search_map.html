@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=375px, initial-scale=1.0">
+  <title>지도검색</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#7C3AED',
+            secondary: '#6D28D9'
+          },
+          borderRadius: {
+            'none': '0px',
+            'sm': '4px',
+            DEFAULT: '8px',
+            'md': '12px',
+            'lg': '16px',
+            'xl': '20px',
+            '2xl': '24px',
+            '3xl': '32px',
+            'full': '9999px',
+            'button': '8px'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :where([class^="ri-"])::before {
+      content: "\f3c2";
+    }
+
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes scaleIn {
+      from {
+        transform: scale(0.9);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes bounce {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-5px);
+      }
+    }
+
+    .animate-fadeIn {
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    .animate-scaleIn {
+      animation: scaleIn 0.3s ease-out forwards;
+    }
+
+    .animate-bounce {
+      animation: bounce 2s infinite;
+    }
+
+    .hover-float:hover {
+      transform: translateY(-5px);
+      transition: transform 0.3s ease;
+    }
+  </style>
+</head>
+
+<body class="bg-[#F8F7FF]   min-h-[762px]">
+  <nav class="fixed top-0 left-0 right-0 bg-white z-50 shadow-sm">
+    <div class="flex items-center px-4 h-16">
+      <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/f0337728-efa7-4fab-800c-adcdbba971c8"
+        data-readdy="true"
+        class="w-10 h-10 flex items-center justify-center cursor-pointer hover:bg-gray-50 rounded-full">
+        <i class="ri-arrow-left-s-line text-xl"></i>
+      </a>
+      <div class="flex-1 flex justify-center gap-6">
+        <a href="search.html" data-readdy="true" class="text-gray-400 hover:text-gray-600">숙소검색</a>
+        <button
+          class="text-primary font-medium relative after:absolute after:bottom-[-14px] after:left-0 after:w-full after:h-[2px] after:bg-primary">지도검색</button>
+      </div>
+    </div>
+  </nav>
+  <div class="fixed top-16 left-0 right-0 bg-white z-40 shadow-sm">
+    <div class="p-4 space-y-3">
+      <div class="flex gap-3 overflow-x-auto py-1 no-scrollbar">
+        <button id="datePickerBtn"
+          class="flex items-center gap-2 px-4 py-2 rounded-full bg-white shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 whitespace-nowrap transform hover:scale-105">
+          <i class="ri-calendar-fill text-primary text-lg"></i>
+          <span class="text-sm" id="dateDisplay">07.07 월 - 07.08 화, 1박</span>
+        </button>
+        <button id="guestPickerBtn"
+          class="flex items-center gap-2 px-4 py-2 rounded-full bg-white shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 whitespace-nowrap transform hover:scale-105">
+          <i class="ri-user-fill text-primary text-lg"></i>
+          <span class="text-sm" id="guestDisplay">성인 0, 소인 0</span>
+        </button>
+      </div>
+      <div id="datePickerModal"
+        class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div class="bg-white rounded-xl p-4 w-[340px] animate-scaleIn">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-medium">날짜 선택</h3>
+            <button class="closeDatePicker">
+              <i class="ri-close-line text-xl"></i>
+            </button>
+          </div>
+          <div class="calendar-container">
+            <div class="flex justify-between items-center mb-4">
+              <button id="prevMonth" class="p-2"><i class="ri-arrow-left-s-line"></i></button>
+              <h4 id="currentMonth" class="text-lg font-medium">2025년 7월</h4>
+              <button id="nextMonth" class="p-2"><i class="ri-arrow-right-s-line"></i></button>
+            </div>
+            <div class="grid grid-cols-7 gap-1 text-center mb-2">
+              <div class="text-sm text-gray-500">일</div>
+              <div class="text-sm text-gray-500">월</div>
+              <div class="text-sm text-gray-500">화</div>
+              <div class="text-sm text-gray-500">수</div>
+              <div class="text-sm text-gray-500">목</div>
+              <div class="text-sm text-gray-500">금</div>
+              <div class="text-sm text-gray-500">토</div>
+            </div>
+            <div id="calendarDays" class="grid grid-cols-7 gap-1">
+            </div>
+          </div>
+          <button id="confirmDateSelection"
+            class="w-full mt-4 py-2 bg-gray-300 text-gray-500 rounded-lg !rounded-button cursor-not-allowed transition-all duration-300"
+            disabled>선택 완료</button>
+        </div>
+      </div>
+      <div id="guestPickerModal"
+        class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div class="bg-white rounded-xl p-4 w-[340px] animate-scaleIn">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-medium">인원 선택</h3>
+            <button class="closeGuestPicker">
+              <i class="ri-close-line text-xl"></i>
+            </button>
+          </div>
+          <div class="space-y-4">
+            <div class="flex justify-between items-center">
+              <span>성인</span>
+              <div class="flex items-center gap-3">
+                <button class="guest-btn minus" data-type="adult">
+                  <i class="ri-subtract-line"></i>
+                </button>
+                <span class="guest-count" data-type="adult">0</span>
+                <button class="guest-btn plus" data-type="adult">
+                  <i class="ri-add-line"></i>
+                </button>
+              </div>
+            </div>
+            <div class="flex justify-between items-center">
+              <span>소인</span>
+              <div class="flex items-center gap-3">
+                <button class="guest-btn minus" data-type="child">
+                  <i class="ri-subtract-line"></i>
+                </button>
+                <span class="guest-count" data-type="child">0</span>
+                <button class="guest-btn plus" data-type="child">
+                  <i class="ri-add-line"></i>
+                </button>
+              </div>
+            </div>
+            <div class="flex justify-between items-center">
+              <span>반려견</span>
+              <div class="flex items-center gap-3">
+                <button class="guest-btn minus" data-type="pet">
+                  <i class="ri-subtract-line"></i>
+                </button>
+                <span class="guest-count" data-type="pet">0</span>
+                <button class="guest-btn plus" data-type="pet">
+                  <i class="ri-add-line"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <button id="confirmDateSelection"
+            class="w-full mt-4 py-2 bg-gray-300 text-gray-500 rounded-lg !rounded-button cursor-not-allowed transition-all duration-300"
+            disabled>선택 완료</button>
+        </div>
+      </div>
+      <div class="flex gap-3 overflow-x-auto py-1 no-scrollbar">
+        <button id="filterAll"
+          class="filter-btn px-5 py-2 rounded-full bg-primary text-white shadow-lg hover:shadow-xl transition-all duration-300 whitespace-nowrap transform hover:scale-105 flex items-center">
+          <i class="ri-apps-2-fill mr-2 text-lg"></i>전체
+        </button>
+        <button id="filterAutoCamping"
+          class="filter-btn px-5 py-2 rounded-full bg-white shadow-lg hover:shadow-xl transition-all duration-300 whitespace-nowrap text-gray-600 transform hover:scale-105 hover:bg-gray-50 flex items-center">
+          <i class="ri-tent-line mr-2 text-lg text-primary"></i>오토캠핑
+        </button>
+        <button id="filterGlamping"
+          class="filter-btn px-5 py-2 rounded-full bg-white shadow-lg hover:shadow-xl transition-all duration-300 whitespace-nowrap text-gray-600 transform hover:scale-105 hover:bg-gray-50 flex items-center">
+          <i class="ri-home-smile-2-line mr-2 text-lg text-primary"></i>글램핑
+        </button>
+        <button id="filterCaravan"
+          class="filter-btn px-5 py-2 rounded-full bg-white shadow-lg hover:shadow-xl transition-all duration-300 whitespace-nowrap text-gray-600 transform hover:scale-105 hover:bg-gray-50 flex items-center">
+          <i class="ri-caravan-line mr-2 text-lg text-primary"></i>카라반
+        </button>
+        <button id="filterPension"
+          class="filter-btn px-5 py-2 rounded-full bg-white shadow-lg hover:shadow-xl transition-all duration-300 whitespace-nowrap text-gray-600 transform hover:scale-105 hover:bg-gray-50 flex items-center">
+          <i class="ri-building-2-line mr-2 text-lg text-primary"></i>펜션
+        </button>
+      </div>
+    </div>
+  </div>
+  <main class="pt-44 pb-20 relative h-[762px]">
+    <div class="relative h-full w-full overflow-hidden">
+      <img src="https://public.readdy.ai/gen_page/map_placeholder_1280x720.png"
+        class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 min-w-full min-h-full object-cover"
+        alt="지도">
+      <!-- 지도 마커들 -->
+      <div class="absolute top-1/4 left-1/3 cursor-pointer" id="marker1">
+        <div
+          class="w-[90px] h-[36px] flex items-center justify-center bg-primary text-white rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-110 cursor-pointer">
+          <span class="text-sm font-medium">₩130,000</span>
+        </div>
+      </div>
+      <div class="absolute top-1/3 left-2/3 cursor-pointer" id="marker2">
+        <div
+          class="w-[90px] h-[36px] flex items-center justify-center bg-primary text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300">
+          <span class="text-sm font-medium">₩145,000</span>
+        </div>
+      </div>
+      <div class="absolute top-1/2 left-1/4 cursor-pointer" id="marker3">
+        <div
+          class="w-[90px] h-[36px] flex items-center justify-center bg-primary text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300">
+          <span class="text-sm font-medium">₩120,000</span>
+        </div>
+      </div>
+      <div class="absolute top-2/3 left-1/2 cursor-pointer" id="marker4">
+        <div
+          class="w-[90px] h-[36px] flex items-center justify-center bg-primary text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300">
+          <span class="text-sm font-medium">₩160,000</span>
+        </div>
+      </div>
+      <!-- 지도 컨트롤 -->
+      <div class="absolute bottom-24 right-4 flex flex-col gap-2">
+        <button class="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-md cursor-pointer">
+          <i class="ri-add-line text-xl"></i>
+        </button>
+        <button class="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-md cursor-pointer">
+          <i class="ri-subtract-line text-xl"></i>
+        </button>
+        <button class="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-md cursor-pointer">
+          <i class="ri-map-pin-user-line text-xl text-primary"></i>
+        </button>
+      </div>
+      <!-- 숙소 정보 팝업 (기본적으로 숨김) -->
+      <div id="infoPopup"
+        class="hidden absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[300px] bg-white rounded-xl shadow-2xl z-10 animate-scaleIn">
+        <div class="relative">
+          <img id="popupImage" src="" class="w-full h-36 object-cover rounded-t-xl" alt="숙소 이미지">
+          <button id="closePopup"
+            class="absolute top-2 right-2 w-8 h-8 flex items-center justify-center bg-black/50 rounded-full text-white cursor-pointer">
+            <i class="ri-close-line"></i>
+          </button>
+        </div>
+        <div class="p-4">
+          <h3 id="popupTitle" class="font-medium text-lg"></h3>
+          <div class="flex items-center gap-1 mt-1">
+            <i class="ri-star-fill text-yellow-400"></i>
+            <span id="popupRating" class="text-sm"></span>
+            <span class="text-gray-400 text-sm">·</span>
+            <span id="popupReviews" class="text-gray-400 text-sm"></span>
+          </div>
+          <div class="mt-2 flex justify-between items-center">
+            <div>
+              <p id="popupPrice" class="font-medium text-primary"></p>
+              <p class="text-xs text-gray-500">1박 기준</p>
+            </div>
+            <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/1cf0d814-6ea9-40e4-9232-9102e310c481"
+              data-readdy="true"
+              class="px-4 py-2 bg-primary text-white rounded-lg !rounded-button shadow-sm cursor-pointer">자세히 보기</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <div class="fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur-md border-t border-gray-100">
+    <button
+      class="w-full h-14 bg-primary text-white font-medium rounded-xl !rounded-button shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all duration-300 cursor-pointer transform hover:scale-105 hover:bg-primary/90">
+      <i class="ri-search-2-fill mr-2"></i>검색
+    </button>
+  </div>
+  <script id="datePickerScript">
+    document.addEventListener('DOMContentLoaded', function () {
+      const datePickerBtn = document.getElementById('datePickerBtn');
+      const datePickerModal = document.getElementById('datePickerModal');
+      const closeDatePicker = document.querySelector('.closeDatePicker');
+      const prevMonthBtn = document.getElementById('prevMonth');
+      const nextMonthBtn = document.getElementById('nextMonth');
+      const currentMonthEl = document.getElementById('currentMonth');
+      const calendarDays = document.getElementById('calendarDays');
+      const dateDisplay = document.getElementById('dateDisplay');
+
+      dateDisplay.addEventListener('click', (e) => {
+        e.stopPropagation();
+        datePickerModal.classList.remove('hidden');
+        updateCalendar();
+      });
+      const confirmDateBtn = document.querySelector('#datePickerModal .w-full.mt-4');
+      let currentDate = new Date(2025, 6, 8);
+      let selectedStartDate = null;
+      let selectedEndDate = null;
+      function updateCalendar() {
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        const startingDay = firstDay.getDay();
+        const monthLength = lastDay.getDate();
+        const confirmBtn = document.getElementById('confirmDateSelection');
+        currentMonthEl.textContent = `${year}년 ${month + 1}월`;
+        calendarDays.innerHTML = '';
+        if (selectedStartDate && selectedEndDate) {
+          confirmBtn.classList.remove('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+          confirmBtn.classList.add('bg-primary', 'text-white', 'hover:bg-primary/90', 'cursor-pointer');
+          confirmBtn.disabled = false;
+        } else {
+          confirmBtn.classList.remove('bg-primary', 'text-white', 'hover:bg-primary/90', 'cursor-pointer');
+          confirmBtn.classList.add('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+          confirmBtn.disabled = true;
+        }
+        for (let i = 0; i < startingDay; i++) {
+          calendarDays.appendChild(document.createElement('div'));
+        }
+        for (let day = 1; day <= monthLength; day++) {
+          const dayEl = document.createElement('button');
+          dayEl.className = 'w-10 h-10 rounded-full flex items-center justify-center hover:bg-primary/10';
+          dayEl.textContent = day;
+          const currentDateObj = new Date(year, month, day);
+          if (selectedStartDate && currentDateObj.getTime() === selectedStartDate.getTime()) {
+            dayEl.classList.add('bg-primary', 'text-white');
+          } else if (selectedEndDate && currentDateObj.getTime() === selectedEndDate.getTime()) {
+            dayEl.classList.add('bg-primary', 'text-white');
+          } else if (selectedStartDate && selectedEndDate &&
+            currentDateObj > selectedStartDate && currentDateObj < selectedEndDate) {
+            dayEl.classList.add('bg-primary/20');
+          }
+          dayEl.addEventListener('click', () => {
+            if (!selectedStartDate || (selectedStartDate && selectedEndDate)) {
+              selectedStartDate = new Date(year, month, day);
+              selectedEndDate = null;
+            } else {
+              const clickedDate = new Date(year, month, day);
+              if (clickedDate > selectedStartDate) {
+                selectedEndDate = clickedDate;
+                updateDateDisplay();
+                datePickerModal.classList.add('hidden');
+              } else {
+                selectedStartDate = clickedDate;
+                selectedEndDate = null;
+              }
+            }
+            updateCalendar();
+          });
+          calendarDays.appendChild(dayEl);
+        }
+      }
+      function updateDateDisplay() {
+        if (selectedStartDate && selectedEndDate) {
+          const nights = Math.round((selectedEndDate - selectedStartDate) / (1000 * 60 * 60 * 24));
+          const formatDate = (date) => {
+            const days = ['일', '월', '화', '수', '목', '금', '토'];
+            return `${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getDate().toString().padStart(2, '0')} ${days[date.getDay()]}`;
+          };
+          dateDisplay.textContent = `${formatDate(selectedStartDate)} - ${formatDate(selectedEndDate)}, ${nights}박`;
+        }
+      }
+      datePickerBtn.addEventListener('click', () => {
+        datePickerModal.classList.remove('hidden');
+        updateCalendar();
+      });
+      closeDatePicker.addEventListener('click', () => {
+        datePickerModal.classList.add('hidden');
+      });
+      prevMonthBtn.addEventListener('click', () => {
+        currentDate.setMonth(currentDate.getMonth() - 1);
+        updateCalendar();
+      });
+      nextMonthBtn.addEventListener('click', () => {
+        currentDate.setMonth(currentDate.getMonth() + 1);
+        updateCalendar();
+      });
+      datePickerModal.addEventListener('click', (e) => {
+        if (e.target === datePickerModal) {
+          datePickerModal.classList.add('hidden');
+        }
+      });
+      const confirmDateBtn = document.getElementById('confirmDateSelection');
+      confirmDateBtn.addEventListener('click', () => {
+        if (selectedStartDate && selectedEndDate) {
+          updateDateDisplay();
+          datePickerModal.classList.add('hidden');
+          const datePickerBtn = document.getElementById('datePickerBtn');
+          datePickerBtn.classList.add('animate-scaleIn');
+          setTimeout(() => {
+            datePickerBtn.classList.remove('animate-scaleIn');
+          }, 300);
+        }
+      });
+    });
+  </script>
+  <script id="guestPickerScript">
+    document.addEventListener('DOMContentLoaded', function () {
+      const guestPickerBtn = document.getElementById('guestPickerBtn');
+      const guestPickerModal = document.getElementById('guestPickerModal');
+      const closeGuestPicker = document.querySelector('.closeGuestPicker');
+      const guestDisplay = document.getElementById('guestDisplay');
+      const guestCounts = {
+        adult: 0,
+        child: 0,
+        pet: 0
+      };
+      function updateGuestDisplay() {
+        const parts = [];
+        if (guestCounts.adult > 0) parts.push(`성인 ${guestCounts.adult}`);
+        if (guestCounts.child > 0) parts.push(`소인 ${guestCounts.child}`);
+        if (guestCounts.pet > 0) parts.push(`반려견 ${guestCounts.pet}`);
+        guestDisplay.textContent = parts.length > 0 ? parts.join(', ') : '인원 선택';
+      }
+      document.querySelectorAll('.guest-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const type = btn.dataset.type;
+          const isPlus = btn.classList.contains('plus');
+          const countEl = btn.parentElement.querySelector('.guest-count');
+          if (isPlus && guestCounts[type] < 10) {
+            guestCounts[type]++;
+          } else if (!isPlus && guestCounts[type] > 0) {
+            guestCounts[type]--;
+          }
+          countEl.textContent = guestCounts[type];
+          updateGuestDisplay();
+        });
+      });
+      guestPickerBtn.addEventListener('click', () => {
+        guestPickerModal.classList.remove('hidden');
+      });
+      closeGuestPicker.addEventListener('click', () => {
+        guestPickerModal.classList.add('hidden');
+      });
+      guestPickerModal.addEventListener('click', (e) => {
+        if (e.target === guestPickerModal) {
+          guestPickerModal.classList.add('hidden');
+        }
+      });
+    });
+  </script>
+  <script id="markerInteraction">
+    document.addEventListener('DOMContentLoaded', function () {
+      function filterMarkers(type) {
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        filterButtons.forEach(btn => {
+          btn.classList.remove('bg-primary', 'text-white');
+          btn.classList.add('bg-white', 'text-gray-600');
+          const icon = btn.querySelector('i');
+          if (icon) {
+            icon.classList.add('text-primary');
+          }
+        });
+        const selectedButton = document.getElementById(`filter${type}`);
+        if (selectedButton) {
+          selectedButton.classList.remove('bg-white', 'text-gray-600');
+          selectedButton.classList.add('bg-primary', 'text-white');
+          const icon = selectedButton.querySelector('i');
+          if (icon) {
+            icon.classList.remove('text-primary');
+          }
+        }
+        markers.forEach(marker => {
+          const markerElement = document.getElementById(marker.id);
+          if (type === 'All' || marker.type === type.toLowerCase()) {
+            markerElement.style.display = '';
+            markerElement.classList.add('animate-scaleIn');
+            setTimeout(() => {
+              markerElement.classList.remove('animate-scaleIn');
+            }, 300);
+          } else {
+            markerElement.style.display = 'none';
+          }
+        });
+      }
+      document.getElementById('filterAll').addEventListener('click', () => filterMarkers('All'));
+      document.getElementById('filterGlamping').addEventListener('click', () => filterMarkers('Glamping'));
+      document.getElementById('filterAutoCamping').addEventListener('click', () => filterMarkers('AutoCamping'));
+      document.getElementById('filterCaravan').addEventListener('click', () => filterMarkers('Caravan'));
+      document.getElementById('filterPension').addEventListener('click', () => filterMarkers('Pension'));
+      const addBounceAnimation = () => {
+        const markers = document.querySelectorAll('[id^="marker"]');
+        markers.forEach((marker, index) => {
+          setTimeout(() => {
+            marker.classList.add('animate-bounce');
+          }, index * 200);
+        });
+      };
+      setTimeout(addBounceAnimation, 500);
+      const markers = [
+        {
+          id: 'marker1',
+          type: 'glamping',
+          image: 'https://readdy.ai/api/search-image?query=Luxury%20glamping%20tent%20in%20forest%20setting%2C%20cozy%20interior%20with%20comfortable%20bed%2C%20warm%20lighting%2C%20natural%20wood%20elements%2C%20high-quality%20professional%20photography%2C%20no%20people%2C%20serene%20atmosphere&width=600&height=400&seq=101&orientation=landscape',
+          title: '숲속 글램핑 리조트',
+          rating: '4.8',
+          reviews: '리뷰 128개',
+          price: '₩130,000'
+        },
+        {
+          id: 'marker2',
+          type: 'caravan',
+          image: 'https://readdy.ai/api/search-image?query=Modern%20caravan%20camping%20site%20with%20outdoor%20deck%2C%20mountain%20view%2C%20sunset%20lighting%2C%20professional%20photography%2C%20no%20people%2C%20luxury%20camping%20experience&width=600&height=400&seq=102&orientation=landscape',
+          title: '마운틴 뷰 카라반',
+          rating: '4.6',
+          reviews: '리뷰 95개',
+          price: '₩145,000'
+        },
+        {
+          id: 'marker3',
+          type: 'pension',
+          image: 'https://readdy.ai/api/search-image?query=Traditional%20Korean%20pension%20house%20with%20wooden%20architecture%2C%20beautiful%20garden%2C%20peaceful%20surroundings%2C%20professional%20photography%2C%20no%20people%2C%20vacation%20rental&width=600&height=400&seq=103&orientation=landscape',
+          title: '한옥 스타일 펜션',
+          rating: '4.7',
+          reviews: '리뷰 156개',
+          price: '₩120,000'
+        },
+        {
+          id: 'marker4',
+          type: 'autoCamping',
+          image: 'https://readdy.ai/api/search-image?query=Luxury%20auto%20camping%20site%20by%20the%20lake%2C%20modern%20tent%20setup%2C%20campfire%2C%20evening%20atmosphere%2C%20professional%20photography%2C%20no%20people%2C%20outdoor%20adventure&width=600&height=400&seq=104&orientation=landscape',
+          title: '레이크 오토캠핑장',
+          rating: '4.9',
+          reviews: '리뷰 210개',
+          price: '₩160,000'
+        }
+      ];
+      const popup = document.getElementById('infoPopup');
+      const popupImage = document.getElementById('popupImage');
+      const popupTitle = document.getElementById('popupTitle');
+      const popupRating = document.getElementById('popupRating');
+      const popupReviews = document.getElementById('popupReviews');
+      const popupPrice = document.getElementById('popupPrice');
+      const closePopup = document.getElementById('closePopup');
+      markers.forEach(marker => {
+        const markerElement = document.getElementById(marker.id);
+        markerElement.addEventListener('click', function () {
+          popupImage.src = marker.image;
+          popupTitle.textContent = marker.title;
+          popupRating.textContent = marker.rating;
+          popupReviews.textContent = marker.reviews;
+          popupPrice.textContent = marker.price;
+          popup.classList.remove('hidden');
+        });
+      });
+      closePopup.addEventListener('click', function () {
+        popup.classList.add('hidden');
+      });
+    });
+  </script>
+  <script id="mapControls">
+    document.addEventListener('DOMContentLoaded', function () {
+      const map = document.querySelector('.relative.h-full.w-full');
+      const mapImage = map.querySelector('img');
+      const markers = document.querySelectorAll('[id^="marker"]');
+      let currentZoom = 1;
+      const maxZoom = 2;
+      const minZoom = 1;
+      const zoomStep = 0.2;
+      const markerPositions = Array.from(markers).map(marker => {
+        const rect = marker.getBoundingClientRect();
+        return {
+          id: marker.id,
+          top: marker.style.top,
+          left: marker.style.left
+        };
+      });
+      function updateZoomControls() {
+        const zoomInBtn = document.querySelector('.ri-add-line').parentElement;
+        const zoomOutBtn = document.querySelector('.ri-subtract-line').parentElement;
+        if (currentZoom >= maxZoom) {
+          zoomInBtn.classList.add('opacity-50', 'cursor-not-allowed');
+          zoomInBtn.disabled = true;
+        } else {
+          zoomInBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+          zoomInBtn.disabled = false;
+        }
+        if (currentZoom <= minZoom) {
+          zoomOutBtn.classList.add('opacity-50', 'cursor-not-allowed');
+          zoomOutBtn.disabled = true;
+        } else {
+          zoomOutBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+          zoomOutBtn.disabled = false;
+        }
+      }
+      function zoomMap(isZoomIn) {
+        const newZoom = isZoomIn ? currentZoom + zoomStep : currentZoom - zoomStep;
+        if (newZoom >= minZoom && newZoom <= maxZoom) {
+          currentZoom = newZoom;
+          mapImage.style.transition = 'transform 0.3s ease-out';
+          mapImage.style.transform = `translate(-50%, -50%) scale(${currentZoom})`;
+          markers.forEach((marker, index) => {
+            const basePosition = markerPositions[index];
+            const topValue = parseFloat(basePosition.top) * currentZoom;
+            const leftValue = parseFloat(basePosition.left) * currentZoom;
+            marker.style.transition = 'all 0.3s ease-out';
+            marker.style.transform = `translate(-50%, -50%) scale(${1 / currentZoom})`;
+          });
+          updateZoomControls();
+        }
+      }
+      document.querySelector('.ri-add-line').parentElement.addEventListener('click', function () {
+        if (currentZoom < maxZoom) {
+          zoomMap(true);
+          this.classList.add('bg-gray-50');
+          setTimeout(() => this.classList.remove('bg-gray-50'), 200);
+        }
+      });
+      document.querySelector('.ri-subtract-line').parentElement.addEventListener('click', function () {
+        if (currentZoom > minZoom) {
+          zoomMap(false);
+          this.classList.add('bg-gray-50');
+          setTimeout(() => this.classList.remove('bg-gray-50'), 200);
+        }
+      });
+      document.querySelector('.ri-map-pin-user-line').parentElement.addEventListener('click', function () {
+        this.classList.add('bg-gray-50');
+        setTimeout(() => this.classList.remove('bg-gray-50'), 200);
+      });
+      updateZoomControls();
+    });
+  </script>
+</body>
+
+</html>

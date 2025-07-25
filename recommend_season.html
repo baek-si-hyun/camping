@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=375px, initial-scale=1.0">
+  <title>계절별 추천 캠핑</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#FF7A45',
+            secondary: '#4A90E2'
+          },
+          borderRadius: {
+            'none': '0px',
+            'sm': '4px',
+            DEFAULT: '8px',
+            'md': '12px',
+            'lg': '16px',
+            'xl': '20px',
+            '2xl': '24px',
+            '3xl': '32px',
+            'full': '9999px',
+            'button': '8px'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :where([class^="ri-"])::before {
+      content: "\f3c2";
+    }
+
+    .search-input::-webkit-search-cancel-button {
+      display: none;
+    }
+
+    .tab-active {
+      color: #FF7A45;
+      border-bottom: 2px solid #FF7A45;
+    }
+
+    .season-tab-active {
+      color: #FF7A45;
+      border-bottom: 2px solid #FF7A45;
+    }
+
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .accordion-content.active {
+      max-height: 500px;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.05);
+      }
+    }
+
+    .pulse-on-hover:hover {
+      animation: pulse 1s infinite;
+    }
+
+    .scroll-smooth {
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .scroll-smooth::-webkit-scrollbar {
+      display: none;
+    }
+
+    @keyframes fade-in {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-fade-in {
+      animation: fade-in 0.6s ease-out forwards;
+    }
+
+    @keyframes slide-in {
+      from {
+        transform: translateX(-100%);
+      }
+
+      to {
+        transform: translateX(0);
+      }
+    }
+
+    .animate-slide-in {
+      animation: slide-in 0.5s ease-out forwards;
+    }
+  </style>
+</head>
+
+<body class="  min-h-[762px] mx-auto bg-white">
+  <header class="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
+    <div class="flex items-center justify-between px-4 py-3">
+      <div class="flex items-center gap-2">
+        <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/121c183c-fd8c-4b74-afb5-ff594d9bad05"
+          data-readdy="true" class="w-8 h-8 flex items-center justify-center cursor-pointer">
+          <i class="ri-arrow-left-s-line text-xl"></i>
+        </a>
+        <h1 class="text-lg font-medium">계절별 추천 캠핑</h1>
+      </div>
+      <div class="flex items-center gap-3">
+        <button class="w-8 h-8 flex items-center justify-center cursor-pointer">
+          <i class="ri-search-line text-xl"></i>
+        </button>
+        <button class="w-8 h-8 flex items-center justify-center cursor-pointer">
+          <i class="ri-heart-3-line text-xl"></i>
+        </button>
+      </div>
+    </div>
+    <!-- 계절 탭 메뉴 -->
+    <div class="flex border-b">
+      <button class="season-tab flex-1 py-3 text-center text-sm font-medium season-tab-active"
+        data-season="spring">봄</button>
+      <button class="season-tab flex-1 py-3 text-center text-sm font-medium text-gray-500"
+        data-season="summer">여름</button>
+      <button class="season-tab flex-1 py-3 text-center text-sm font-medium text-gray-500"
+        data-season="autumn">가을</button>
+      <button class="season-tab flex-1 py-3 text-center text-sm font-medium text-gray-500"
+        data-season="winter">겨울</button>
+    </div>
+  </header>
+  <main class="pt-28 pb-20 transition-all duration-300 ease-in-out">
+    <!-- 봄 계절 컨텐츠 -->
+    <div id="spring-content" class="season-content animate-fade-in">
+      <!-- 계절 소개 -->
+      <div
+        class="px-4 py-4 bg-gradient-to-r from-pink-50 to-rose-50 mb-5 rounded-xl shadow-sm transform hover:scale-[1.02] transition-transform duration-300">
+        <div class="flex items-center gap-4 mb-3">
+          <div
+            class="w-12 h-12 flex items-center justify-center bg-white rounded-full shadow-md transform hover:rotate-12 transition-transform duration-300">
+            <i class="ri-flower-line text-pink-500 text-2xl"></i>
+          </div>
+          <h2 class="text-xl font-bold tracking-tight">봄 캠핑의 매력</h2>
+        </div>
+        <p class="text-base text-gray-700 mb-4 leading-relaxed font-medium">봄바람과 함께 피어나는 꽃들, 새싹이 돋는 자연 속에서 즐기는 캠핑은 특별한
+          경험을 선사합니다. 쌀쌀한 밤공기와 따뜻한 낮 온도의 조화가 봄 캠핑의 매력입니다.</p>
+        <div class="flex gap-2 flex-wrap">
+          <span
+            class="text-sm bg-white px-4 py-1.5 rounded-full text-gray-700 shadow-sm font-medium hover:shadow-md transition-shadow duration-300 cursor-pointer transform hover:-translate-y-0.5">벚꽃
+            명소</span>
+          <span
+            class="text-sm bg-white px-4 py-1.5 rounded-full text-gray-700 shadow-sm font-medium hover:shadow-md transition-shadow duration-300 cursor-pointer transform hover:-translate-y-0.5">온화한
+            날씨</span>
+          <span
+            class="text-sm bg-white px-4 py-1.5 rounded-full text-gray-700 shadow-sm font-medium hover:shadow-md transition-shadow duration-300 cursor-pointer transform hover:-translate-y-0.5">새싹
+            관찰</span>
+        </div>
+      </div>
+      <!-- 추천 캠핑장 목록 -->
+      <div class="px-4 mb-8">
+        <h3 class="text-xl font-bold mb-5 tracking-tight">봄 추천 캠핑장</h3>
+        <div class="space-y-6">
+          <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+            <img
+              src="https://readdy.ai/api/search-image?query=Spring%20camping%20in%20Korea%20with%20cherry%20blossoms%2C%20peaceful%20atmosphere%2C%20tent%20setup%20near%20flowering%20trees%2C%20beautiful%20nature%20scenery%2C%20professional%20photography%2C%20clear%20blue%20sky&width=800&height=400&seq=201&orientation=landscape"
+              class="w-full h-48 object-cover" alt="봄 캠핑장">
+            <div class="p-4">
+              <div class="flex justify-between items-start mb-2">
+                <div>
+                  <h4 class="font-medium">양평 벚꽃마을 캠핑장</h4>
+                  <div class="flex items-center gap-1 mt-1">
+                    <div class="flex text-yellow-400">
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-half-fill text-sm"></i>
+                    </div>
+                    <span class="text-xs text-gray-500">(142)</span>
+                  </div>
+                </div>
+                <button class="w-8 h-8 flex items-center justify-center text-gray-400 cursor-pointer">
+                  <i class="ri-heart-line text-xl"></i>
+                </button>
+              </div>
+              <div class="flex flex-wrap gap-1 mb-3">
+                <span class="text-xs bg-pink-50 px-2 py-1 rounded-full text-pink-600">벚꽃 명소</span>
+                <span class="text-xs bg-blue-50 px-2 py-1 rounded-full text-blue-600">계곡 인접</span>
+                <span class="text-xs bg-green-50 px-2 py-1 rounded-full text-green-600">반려동물 동반</span>
+              </div>
+              <p class="text-sm text-gray-600 mb-3">남한강변을 따라 피어나는 벚꽃과 함께하는 캠핑, 4월 초 벚꽃 축제 기간 방문 추천</p>
+              <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
+                <i class="ri-map-pin-line"></i>
+                <span>경기도 양평군 양서면 벚꽃로 156</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-primary font-medium">₩85,000~</span>
+                <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/b17e06a2-c8bb-4255-901e-710cba572e47?accommodation=양평벚꽃마을캠핑장"
+                  data-readdy="true"
+                  class="px-4 py-2 bg-primary text-white !rounded-button text-sm cursor-pointer pulse-on-hover inline-block no-underline hover:bg-primary/90 transition-colors">예약하기</a>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+            <img
+              src="https://readdy.ai/api/search-image?query=Spring%20camping%20in%20Korea%20with%20green%20hills%2C%20wildflowers%2C%20tent%20setup%20in%20meadow%2C%20beautiful%20nature%20scenery%2C%20professional%20photography&width=800&height=400&seq=202&orientation=landscape"
+              class="w-full h-48 object-cover" alt="봄 캠핑장">
+            <div class="p-4">
+              <div class="flex justify-between items-start mb-2">
+                <div>
+                  <h4 class="font-medium">가평 청춘 글램핑</h4>
+                  <div class="flex items-center gap-1 mt-1">
+                    <div class="flex text-yellow-400">
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-line text-sm"></i>
+                    </div>
+                    <span class="text-xs text-gray-500">(98)</span>
+                  </div>
+                </div>
+                <button class="w-8 h-8 flex items-center justify-center text-gray-400 cursor-pointer">
+                  <i class="ri-heart-line text-xl"></i>
+                </button>
+              </div>
+              <div class="flex flex-wrap gap-1 mb-3">
+                <span class="text-xs bg-purple-50 px-2 py-1 rounded-full text-purple-600">글램핑</span>
+                <span class="text-xs bg-orange-50 px-2 py-1 rounded-full text-orange-600">바베큐</span>
+                <span class="text-xs bg-blue-50 px-2 py-1 rounded-full text-blue-600">온수 샤워</span>
+              </div>
+              <p class="text-sm text-gray-600 mb-3">편안한 글램핑 시설과 봄꽃 정원, 개인 바베큐장 완비, 커플 추천</p>
+              <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
+                <i class="ri-map-pin-line"></i>
+                <span>경기도 가평군 상면 수목원로 248</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-primary font-medium">₩120,000~</span>
+                <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/b17e06a2-c8bb-4255-901e-710cba572e47?accommodation=양평벚꽃마을캠핑장"
+                  data-readdy="true"
+                  class="px-4 py-2 bg-primary text-white !rounded-button text-sm cursor-pointer pulse-on-hover inline-block no-underline hover:bg-primary/90 transition-colors">예약하기</a>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+            <img
+              src="https://readdy.ai/api/search-image?query=Spring%20camping%20in%20Korea%20with%20mountain%20view%2C%20tent%20setup%20near%20forest%2C%20beautiful%20nature%20scenery%2C%20professional%20photography&width=800&height=400&seq=203&orientation=landscape"
+              class="w-full h-48 object-cover" alt="봄 캠핑장">
+            <div class="p-4">
+              <div class="flex justify-between items-start mb-2">
+                <div>
+                  <h4 class="font-medium">춘천 호반 캠핑장</h4>
+                  <div class="flex items-center gap-1 mt-1">
+                    <div class="flex text-yellow-400">
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                    </div>
+                    <span class="text-xs text-gray-500">(215)</span>
+                  </div>
+                </div>
+                <button class="w-8 h-8 flex items-center justify-center text-gray-400 cursor-pointer">
+                  <i class="ri-heart-line text-xl"></i>
+                </button>
+              </div>
+              <div class="flex flex-wrap gap-1 mb-3">
+                <span class="text-xs bg-blue-50 px-2 py-1 rounded-full text-blue-600">호수 뷰</span>
+                <span class="text-xs bg-green-50 px-2 py-1 rounded-full text-green-600">숲속 캠핑</span>
+                <span class="text-xs bg-yellow-50 px-2 py-1 rounded-full text-yellow-600">데크 사이트</span>
+              </div>
+              <p class="text-sm text-gray-600 mb-3">의암호가 보이는 전망 좋은 사이트, 봄철 야생화 관찰 코스 인접</p>
+              <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
+                <i class="ri-map-pin-line"></i>
+                <span>강원도 춘천시 서면 박사로 892</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-primary font-medium">₩70,000~</span>
+                <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/b17e06a2-c8bb-4255-901e-710cba572e47?accommodation=양평벚꽃마을캠핑장"
+                  data-readdy="true"
+                  class="px-4 py-2 bg-primary text-white !rounded-button text-sm cursor-pointer pulse-on-hover inline-block no-underline hover:bg-primary/90 transition-colors">예약하기</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 봄 캠핑 팁 -->
+      <div class="px-4 py-4 bg-gray-50">
+        <h3 class="text-lg font-medium mb-4">봄 캠핑 준비 팁</h3>
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm mb-4">
+          <button class="w-full flex justify-between items-center p-4 cursor-pointer accordion-toggle">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center">
+                <i class="ri-list-check-2 text-pink-600"></i>
+              </div>
+              <span class="font-medium">봄 캠핑 준비물 체크리스트</span>
+            </div>
+            <i class="ri-arrow-down-s-line text-gray-400"></i>
+          </button>
+          <div class="accordion-content px-4 pb-4">
+            <div class="pl-11 text-sm text-gray-600 space-y-2">
+              <p>1. 일교차 대비 겹옷 (아침저녁 추위 대비)</p>
+              <p>2. 방수 기능이 있는 텐트와 타프</p>
+              <p>3. 봄비 대비 우산과 레인코트</p>
+              <p>4. 꽃가루 알레르기 대비 약품</p>
+              <p>5. 벌레 퇴치제 (초봄부터 벌레 출현)</p>
+              <p>6. 보온성 좋은 침낭 (밤 기온 하락 대비)</p>
+              <p>7. 따뜻한 음료를 위한 보온병</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm mb-4">
+          <button class="w-full flex justify-between items-center p-4 cursor-pointer accordion-toggle">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                <i class="ri-information-line text-blue-600"></i>
+              </div>
+              <span class="font-medium">봄 캠핑 주의사항</span>
+            </div>
+            <i class="ri-arrow-down-s-line text-gray-400"></i>
+          </button>
+          <div class="accordion-content px-4 pb-4">
+            <div class="pl-11 text-sm text-gray-600 space-y-2">
+              <p>1. 일교차가 크므로 옷차림에 신경쓰세요.</p>
+              <p>2. 봄비가 자주 내리므로 방수 준비를 철저히 하세요.</p>
+              <p>3. 황사/미세먼지 정보를 확인하고 마스크를 준비하세요.</p>
+              <p>4. 꽃가루 알레르기가 있다면 약을 챙기세요.</p>
+              <p>5. 해가 짧으므로 일찍 텐트를 설치하는 것이 좋습니다.</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+          <button class="w-full flex justify-between items-center p-4 cursor-pointer accordion-toggle">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                <i class="ri-plant-line text-green-600"></i>
+              </div>
+              <span class="font-medium">봄 캠핑 추천 활동</span>
+            </div>
+            <i class="ri-arrow-down-s-line text-gray-400"></i>
+          </button>
+          <div class="accordion-content px-4 pb-4">
+            <div class="pl-11 text-sm text-gray-600 space-y-2">
+              <p>1. 봄꽃 관찰 및 사진 촬영</p>
+              <p>2. 가벼운 산책과 트레킹</p>
+              <p>3. 봄나물 채집 (캠핑장 규정 확인 필수)</p>
+              <p>4. 별자리 관찰 (봄철 별자리)</p>
+              <p>5. 봄 테마 요리 (봄나물 요리, 딸기 디저트 등)</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 여름 계절 컨텐츠 -->
+    <div id="summer-content" class="season-content hidden">
+      <!-- 계절 소개 -->
+      <div class="px-4 py-3 bg-gradient-to-r from-blue-50 to-cyan-50 mb-4">
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-sm">
+            <i class="ri-sun-line text-yellow-500"></i>
+          </div>
+          <h2 class="text-lg font-medium">여름 캠핑의 매력</h2>
+        </div>
+        <p class="text-sm text-gray-700 mb-3">시원한 계곡과 강가에서 즐기는 물놀이, 밤하늘의 쏟아지는 별빛까지. 여름 캠핑은 자연과 하나되는 특별한 경험을 선사합니다.</p>
+        <div class="flex gap-2">
+          <span class="text-xs bg-white px-3 py-1 rounded-full text-gray-700 shadow-sm">계곡 물놀이</span>
+          <span class="text-xs bg-white px-3 py-1 rounded-full text-gray-700 shadow-sm">밤하늘 별 관찰</span>
+          <span class="text-xs bg-white px-3 py-1 rounded-full text-gray-700 shadow-sm">바베큐</span>
+        </div>
+      </div>
+      <!-- 추천 캠핑장 목록 -->
+      <div class="px-4 mb-6">
+        <h3 class="text-lg font-medium mb-4">여름 추천 캠핑장</h3>
+        <div class="space-y-4">
+          <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+            <img
+              src="https://readdy.ai/api/search-image?query=Summer%20camping%20in%20Korea%20near%20river%20or%20lake%2C%20refreshing%20water%20activities%2C%20tents%20under%20shade%2C%20clear%20blue%20sky%2C%20professional%20photography&width=800&height=400&seq=204&orientation=landscape"
+              class="w-full h-48 object-cover" alt="여름 캠핑장">
+            <div class="p-4">
+              <div class="flex justify-between items-start mb-2">
+                <div>
+                  <h4 class="font-medium">가평 청평 계곡 캠핑장</h4>
+                  <div class="flex items-center gap-1 mt-1">
+                    <div class="flex text-yellow-400">
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-half-fill text-sm"></i>
+                    </div>
+                    <span class="text-xs text-gray-500">(176)</span>
+                  </div>
+                </div>
+                <button class="w-8 h-8 flex items-center justify-center text-gray-400 cursor-pointer">
+                  <i class="ri-heart-line text-xl"></i>
+                </button>
+              </div>
+              <div class="flex flex-wrap gap-1 mb-3">
+                <span class="text-xs bg-blue-50 px-2 py-1 rounded-full text-blue-600">계곡 접근성</span>
+                <span class="text-xs bg-green-50 px-2 py-1 rounded-full text-green-600">그늘 많음</span>
+                <span class="text-xs bg-orange-50 px-2 py-1 rounded-full text-orange-600">수영장</span>
+              </div>
+              <p class="text-sm text-gray-600 mb-3">깨끗한 계곡물과 울창한 숲, 어린이 물놀이장 완비, 가족 캠핑 추천</p>
+              <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
+                <i class="ri-map-pin-line"></i>
+                <span>경기도 가평군 청평면 호반로 385</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-primary font-medium">₩90,000~</span>
+                <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/b17e06a2-c8bb-4255-901e-710cba572e47?accommodation=양평벚꽃마을캠핑장"
+                  data-readdy="true"
+                  class="px-4 py-2 bg-primary text-white !rounded-button text-sm cursor-pointer pulse-on-hover inline-block no-underline hover:bg-primary/90 transition-colors">예약하기</a>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+            <img
+              src="https://readdy.ai/api/search-image?query=Summer%20glamping%20in%20Korea%2C%20luxury%20tents%20with%20private%20pool%2C%20beautiful%20forest%20surroundings%2C%20professional%20photography&width=800&height=400&seq=205&orientation=landscape"
+              class="w-full h-48 object-cover" alt="여름 캠핑장">
+            <div class="p-4">
+              <div class="flex justify-between items-start mb-2">
+                <div>
+                  <h4 class="font-medium">홍천 수동계곡 글램핑</h4>
+                  <div class="flex items-center gap-1 mt-1">
+                    <div class="flex text-yellow-400">
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-line text-sm"></i>
+                    </div>
+                    <span class="text-xs text-gray-500">(124)</span>
+                  </div>
+                </div>
+                <button class="w-8 h-8 flex items-center justify-center text-gray-400 cursor-pointer">
+                  <i class="ri-heart-line text-xl"></i>
+                </button>
+              </div>
+              <div class="flex flex-wrap gap-1 mb-3">
+                <span class="text-xs bg-purple-50 px-2 py-1 rounded-full text-purple-600">글램핑</span>
+                <span class="text-xs bg-blue-50 px-2 py-1 rounded-full text-blue-600">개별 풀장</span>
+                <span class="text-xs bg-red-50 px-2 py-1 rounded-full text-red-600">에어컨 완비</span>
+              </div>
+              <p class="text-sm text-gray-600 mb-3">프라이빗 온수풀, 에어컨 완비 글램핑, 계곡 도보 5분</p>
+              <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
+                <i class="ri-map-pin-line"></i>
+                <span>강원도 홍천군 내면 수동길 156</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-primary font-medium">₩160,000~</span>
+                <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/b17e06a2-c8bb-4255-901e-710cba572e47?accommodation=양평벚꽃마을캠핑장"
+                  data-readdy="true"
+                  class="px-4 py-2 bg-primary text-white !rounded-button text-sm cursor-pointer pulse-on-hover inline-block no-underline hover:bg-primary/90 transition-colors">예약하기</a>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+            <img
+              src="https://readdy.ai/api/search-image?query=Summer%20beach%20camping%20in%20Korea%2C%20tents%20near%20ocean%2C%20beautiful%20sunset%20view%2C%20professional%20photography&width=800&height=400&seq=206&orientation=landscape"
+              class="w-full h-48 object-cover" alt="여름 캠핑장">
+            <div class="p-4">
+              <div class="flex justify-between items-start mb-2">
+                <div>
+                  <h4 class="font-medium">강릉 바다 캠핑장</h4>
+                  <div class="flex items-center gap-1 mt-1">
+                    <div class="flex text-yellow-400">
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-half-fill text-sm"></i>
+                    </div>
+                    <span class="text-xs text-gray-500">(203)</span>
+                  </div>
+                </div>
+                <button class="w-8 h-8 flex items-center justify-center text-gray-400 cursor-pointer">
+                  <i class="ri-heart-line text-xl"></i>
+                </button>
+              </div>
+              <div class="flex flex-wrap gap-1 mb-3">
+                <span class="text-xs bg-blue-50 px-2 py-1 rounded-full text-blue-600">해변 접근성</span>
+                <span class="text-xs bg-yellow-50 px-2 py-1 rounded-full text-yellow-600">일출 명소</span>
+                <span class="text-xs bg-green-50 px-2 py-1 rounded-full text-green-600">데크 사이트</span>
+              </div>
+              <p class="text-sm text-gray-600 mb-3">동해안 바다가 보이는 오션뷰, 해수욕장 도보 3분, 일출 명소</p>
+              <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
+                <i class="ri-map-pin-line"></i>
+                <span>강원도 강릉시 주문진읍 해안로 123</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-primary font-medium">₩100,000~</span>
+                <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/b17e06a2-c8bb-4255-901e-710cba572e47?accommodation=양평벚꽃마을캠핑장"
+                  data-readdy="true"
+                  class="px-4 py-2 bg-primary text-white !rounded-button text-sm cursor-pointer pulse-on-hover inline-block no-underline hover:bg-primary/90 transition-colors">예약하기</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 여름 캠핑 팁 -->
+      <div class="px-4 py-4 bg-gray-50">
+        <h3 class="text-lg font-medium mb-4">여름 캠핑 준비 팁</h3>
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm mb-4">
+          <button class="w-full flex justify-between items-center p-4 cursor-pointer accordion-toggle">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                <i class="ri-list-check-2 text-blue-600"></i>
+              </div>
+              <span class="font-medium">여름 캠핑 준비물 체크리스트</span>
+            </div>
+            <i class="ri-arrow-down-s-line text-gray-400"></i>
+          </button>
+          <div class="accordion-content px-4 pb-4">
+            <div class="pl-11 text-sm text-gray-600 space-y-2">
+              <p>1. 모기 및 벌레 퇴치제 (필수!)</p>
+              <p>2. 선크림과 자외선 차단제</p>
+              <p>3. 휴대용 선풍기와 아이스박스</p>
+              <p>4. 그늘막과 타프 (햇빛 차단용)</p>
+              <p>5. 물놀이 용품 (수영복, 튜브 등)</p>
+              <p>6. 시원한 매트와 얇은 침낭</p>
+              <p>7. 갑작스런 소나기 대비 방수 용품</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm mb-4">
+          <button class="w-full flex justify-between items-center p-4 cursor-pointer accordion-toggle">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
+                <i class="ri-information-line text-yellow-600"></i>
+              </div>
+              <span class="font-medium">여름 캠핑 주의사항</span>
+            </div>
+            <i class="ri-arrow-down-s-line text-gray-400"></i>
+          </button>
+          <div class="accordion-content px-4 pb-4">
+            <div class="pl-11 text-sm text-gray-600 space-y-2">
+              <p>1. 식중독 예방을 위해 음식 보관에 주의하세요.</p>
+              <p>2. 폭염 시간대(오후 1-4시)에는 그늘에서 휴식하세요.</p>
+              <p>3. 계곡 물놀이 시 안전 수칙을 준수하세요.</p>
+              <p>4. 갑작스런 호우와 낙뢰에 대비하세요.</p>
+              <p>5. 자외선 차단제를 2-3시간마다 발라주세요.</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+          <button class="w-full flex justify-between items-center p-4 cursor-pointer accordion-toggle">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 bg-cyan-100 rounded-full flex items-center justify-center">
+                <i class="ri-water-flash-line text-cyan-600"></i>
+              </div>
+              <span class="font-medium">여름 캠핑 추천 활동</span>
+            </div>
+            <i class="ri-arrow-down-s-line text-gray-400"></i>
+          </button>
+          <div class="accordion-content px-4 pb-4">
+            <div class="pl-11 text-sm text-gray-600 space-y-2">
+              <p>1. 계곡/해변 물놀이</p>
+              <p>2. 야간 별자리 관찰 (여름철 별자리)</p>
+              <p>3. 바베큐 파티</p>
+              <p>4. 캠핑장 주변 트레킹</p>
+              <p>5. 캠핑장 내 물총 놀이</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 가을 계절 컨텐츠 -->
+    <div id="autumn-content" class="season-content hidden">
+      <!-- 계절 소개 -->
+      <div class="px-4 py-3 bg-gradient-to-r from-orange-50 to-amber-50 mb-4">
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-sm">
+            <i class="ri-leaf-line text-orange-500"></i>
+          </div>
+          <h2 class="text-lg font-medium">가을 캠핑의 매력</h2>
+        </div>
+        <p class="text-sm text-gray-700 mb-3">붉게 물든 단풍과 선선한 바람, 맑은 하늘까지. 가을 캠핑은 자연의 아름다움을 만끽할 수 있는 최고의 계절입니다.</p>
+        <div class="flex gap-2">
+          <span class="text-xs bg-white px-3 py-1 rounded-full text-gray-700 shadow-sm">단풍 구경</span>
+          <span class="text-xs bg-white px-3 py-1 rounded-full text-gray-700 shadow-sm">선선한 날씨</span>
+          <span class="text-xs bg-white px-3 py-1 rounded-full text-gray-700 shadow-sm">캠프파이어</span>
+        </div>
+      </div>
+      <!-- 추천 캠핑장 목록 -->
+      <div class="px-4 mb-6">
+        <h3 class="text-lg font-medium mb-4">가을 추천 캠핑장</h3>
+        <div class="space-y-4">
+          <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+            <img
+              src="https://readdy.ai/api/search-image?query=Autumn%20camping%20in%20Korea%20with%20colorful%20fall%20foliage%2C%20tents%20surrounded%20by%20red%20and%20orange%20trees%2C%20beautiful%20mountain%20view%2C%20professional%20photography&width=800&height=400&seq=207&orientation=landscape"
+              class="w-full h-48 object-cover" alt="가을 캠핑장">
+            <div class="p-4">
+              <div class="flex justify-between items-start mb-2">
+                <div>
+                  <h4 class="font-medium">내장산 단풍 캠핑장</h4>
+                  <div class="flex items-center gap-1 mt-1">
+                    <div class="flex text-yellow-400">
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-half-fill text-sm"></i>
+                    </div>
+                    <span class="text-xs text-gray-500">(189)</span>
+                  </div>
+                </div>
+                <button class="w-8 h-8 flex items-center justify-center text-gray-400 cursor-pointer">
+                  <i class="ri-heart-line text-xl"></i>
+                </button>
+              </div>
+              <div class="flex flex-wrap gap-1 mb-3">
+                <span class="text-xs bg-orange-50 px-2 py-1 rounded-full text-orange-600">단풍 명소</span>
+                <span class="text-xs bg-green-50 px-2 py-1 rounded-full text-green-600">국립공원</span>
+                <span class="text-xs bg-red-50 px-2 py-1 rounded-full text-red-600">캠프파이어</span>
+              </div>
+              <p class="text-sm text-gray-600 mb-3">내장산 국립공원 입구에 위치, 단풍 절정기 10월 중순~11월 초 추천</p>
+              <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
+                <i class="ri-map-pin-line"></i>
+                <span>전라북도 정읍시 내장산로 256</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-primary font-medium">₩80,000~</span>
+                <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/b17e06a2-c8bb-4255-901e-710cba572e47?accommodation=양평벚꽃마을캠핑장"
+                  data-readdy="true"
+                  class="px-4 py-2 bg-primary text-white !rounded-button text-sm cursor-pointer pulse-on-hover inline-block no-underline hover:bg-primary/90 transition-colors">예약하기</a>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+            <img
+              src="https://readdy.ai/api/search-image?query=Autumn%20camping%20in%20Korea%20with%20mountain%20view%2C%20tents%20near%20lake%2C%20beautiful%20fall%20colors%2C%20professional%20photography&width=800&height=400&seq=208&orientation=landscape"
+              class="w-full h-48 object-cover" alt="가을 캠핑장">
+            <div class="p-4">
+              <div class="flex justify-between items-start mb-2">
+                <div>
+                  <h4 class="font-medium">설악산 단풍 글램핑</h4>
+                  <div class="flex items-center gap-1 mt-1">
+                    <div class="flex text-yellow-400">
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-line text-sm"></i>
+                    </div>
+                    <span class="text-xs text-gray-500">(112)</span>
+                  </div>
+                </div>
+                <button class="w-8 h-8 flex items-center justify-center text-gray-400 cursor-pointer">
+                  <i class="ri-heart-line text-xl"></i>
+                </button>
+              </div>
+              <div class="flex flex-wrap gap-1 mb-3">
+                <span class="text-xs bg-purple-50 px-2 py-1 rounded-full text-purple-600">글램핑</span>
+                <span class="text-xs bg-orange-50 px-2 py-1 rounded-full text-orange-600">단풍 뷰</span>
+                <span class="text-xs bg-blue-50 px-2 py-1 rounded-full text-blue-600">온수 욕조</span>
+              </div>
+              <p class="text-sm text-gray-600 mb-3">설악산 단풍을 감상할 수 있는 프라이빗 글램핑, 개별 온수 욕조 완비</p>
+              <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
+                <i class="ri-map-pin-line"></i>
+                <span>강원도 속초시 설악산로 458</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-primary font-medium">₩150,000~</span>
+                <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/b17e06a2-c8bb-4255-901e-710cba572e47?accommodation=양평벚꽃마을캠핑장"
+                  data-readdy="true"
+                  class="px-4 py-2 bg-primary text-white !rounded-button text-sm cursor-pointer pulse-on-hover inline-block no-underline hover:bg-primary/90 transition-colors">예약하기</a>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+            <img
+              src="https://readdy.ai/api/search-image?query=Autumn%20camping%20in%20Korea%20with%20riverside%20view%2C%20tents%20near%20river%2C%20beautiful%20fall%20colors%2C%20professional%20photography&width=800&height=400&seq=209&orientation=landscape"
+              class="w-full h-48 object-cover" alt="가을 캠핑장">
+            <div class="p-4">
+              <div class="flex justify-between items-start mb-2">
+                <div>
+                  <h4 class="font-medium">남한강 오토캠핑장</h4>
+                  <div class="flex items-center gap-1 mt-1">
+                    <div class="flex text-yellow-400">
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-half-fill text-sm"></i>
+                    </div>
+                    <span class="text-xs text-gray-500">(156)</span>
+                  </div>
+                </div>
+                <button class="w-8 h-8 flex items-center justify-center text-gray-400 cursor-pointer">
+                  <i class="ri-heart-line text-xl"></i>
+                </button>
+              </div>
+              <div class="flex flex-wrap gap-1 mb-3">
+                <span class="text-xs bg-blue-50 px-2 py-1 rounded-full text-blue-600">강변 뷰</span>
+                <span class="text-xs bg-yellow-50 px-2 py-1 rounded-full text-yellow-600">오토캠핑</span>
+                <span class="text-xs bg-green-50 px-2 py-1 rounded-full text-green-600">자전거 도로</span>
+              </div>
+              <p class="text-sm text-gray-600 mb-3">남한강변 단풍과 함께하는 캠핑, 자전거 도로 인접, 넓은 사이트</p>
+              <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
+                <i class="ri-map-pin-line"></i>
+                <span>경기도 여주시 강변로 325</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-primary font-medium">₩90,000~</span>
+                <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/b17e06a2-c8bb-4255-901e-710cba572e47?accommodation=양평벚꽃마을캠핑장"
+                  data-readdy="true"
+                  class="px-4 py-2 bg-primary text-white !rounded-button text-sm cursor-pointer pulse-on-hover inline-block no-underline hover:bg-primary/90 transition-colors">예약하기</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 가을 캠핑 팁 -->
+      <div class="px-4 py-4 bg-gray-50">
+        <h3 class="text-lg font-medium mb-4">가을 캠핑 준비 팁</h3>
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm mb-4">
+          <button class="w-full flex justify-between items-center p-4 cursor-pointer accordion-toggle">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
+                <i class="ri-list-check-2 text-orange-600"></i>
+              </div>
+              <span class="font-medium">가을 캠핑 준비물 체크리스트</span>
+            </div>
+            <i class="ri-arrow-down-s-line text-gray-400"></i>
+          </button>
+          <div class="accordion-content px-4 pb-4">
+            <div class="pl-11 text-sm text-gray-600 space-y-2">
+              <p>1. 보온성 좋은 침낭 (밤 기온 하락 대비)</p>
+              <p>2. 두꺼운 패딩 매트</p>
+              <p>3. 긴팔 옷과 얇은 패딩 또는 플리스</p>
+              <p>4. 핫팩과 보온병</p>
+              <p>5. 방풍 기능이 있는 텐트</p>
+              <p>6. 캠프파이어용 장작 (허용된 캠핑장에서만)</p>
+              <p>7. 가을 산행용 등산화 (단풍 트레킹용)</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm mb-4">
+          <button class="w-full flex justify-between items-center p-4 cursor-pointer accordion-toggle">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center">
+                <i class="ri-information-line text-amber-600"></i>
+              </div>
+              <span class="font-medium">가을 캠핑 주의사항</span>
+            </div>
+            <i class="ri-arrow-down-s-line text-gray-400"></i>
+          </button>
+          <div class="accordion-content px-4 pb-4">
+            <div class="pl-11 text-sm text-gray-600 space-y-2">
+              <p>1. 일교차가 크므로 옷차림에 신경쓰세요.</p>
+              <p>2. 낙엽 위에 텐트를 설치할 경우 바닥 점검을 철저히 하세요.</p>
+              <p>3. 가을철 벌 출몰에 주의하세요.</p>
+              <p>4. 해가 일찍 지므로 텐트 설치 시간을 고려하세요.</p>
+              <p>5. 가을 산불 예방에 주의하세요.</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+          <button class="w-full flex justify-between items-center p-4 cursor-pointer accordion-toggle">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
+                <i class="ri-fire-line text-red-600"></i>
+              </div>
+              <span class="font-medium">가을 캠핑 추천 활동</span>
+            </div>
+            <i class="ri-arrow-down-s-line text-gray-400"></i>
+          </button>
+          <div class="accordion-content px-4 pb-4">
+            <div class="pl-11 text-sm text-gray-600 space-y-2">
+              <p>1. 단풍 트레킹 및 사진 촬영</p>
+              <p>2. 캠프파이어 (허용된 캠핑장에서만)</p>
+              <p>3. 가을 제철 음식 요리 (고구마, 밤 등)</p>
+              <p>4. 별자리 관찰 (맑은 가을 하늘)</p>
+              <p>5. 낙엽 공예 및 자연 미술 활동</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 겨울 계절 컨텐츠 -->
+    <div id="winter-content" class="season-content hidden">
+      <!-- 계절 소개 -->
+      <div class="px-4 py-3 bg-gradient-to-r from-blue-50 to-indigo-50 mb-4">
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-sm">
+            <i class="ri-snowy-line text-blue-500"></i>
+          </div>
+          <h2 class="text-lg font-medium">겨울 캠핑의 매력</h2>
+        </div>
+        <p class="text-sm text-gray-700 mb-3">하얀 눈 내리는 풍경 속에서 즐기는 캠핑은 색다른 낭만을 선사합니다. 따뜻한 텐트 안에서 바라보는 설경은 잊지 못할 추억이 됩니다.
+        </p>
+        <div class="flex gap-2">
+          <span class="text-xs bg-white px-3 py-1 rounded-full text-gray-700 shadow-sm">설경 감상</span>
+          <span class="text-xs bg-white px-3 py-1 rounded-full text-gray-700 shadow-sm">따뜻한 음료</span>
+          <span class="text-xs bg-white px-3 py-1 rounded-full text-gray-700 shadow-sm">겨울 스포츠</span>
+        </div>
+      </div>
+      <!-- 추천 캠핑장 목록 -->
+      <div class="px-4 mb-6">
+        <h3 class="text-lg font-medium mb-4">겨울 추천 캠핑장</h3>
+        <div class="space-y-4">
+          <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+            <img
+              src="https://readdy.ai/api/search-image?query=Winter%20camping%20in%20Korea%20with%20snow%2C%20cozy%20tent%20setup%20with%20warm%20lighting%2C%20snowy%20landscape%2C%20professional%20photography&width=800&height=400&seq=210&orientation=landscape"
+              class="w-full h-48 object-cover" alt="겨울 캠핑장">
+            <div class="p-4">
+              <div class="flex justify-between items-start mb-2">
+                <div>
+                  <h4 class="font-medium">평창 눈꽃 글램핑</h4>
+                  <div class="flex items-center gap-1 mt-1">
+                    <div class="flex text-yellow-400">
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-half-fill text-sm"></i>
+                    </div>
+                    <span class="text-xs text-gray-500">(167)</span>
+                  </div>
+                </div>
+                <button class="w-8 h-8 flex items-center justify-center text-gray-400 cursor-pointer">
+                  <i class="ri-heart-line text-xl"></i>
+                </button>
+              </div>
+              <div class="flex flex-wrap gap-1 mb-3">
+                <span class="text-xs bg-purple-50 px-2 py-1 rounded-full text-purple-600">글램핑</span>
+                <span class="text-xs bg-blue-50 px-2 py-1 rounded-full text-blue-600">온돌 바닥</span>
+                <span class="text-xs bg-red-50 px-2 py-1 rounded-full text-red-600">스키장 인접</span>
+              </div>
+              <p class="text-sm text-gray-600 mb-3">온돌 바닥 난방 글램핑, 스키장 5분 거리, 눈꽃 뷰 최고</p>
+              <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
+                <i class="ri-map-pin-line"></i>
+                <span>강원도 평창군 봉평면 태기로 258</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-primary font-medium">₩180,000~</span>
+                <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/b17e06a2-c8bb-4255-901e-710cba572e47?accommodation=양평벚꽃마을캠핑장"
+                  data-readdy="true"
+                  class="px-4 py-2 bg-primary text-white !rounded-button text-sm cursor-pointer pulse-on-hover inline-block no-underline hover:bg-primary/90 transition-colors">예약하기</a>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+            <img
+              src="https://readdy.ai/api/search-image?query=Winter%20camping%20in%20Korea%20with%20heated%20dome%20tents%2C%20snowy%20forest%20surroundings%2C%20professional%20photography&width=800&height=400&seq=211&orientation=landscape"
+              class="w-full h-48 object-cover" alt="겨울 캠핑장">
+            <div class="p-4">
+              <div class="flex justify-between items-start mb-2">
+                <div>
+                  <h4 class="font-medium">홍천 알파인 돔텐트</h4>
+                  <div class="flex items-center gap-1 mt-1">
+                    <div class="flex text-yellow-400">
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-line text-sm"></i>
+                    </div>
+                    <span class="text-xs text-gray-500">(132)</span>
+                  </div>
+                </div>
+                <button class="w-8 h-8 flex items-center justify-center text-gray-400 cursor-pointer">
+                  <i class="ri-heart-line text-xl"></i>
+                </button>
+              </div>
+              <div class="flex flex-wrap gap-1 mb-3">
+                <span class="text-xs bg-indigo-50 px-2 py-1 rounded-full text-indigo-600">돔텐트</span>
+                <span class="text-xs bg-red-50 px-2 py-1 rounded-full text-red-600">난방 완비</span>
+                <span class="text-xs bg-green-50 px-2 py-1 rounded-full text-green-600">설경 뷰</span>
+              </div>
+              <p class="text-sm text-gray-600 mb-3">투명 돔텐트에서 즐기는 설경, 완벽한 난방 시스템, 겨울 캠핑 최적화</p>
+              <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
+                <i class="ri-map-pin-line"></i>
+                <span>강원도 홍천군 서면 한치골길 356</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-primary font-medium">₩160,000~</span>
+                <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/b17e06a2-c8bb-4255-901e-710cba572e47?accommodation=양평벚꽃마을캠핑장"
+                  data-readdy="true"
+                  class="px-4 py-2 bg-primary text-white !rounded-button text-sm cursor-pointer pulse-on-hover inline-block no-underline hover:bg-primary/90 transition-colors">예약하기</a>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+            <img
+              src="https://readdy.ai/api/search-image?query=Winter%20camping%20in%20Korea%20with%20cabin%20style%20accommodation%2C%20snow%20covered%20landscape%2C%20professional%20photography&width=800&height=400&seq=212&orientation=landscape"
+              class="w-full h-48 object-cover" alt="겨울 캠핑장">
+            <div class="p-4">
+              <div class="flex justify-between items-start mb-2">
+                <div>
+                  <h4 class="font-medium">태백 눈꽃 캐빈</h4>
+                  <div class="flex items-center gap-1 mt-1">
+                    <div class="flex text-yellow-400">
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                      <i class="ri-star-fill text-sm"></i>
+                    </div>
+                    <span class="text-xs text-gray-500">(198)</span>
+                  </div>
+                </div>
+                <button class="w-8 h-8 flex items-center justify-center text-gray-400 cursor-pointer">
+                  <i class="ri-heart-line text-xl"></i>
+                </button>
+              </div>
+              <div class="flex flex-wrap gap-1 mb-3">
+                <span class="text-xs bg-yellow-50 px-2 py-1 rounded-full text-yellow-600">캐빈하우스</span>
+                <span class="text-xs bg-blue-50 px-2 py-1 rounded-full text-blue-600">벽난로</span>
+                <span class="text-xs bg-red-50 px-2 py-1 rounded-full text-red-600">온천 인접</span>
+              </div>
+              <p class="text-sm text-gray-600 mb-3">아늑한 통나무 캐빈, 실내 벽난로, 인근 온천 이용 가능</p>
+              <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
+                <i class="ri-map-pin-line"></i>
+                <span>강원도 태백시 서학로 427</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-primary font-medium">₩200,000~</span>
+                <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/b17e06a2-c8bb-4255-901e-710cba572e47?accommodation=양평벚꽃마을캠핑장"
+                  data-readdy="true"
+                  class="px-4 py-2 bg-primary text-white !rounded-button text-sm cursor-pointer pulse-on-hover inline-block no-underline hover:bg-primary/90 transition-colors">예약하기</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 겨울 캠핑 팁 -->
+      <div class="px-4 py-4 bg-gray-50">
+        <h3 class="text-lg font-medium mb-4">겨울 캠핑 준비 팁</h3>
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm mb-4">
+          <button class="w-full flex justify-between items-center p-4 cursor-pointer accordion-toggle">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                <i class="ri-list-check-2 text-blue-600"></i>
+              </div>
+              <span class="font-medium">겨울 캠핑 준비물 체크리스트</span>
+            </div>
+            <i class="ri-arrow-down-s-line text-gray-400"></i>
+          </button>
+          <div class="accordion-content px-4 pb-4">
+            <div class="pl-11 text-sm text-gray-600 space-y-2">
+              <p>1. 동계용 침낭 (-10℃ 이하 견디는 제품)</p>
+              <p>2. 두꺼운 패딩 매트 또는 에어 매트</p>
+              <p>3. 보온병과 핫팩 (다량)</p>
+              <p>4. 방한용 의류 (내복, 패딩, 방한화, 장갑 등)</p>
+              <p>5. 4계절용 텐트와 추가 보온재</p>
+              <p>6. 고효율 버너와 충분한 연료</p>
+              <p>7. 전기 히터 (전기 사용 가능 캠핑장)</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm mb-4">
+          <button class="w-full flex justify-between items-center p-4 cursor-pointer accordion-toggle">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
+                <i class="ri-information-line text-indigo-600"></i>
+              </div>
+              <span class="font-medium">겨울 캠핑 주의사항</span>
+            </div>
+            <i class="ri-arrow-down-s-line text-gray-400"></i>
+          </button>
+          <div class="accordion-content px-4 pb-4">
+            <div class="pl-11 text-sm text-gray-600 space-y-2">
+              <p>1. 일산화탄소 중독 위험에 주의하세요. (텐트 내 환기 필수)</p>
+              <p>2. 동파 방지를 위해 수도관과 물통을 관리하세요.</p>
+              <p>3. 눈이 내릴 경우 텐트 위 눈을 주기적으로 제거하세요.</p>
+              <p>4. 화재 위험이 높으므로 난방 기구 사용에 주의하세요.</p>
+              <p>5. 체온 유지에 신경쓰고 저체온증 증상을 알아두세요.</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+          <button class="w-full flex justify-between items-center p-4 cursor-pointer accordion-toggle">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 bg-cyan-100 rounded-full flex items-center justify-center">
+                <i class="ri-snowy-line text-cyan-600"></i>
+              </div>
+              <span class="font-medium">겨울 캠핑 추천 활동</span>
+            </div>
+            <i class="ri-arrow-down-s-line text-gray-400"></i>
+          </button>
+          <div class="accordion-content px-4 pb-4">
+            <div class="pl-11 text-sm text-gray-600 space-y-2">
+              <p>1. 눈사람 만들기, 눈싸움</p>
+              <p>2. 인근 스키장 이용</p>
+              <p>3. 따뜻한 겨울 음료 만들기 (핫초코, 글루바인 등)</p>
+              <p>4. 겨울 별자리 관찰 (맑은 겨울 밤하늘)</p>
+              <p>5. 캠핑장 주변 설경 사진 촬영</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <nav class="fixed bottom-0 left-0 right-0 bg-white border-t">
+    <div class="grid grid-cols-5 py-1">
+      <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/121c183c-fd8c-4b74-afb5-ff594d9bad05"
+        data-readdy="true" class="flex flex-col items-center gap-1 cursor-pointer">
+        <div class="w-6 h-6 flex items-center justify-center">
+          <i class="ri-home-5-line text-lg"></i>
+        </div>
+        <span class="text-[10px]">홈</span>
+      </a>
+      <button class="flex flex-col items-center gap-1 cursor-pointer">
+        <div class="w-6 h-6 flex items-center justify-center">
+          <i class="ri-search-line text-lg"></i>
+        </div>
+        <span class="text-[10px]">검색</span>
+      </button>
+      <button class="flex flex-col items-center gap-1 cursor-pointer">
+        <div class="w-6 h-6 flex items-center justify-center">
+          <i class="ri-heart-3-line text-lg"></i>
+        </div>
+        <span class="text-[10px]">찜목록</span>
+      </button>
+      <button class="flex flex-col items-center gap-1 cursor-pointer">
+        <div class="w-6 h-6 flex items-center justify-center">
+          <i class="ri-calendar-check-line text-lg"></i>
+        </div>
+        <span class="text-[10px]">예약내역</span>
+      </button>
+      <button class="flex flex-col items-center gap-1 cursor-pointer">
+        <div class="w-6 h-6 flex items-center justify-center">
+          <i class="ri-user-3-line text-lg"></i>
+        </div>
+        <span class="text-[10px]">마이페이지</span>
+      </button>
+    </div>
+  </nav>
+  <script id="seasonTabScript">
+    document.addEventListener('DOMContentLoaded', function () {
+      const seasonTabs = document.querySelectorAll('.season-tab');
+      const seasonContents = document.querySelectorAll('.season-content');
+      seasonTabs.forEach(tab => {
+        tab.addEventListener('click', function () {
+          const season = this.dataset.season;
+          // 모든 탭 비활성화
+          seasonTabs.forEach(t => {
+            t.classList.remove('season-tab-active');
+            t.classList.add('text-gray-500');
+          });
+          // 클릭한 탭 활성화
+          this.classList.add('season-tab-active');
+          this.classList.remove('text-gray-500');
+          // 모든 컨텐츠 숨기기
+          seasonContents.forEach(content => {
+            content.classList.add('hidden');
+          });
+          // 해당 시즌 컨텐츠 보이기
+          document.getElementById(`${season}-content`).classList.remove('hidden');
+        });
+      });
+    });
+  </script>
+  <script id="accordionScript">
+    document.addEventListener('DOMContentLoaded', function () {
+      const accordionToggles = document.querySelectorAll('.accordion-toggle');
+      accordionToggles.forEach(toggle => {
+        toggle.addEventListener('click', function () {
+          const content = this.nextElementSibling;
+          const icon = this.querySelector('i.ri-arrow-down-s-line');
+          if (content.classList.contains('active')) {
+            content.classList.remove('active');
+            icon.classList.remove('ri-arrow-up-s-line');
+            icon.classList.add('ri-arrow-down-s-line');
+          } else {
+            content.classList.add('active');
+            icon.classList.remove('ri-arrow-down-s-line');
+            icon.classList.add('ri-arrow-up-s-line');
+          }
+        });
+      });
+    });
+  </script>
+  <script id="heartToggleScript">
+    document.addEventListener('DOMContentLoaded', function () {
+      const heartButtons = document.querySelectorAll('button:has(i.ri-heart-line)');
+      heartButtons.forEach(button => {
+        button.addEventListener('click', function () {
+          const icon = this.querySelector('i');
+          if (icon.classList.contains('ri-heart-line')) {
+            icon.classList.remove('ri-heart-line');
+            icon.classList.add('ri-heart-fill');
+            icon.classList.add('text-red-500');
+          } else {
+            icon.classList.remove('ri-heart-fill');
+            icon.classList.remove('text-red-500');
+            icon.classList.add('ri-heart-line');
+          }
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=375px, initial-scale=1.0">
+  <title>날씨 예측 - ThankQ Camping</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#FF7A45',
+            secondary: '#4A90E2'
+          },
+          borderRadius: {
+            'none': '0px',
+            'sm': '4px',
+            DEFAULT: '8px',
+            'md': '12px',
+            'lg': '16px',
+            'xl': '20px',
+            '2xl': '24px',
+            '3xl': '32px',
+            'full': '9999px',
+            'button': '8px'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :where([class^="ri-"])::before {
+      content: "\f3c2";
+    }
+
+    .search-input::-webkit-search-cancel-button {
+      display: none;
+    }
+  </style>
+</head>
+
+<body class="  min-h-[762px] mx-auto bg-gray-50">
+  <header class="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
+    <div class="flex items-center justify-between px-4 py-3">
+      <a href="./index.html" data-readdy="true" class="w-8 h-8 flex items-center justify-center cursor-pointer">
+        <i class="ri-arrow-left-line text-xl"></i>
+      </a>
+      <h1 class="text-lg font-medium">날씨 예측</h1>
+      <button class="w-8 h-8 flex items-center justify-center cursor-pointer">
+        <i class="ri-share-line text-xl"></i>
+      </button>
+    </div>
+    <div class="px-4 pb-3">
+      <div class="relative">
+        <input type="search" id="locationSearch"
+          class="w-full h-12 pl-12 pr-16 text-sm bg-gray-50 border-none !rounded-button search-input"
+          placeholder="지역을 검색하세요">
+        <div class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center">
+          <i class="ri-search-line text-gray-400"></i>
+        </div>
+        <button id="currentLocationBtn"
+          class="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center bg-primary text-white !rounded-full cursor-pointer">
+          <i class="ri-map-pin-fill text-sm"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+  <main class="pt-32 pb-20">
+    <div class="px-4">
+      <div class="bg-white rounded-xl p-6 mb-6 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h2 class="text-xl font-medium">서울특별시 강남구</h2>
+            <p class="text-sm text-gray-500">현재 위치</p>
+          </div>
+          <button id="refreshBtn"
+            class="w-10 h-10 flex items-center justify-center bg-gray-50 !rounded-full cursor-pointer">
+            <i class="ri-refresh-line text-lg"></i>
+          </button>
+        </div>
+        <div class="flex items-center gap-4 mb-6">
+          <div class="w-16 h-16 flex items-center justify-center">
+            <i class="ri-sun-line text-4xl text-yellow-500"></i>
+          </div>
+          <div>
+            <div class="text-3xl font-light mb-1">23°C</div>
+            <div class="text-sm text-gray-600">체감온도 25°C</div>
+          </div>
+          <div class="ml-auto text-right">
+            <div class="text-sm text-gray-600 mb-1">맑음</div>
+            <div class="text-xs text-gray-500">습도 65%</div>
+          </div>
+        </div>
+        <div class="grid grid-cols-4 gap-4 text-center">
+          <div>
+            <i class="ri-eye-line text-lg text-gray-400 mb-1"></i>
+            <div class="text-xs text-gray-500">가시거리</div>
+            <div class="text-sm font-medium">10km</div>
+          </div>
+          <div>
+            <i class="ri-drop-line text-lg text-blue-400 mb-1"></i>
+            <div class="text-xs text-gray-500">강수확률</div>
+            <div class="text-sm font-medium">10%</div>
+          </div>
+          <div>
+            <i class="ri-windy-line text-lg text-gray-400 mb-1"></i>
+            <div class="text-xs text-gray-500">바람</div>
+            <div class="text-sm font-medium">2m/s</div>
+          </div>
+          <div>
+            <i class="ri-sun-line text-lg text-orange-400 mb-1"></i>
+            <div class="text-xs text-gray-500">자외선</div>
+            <div class="text-sm font-medium">보통</div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl p-4 mb-6 shadow-sm">
+        <h3 class="text-lg font-medium mb-4">시간별 날씨</h3>
+        <div class="flex gap-4 overflow-x-auto pb-2">
+          <div class="min-w-[60px] text-center">
+            <div class="text-xs text-gray-500 mb-2">지금</div>
+            <i class="ri-sun-line text-2xl text-yellow-500 mb-2"></i>
+            <div class="text-sm font-medium mb-1">23°</div>
+            <div class="text-xs text-blue-500">10%</div>
+          </div>
+          <div class="min-w-[60px] text-center">
+            <div class="text-xs text-gray-500 mb-2">14시</div>
+            <i class="ri-sun-line text-2xl text-yellow-500 mb-2"></i>
+            <div class="text-sm font-medium mb-1">25°</div>
+            <div class="text-xs text-blue-500">5%</div>
+          </div>
+          <div class="min-w-[60px] text-center">
+            <div class="text-xs text-gray-500 mb-2">15시</div>
+            <i class="ri-sun-cloudy-line text-2xl text-blue-400 mb-2"></i>
+            <div class="text-sm font-medium mb-1">26°</div>
+            <div class="text-xs text-blue-500">15%</div>
+          </div>
+          <div class="min-w-[60px] text-center">
+            <div class="text-xs text-gray-500 mb-2">16시</div>
+            <i class="ri-sun-cloudy-line text-2xl text-blue-400 mb-2"></i>
+            <div class="text-sm font-medium mb-1">24°</div>
+            <div class="text-xs text-blue-500">20%</div>
+          </div>
+          <div class="min-w-[60px] text-center">
+            <div class="text-xs text-gray-500 mb-2">17시</div>
+            <i class="ri-cloudy-line text-2xl text-gray-400 mb-2"></i>
+            <div class="text-sm font-medium mb-1">22°</div>
+            <div class="text-xs text-blue-500">30%</div>
+          </div>
+          <div class="min-w-[60px] text-center">
+            <div class="text-xs text-gray-500 mb-2">18시</div>
+            <i class="ri-cloudy-line text-2xl text-gray-400 mb-2"></i>
+            <div class="text-sm font-medium mb-1">21°</div>
+            <div class="text-xs text-blue-500">25%</div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-4 mb-6">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+            <i class="ri-tent-line text-xl text-green-600"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-medium">캠핑 적합도</h3>
+            <p class="text-sm text-gray-600">오늘의 캠핑 지수</p>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl p-4 mb-4">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-sm font-medium">종합 지수</span>
+            <span class="text-lg font-bold text-green-600">85점</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-green-500 h-2 rounded-full" style="width: 85%"></div>
+          </div>
+          <p class="text-xs text-gray-600 mt-2">캠핑하기 매우 좋은 날씨입니다</p>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="bg-white rounded-xl p-3">
+            <div class="flex items-center gap-2 mb-2">
+              <i class="ri-temp-hot-line text-primary"></i>
+              <span class="text-sm font-medium">기온</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-gray-600">적정</span>
+              <span class="text-sm font-bold text-green-600">90점</span>
+            </div>
+          </div>
+          <div class="bg-white rounded-xl p-3">
+            <div class="flex items-center gap-2 mb-2">
+              <i class="ri-drop-line text-blue-500"></i>
+              <span class="text-sm font-medium">강수</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-gray-600">낮음</span>
+              <span class="text-sm font-bold text-green-600">95점</span>
+            </div>
+          </div>
+          <div class="bg-white rounded-xl p-3">
+            <div class="flex items-center gap-2 mb-2">
+              <i class="ri-windy-line text-gray-500"></i>
+              <span class="text-sm font-medium">바람</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-gray-600">약함</span>
+              <span class="text-sm font-bold text-green-600">80점</span>
+            </div>
+          </div>
+          <div class="bg-white rounded-xl p-3">
+            <div class="flex items-center gap-2 mb-2">
+              <i class="ri-water-percent-line text-secondary"></i>
+              <span class="text-sm font-medium">습도</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-gray-600">보통</span>
+              <span class="text-sm font-bold text-yellow-600">75점</span>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl p-4 mt-4">
+          <div class="flex items-center gap-2 mb-2">
+            <i class="ri-robot-line text-primary"></i>
+            <span class="text-sm font-medium">AI 추천 시간</span>
+          </div>
+          <p class="text-xs text-gray-600">오후 2시~5시가 캠핑 설치에 가장 적합합니다</p>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl p-4 mb-6 shadow-sm">
+        <h3 class="text-lg font-medium mb-4">7일 예보</h3>
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <span class="text-sm font-medium w-12">오늘</span>
+              <i class="ri-sun-line text-xl text-yellow-500"></i>
+              <span class="text-sm text-gray-600">맑음</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-blue-500">10%</span>
+              <span class="text-sm">15° / 26°</span>
+            </div>
+          </div>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <span class="text-sm font-medium w-12">내일</span>
+              <i class="ri-sun-cloudy-line text-xl text-blue-400"></i>
+              <span class="text-sm text-gray-600">구름많음</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-blue-500">30%</span>
+              <span class="text-sm">17° / 24°</span>
+            </div>
+          </div>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <span class="text-sm font-medium w-12">목요일</span>
+              <i class="ri-cloudy-2-line text-xl text-gray-400"></i>
+              <span class="text-sm text-gray-600">흐림</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-blue-500">60%</span>
+              <span class="text-sm">16° / 22°</span>
+            </div>
+          </div>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <span class="text-sm font-medium w-12">금요일</span>
+              <i class="ri-rainy-line text-xl text-blue-600"></i>
+              <span class="text-sm text-gray-600">비</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-blue-500">80%</span>
+              <span class="text-sm">14° / 19°</span>
+            </div>
+          </div>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <span class="text-sm font-medium w-12">토요일</span>
+              <i class="ri-sun-cloudy-line text-xl text-blue-400"></i>
+              <span class="text-sm text-gray-600">구름많음</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-blue-500">40%</span>
+              <span class="text-sm">16° / 23°</span>
+            </div>
+          </div>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <span class="text-sm font-medium w-12">일요일</span>
+              <i class="ri-sun-line text-xl text-yellow-500"></i>
+              <span class="text-sm text-gray-600">맑음</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-blue-500">10%</span>
+              <span class="text-sm">18° / 25°</span>
+            </div>
+          </div>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <span class="text-sm font-medium w-12">월요일</span>
+              <i class="ri-sun-line text-xl text-yellow-500"></i>
+              <span class="text-sm text-gray-600">맑음</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-blue-500">5%</span>
+              <span class="text-sm">19° / 27°</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl p-4 mb-6 shadow-sm">
+        <h3 class="text-lg font-medium mb-4">강수량 예측</h3>
+        <div id="rainChart" class="h-48"></div>
+      </div>
+      <div class="bg-white rounded-xl p-4 mb-6 shadow-sm">
+        <h3 class="text-lg font-medium mb-4">바람 정보</h3>
+        <div class="grid grid-cols-2 gap-4 mb-4">
+          <div class="text-center">
+            <div class="w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center mx-auto mb-2">
+              <i class="ri-navigation-line text-2xl text-blue-500" style="transform: rotate(45deg);"></i>
+            </div>
+            <div class="text-sm font-medium">북동풍</div>
+            <div class="text-xs text-gray-500">풍향</div>
+          </div>
+          <div class="text-center">
+            <div class="w-16 h-16 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-2">
+              <span class="text-xl font-bold text-green-600">2.1</span>
+            </div>
+            <div class="text-sm font-medium">m/s</div>
+            <div class="text-xs text-gray-500">풍속</div>
+          </div>
+        </div>
+        <div id="windChart" class="h-32"></div>
+      </div>
+      <div class="bg-white rounded-xl p-4 mb-6 shadow-sm">
+        <h3 class="text-lg font-medium mb-4">일출/일몰</h3>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-full bg-orange-50 flex items-center justify-center">
+              <i class="ri-sun-line text-xl text-orange-500"></i>
+            </div>
+            <div>
+              <div class="text-sm font-medium">일출</div>
+              <div class="text-lg font-bold">06:42</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-full bg-purple-50 flex items-center justify-center">
+              <i class="ri-moon-line text-xl text-purple-500"></i>
+            </div>
+            <div>
+              <div class="text-sm font-medium">일몰</div>
+              <div class="text-lg font-bold">19:28</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl p-4 mb-6 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-medium">캠핑장 기상특보</h3>
+          <span class="text-xs text-gray-500">최근 업데이트: 10:30</span>
+        </div>
+        <div class="space-y-4">
+          <div class="bg-red-50 rounded-xl p-4">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+                <i class="ri-alert-line text-lg text-red-600"></i>
+              </div>
+              <div>
+                <h4 class="text-base font-medium text-red-700">산사태 주의 지역</h4>
+                <p class="text-sm text-red-600">강원도 및 경상북도 산간 지역</p>
+              </div>
+            </div>
+            <div class="space-y-2">
+              <div class="flex items-center gap-2 text-sm text-red-700">
+                <i class="ri-checkbox-circle-line"></i>
+                <span>설악산 국립공원 캠핑장</span>
+              </div>
+              <div class="flex items-center gap-2 text-sm text-red-700">
+                <i class="ri-checkbox-circle-line"></i>
+                <span>지리산 달궁 캠핑장</span>
+              </div>
+              <div class="flex items-center gap-2 text-sm text-red-700">
+                <i class="ri-checkbox-circle-line"></i>
+                <span>소백산 죽령 캠핑장</span>
+              </div>
+            </div>
+          </div>
+          <div class="bg-blue-50 rounded-xl p-4">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                <i class="ri-snowy-line text-lg text-blue-600"></i>
+              </div>
+              <div>
+                <h4 class="text-base font-medium text-blue-700">폭설 예상 지역</h4>
+                <p class="text-sm text-blue-600">강원도 산간 지역 (해발 700m 이상)</p>
+              </div>
+            </div>
+            <div class="space-y-2">
+              <div class="flex items-center gap-2 text-sm text-blue-700">
+                <i class="ri-checkbox-circle-line"></i>
+                <span>대관령 캠핑장 (예상 적설량: 25cm)</span>
+              </div>
+              <div class="flex items-center gap-2 text-sm text-blue-700">
+                <i class="ri-checkbox-circle-line"></i>
+                <span>용평 캠핑장 (예상 적설량: 20cm)</span>
+              </div>
+              <div class="flex items-center gap-2 text-sm text-blue-700">
+                <i class="ri-checkbox-circle-line"></i>
+                <span>홍천 무궁화 캠핑장 (예상 적설량: 15cm)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/11376e19-f449-4769-be4a-e89f78077e2d"
+    data-readdy="true">
+    <button id="fabBtn"
+      class="fixed bottom-24 right-4 w-14 h-14 bg-primary text-white !rounded-full shadow-lg flex items-center justify-center cursor-pointer">
+      <i class="ri-map-pin-fill text-xl"></i>
+    </button>
+  </a>
+  <script id="weatherScript">
+    document.addEventListener('DOMContentLoaded', function () {
+      const rainChart = echarts.init(document.getElementById('rainChart'));
+      const rainOption = {
+        grid: { top: 20, right: 20, bottom: 30, left: 40 },
+        xAxis: {
+          type: 'category',
+          data: ['00:00', '03:00', '06:00', '09:00', '12:00', '15:00', '18:00', '21:00'],
+          axisLabel: { fontSize: 10 }
+        },
+        yAxis: {
+          type: 'value',
+          name: 'mm',
+          nameTextStyle: { fontSize: 10 },
+          axisLabel: { fontSize: 10 }
+        },
+        series: [{
+          data: [0, 0, 0.2, 0.5, 0, 0, 1.2, 0.8],
+          type: 'bar',
+          itemStyle: { color: '#4A90E2' },
+          barWidth: '60%'
+        }]
+      };
+      rainChart.setOption(rainOption);
+      const windChart = echarts.init(document.getElementById('windChart'));
+      const windOption = {
+        grid: { top: 10, right: 20, bottom: 20, left: 40 },
+        xAxis: {
+          type: 'category',
+          data: ['06:00', '09:00', '12:00', '15:00', '18:00', '21:00'],
+          axisLabel: { fontSize: 10 }
+        },
+        yAxis: {
+          type: 'value',
+          name: 'm/s',
+          nameTextStyle: { fontSize: 10 },
+          axisLabel: { fontSize: 10 }
+        },
+        series: [{
+          data: [1.5, 2.1, 2.8, 3.2, 2.5, 1.8],
+          type: 'line',
+          smooth: true,
+          itemStyle: { color: '#FF7A45' },
+          lineStyle: { color: '#FF7A45' }
+        }]
+      };
+      windChart.setOption(windOption);
+    });
+  </script>
+  <script id="locationScript">
+    document.addEventListener('DOMContentLoaded', function () {
+      const currentLocationBtn = document.getElementById('currentLocationBtn');
+      const refreshBtn = document.getElementById('refreshBtn');
+      const fabBtn = document.getElementById('fabBtn');
+      const locationSearch = document.getElementById('locationSearch');
+      currentLocationBtn.addEventListener('click', function () {
+        this.innerHTML = '<i class="ri-loader-4-line text-sm animate-spin"></i>';
+        setTimeout(() => {
+          this.innerHTML = '<i class="ri-map-pin-fill text-sm"></i>';
+        }, 1500);
+      });
+      refreshBtn.addEventListener('click', function () {
+        this.innerHTML = '<i class="ri-loader-4-line text-lg animate-spin"></i>';
+        setTimeout(() => {
+          this.innerHTML = '<i class="ri-refresh-line text-lg"></i>';
+        }, 2000);
+      });
+      fabBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+      });
+      locationSearch.addEventListener('input', function () {
+        if (this.value.length > 0) {
+          console.log('검색:', this.value);
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

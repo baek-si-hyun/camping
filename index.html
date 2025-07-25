@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=375px, initial-scale=1.0">
+  <title>ThankQ Camping</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#FF7A45',
+            secondary: '#4A90E2'
+          },
+          borderRadius: {
+            'none': '0px',
+            'sm': '4px',
+            DEFAULT: '8px',
+            'md': '12px',
+            'lg': '16px',
+            'xl': '20px',
+            '2xl': '24px',
+            '3xl': '32px',
+            'full': '9999px',
+            'button': '8px'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :where([class^="ri-"])::before {
+      content: "\f3c2";
+    }
+
+    .search-input::-webkit-search-cancel-button {
+      display: none;
+    }
+  </style>
+</head>
+
+<body class="  min-h-[762px] mx-auto bg-white">
+  <header class="fixed top-0 left-0 right-0 z-50 bg-white">
+    <div class="flex items-center justify-between px-4 py-3">
+      <div class="h-8">
+        <img src="https://static.readdy.ai/image/8e132e14d40e39950729448e3ee1a5fe/02ba30866da6053b6048c04a7f5cc66d.png"
+          alt="DaeCamp" class="h-full">
+      </div>
+      <div class="flex items-center gap-2">
+        <a href="./login.html" data-readdy="true">
+          <button class="px-4 py-1.5 text-sm text-primary border border-primary !rounded-button">로그인</button>
+        </a>
+        <button id="menuButton" class="w-8 h-8 flex items-center justify-center">
+          <i class="ri-menu-line text-xl"></i>
+        </button>
+      </div>
+    </div>
+    <div class="px-4 pb-3">
+      <div class="relative">
+        <input type="search" class="w-full h-12 pl-12 pr-4 text-sm bg-gray-50 border-none !rounded-button search-input"
+          placeholder="올 봄엔 어디로 캠핑을 떠날까요?" readonly>
+        <div class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center">
+          <i class="ri-search-line text-gray-400"></i>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main class="pt-28 pb-20">
+    <div class="grid grid-cols-4 gap-6 px-4 mb-8">
+      <a href="./shop_list.html" data-readdy="true"
+        class="flex flex-col items-center gap-2 active:scale-95 transition-transform">
+        <div class="w-16 h-16 rounded-xl overflow-hidden shadow-sm">
+          <img
+            src="https://readdy.ai/api/search-image?query=3D%20rendered%20isometric%20camping%20tent%20icon%2C%20minimalist%20design%2C%20soft%20gradient%20colors%2C%20flat%20style%20with%20depth%2C%20centered%20composition%2C%20clean%20white%20background%2C%20modern%20UI%20icon&width=128&height=128&seq=31&orientation=squarish"
+            class="w-full h-full object-cover" alt="캠핑">
+        </div>
+        <span class="text-xs">캠핑</span>
+      </a>
+      <a href="./shop_list.html" data-readdy="true"
+        class="flex flex-col items-center gap-2 active:scale-95 transition-transform">
+        <div class="w-16 h-16 rounded-xl overflow-hidden shadow-sm">
+          <img
+            src="https://readdy.ai/api/search-image?query=3D%20rendered%20isometric%20glamping%20dome%20tent%20icon%2C%20luxury%20camping%2C%20minimalist%20design%2C%20soft%20gradient%20colors%2C%20flat%20style%20with%20depth%2C%20centered%20composition%2C%20clean%20white%20background%2C%20modern%20UI%20icon&width=128&height=128&seq=32&orientation=squarish"
+            class="w-full h-full object-cover" alt="글램핑">
+        </div>
+        <span class="text-xs">글램핑</span>
+      </a>
+      <a href="./shop_list.html" data-readdy="true"
+        class="flex flex-col items-center gap-2 active:scale-95 transition-transform">
+        <div class="w-16 h-16 rounded-xl overflow-hidden shadow-sm">
+          <img
+            src="https://readdy.ai/api/search-image?query=3D%20rendered%20isometric%20pet%20friendly%20hotel%20icon%2C%20dog%20house%20symbol%2C%20minimalist%20design%2C%20soft%20gradient%20colors%2C%20flat%20style%20with%20depth%2C%20centered%20composition%2C%20clean%20white%20background%2C%20modern%20UI%20icon&width=128&height=128&seq=33&orientation=squarish"
+            class="w-full h-full object-cover" alt="반려동물">
+        </div>
+        <span class="text-xs">반려동물</span>
+      </a>
+      <a href="./shop_list.html" data-readdy="true"
+        class="flex flex-col items-center gap-2 active:scale-95 transition-transform">
+        <div class="w-16 h-16 rounded-xl overflow-hidden shadow-sm">
+          <img
+            src="https://readdy.ai/api/search-image?query=3D%20rendered%20isometric%20pension%20house%20icon%2C%20korean%20style%20building%2C%20minimalist%20design%2C%20soft%20gradient%20colors%2C%20flat%20style%20with%20depth%2C%20centered%20composition%2C%20clean%20white%20background%2C%20modern%20UI%20icon&width=128&height=128&seq=34&orientation=squarish"
+            class="w-full h-full object-cover" alt="펜션">
+        </div>
+        <span class="text-xs">펜션</span>
+      </a>
+      <a href="./shop_list.html" data-readdy="true"
+        class="flex flex-col items-center gap-2 active:scale-95 transition-transform">
+        <div class="w-16 h-16 rounded-xl overflow-hidden shadow-sm">
+          <img
+            src="https://readdy.ai/api/search-image?query=3D%20rendered%20isometric%20hotel%20building%20icon%2C%20modern%20architecture%2C%20minimalist%20design%2C%20soft%20gradient%20colors%2C%20flat%20style%20with%20depth%2C%20centered%20composition%2C%20clean%20white%20background%2C%20modern%20UI%20icon&width=128&height=128&seq=35&orientation=squarish"
+            class="w-full h-full object-cover" alt="호텔">
+        </div>
+        <span class="text-xs">호텔</span>
+      </a>
+      <a href="./shop_list.html" data-readdy="true"
+        class="flex flex-col items-center gap-2 active:scale-95 transition-transform">
+        <div class="w-16 h-16 rounded-xl overflow-hidden shadow-sm">
+          <img
+            src="https://readdy.ai/api/search-image?query=3D%20rendered%20isometric%20private%20house%20icon%2C%20sharing%20economy%20concept%2C%20minimalist%20design%2C%20soft%20gradient%20colors%2C%20flat%20style%20with%20depth%2C%20centered%20composition%2C%20clean%20white%20background%2C%20modern%20UI%20icon&width=128&height=128&seq=36&orientation=squarish"
+            class="w-full h-full object-cover" alt="공유숙박">
+        </div>
+        <span class="text-xs">공유숙박</span>
+      </a>
+      <a href="./shop_list.html" data-readdy="true"
+        class="flex flex-col items-center gap-2 active:scale-95 transition-transform">
+        <div class="w-16 h-16 rounded-xl overflow-hidden shadow-sm">
+          <img
+            src="https://readdy.ai/api/search-image?query=3D%20rendered%20isometric%20hot%20spring%20icon%2C%20wellness%20concept%2C%20minimalist%20design%2C%20soft%20gradient%20colors%2C%20flat%20style%20with%20depth%2C%20centered%20composition%2C%20clean%20white%20background%2C%20modern%20UI%20icon&width=128&height=128&seq=37&orientation=squarish"
+            class="w-full h-full object-cover" alt="온천">
+        </div>
+        <span class="text-xs">온천</span>
+      </a>
+      <a href="./shop_list.html" data-readdy="true"
+        class="flex flex-col items-center gap-2 active:scale-95 transition-transform">
+        <div class="w-16 h-16 rounded-xl overflow-hidden shadow-sm">
+          <img
+            src="https://readdy.ai/api/search-image?query=3D%20rendered%20isometric%20beach%20resort%20icon%2C%20summer%20vacation%20concept%2C%20minimalist%20design%2C%20soft%20gradient%20colors%2C%20flat%20style%20with%20depth%2C%20centered%20composition%2C%20clean%20white%20background%2C%20modern%20UI%20icon&width=128&height=128&seq=38&orientation=squarish"
+            class="w-full h-full object-cover" alt="리조트">
+        </div>
+        <span class="text-xs">리조트</span>
+      </a>
+    </div>
+    <div class="px-4 mb-8">
+      <div class="relative h-64 rounded-xl overflow-hidden bg-black">
+        <video class="w-full h-full object-cover" autoplay muted loop playsinline
+          poster="https://readdy.ai/api/search-image?query=Beautiful%20camping%20site%20in%20nature%20with%20tent%20and%20campfire%20at%20sunset%2C%20cinematic%20shot%2C%204k%20quality&width=800&height=600&seq=10&orientation=landscape">
+          <source
+            src="https://player.vimeo.com/external/517090081.sd.mp4?s=ee4cd63dcd613f16ce69890a7f68ba63d2b4876b&profile_id=164"
+            type="video/mp4">
+        </video>
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+        <div class="absolute bottom-0 left-0 right-0 p-6">
+          <h2 class="text-2xl font-medium text-white mb-2">캠핑의 모든 것</h2>
+          <p class="text-white/90 text-sm mb-4">자연 속에서 특별한 순간을 만나보세요</p>
+          <div class="flex gap-3">
+            <a href="./shop_detail.html" data-readdy="true"
+              class="px-6 py-2 bg-primary text-white !rounded-button flex items-center gap-2">
+              <i class="ri-play-fill"></i>
+              <span>둘러보기</span>
+            </a>
+            <button class="px-6 py-2 bg-white/20 backdrop-blur-sm text-white !rounded-button flex items-center gap-2">
+              <i class="ri-information-line"></i>
+              <span>자세히</span>
+            </button>
+          </div>
+        </div>
+        <div class="absolute top-4 right-4 flex gap-2">
+          <button
+            class="w-10 h-10 bg-black/30 backdrop-blur-sm !rounded-full flex items-center justify-center text-white"
+            id="muteButton">
+            <i class="ri-volume-mute-fill"></i>
+          </button>
+          <button
+            class="w-10 h-10 bg-black/30 backdrop-blur-sm !rounded-full flex items-center justify-center text-white"
+            id="playPauseButton">
+            <i class="ri-pause-fill"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <script id="videoControlScript">
+      document.addEventListener('DOMContentLoaded', function () {
+        const video = document.querySelector('video');
+        const muteButton = document.getElementById('muteButton');
+        const playPauseButton = document.getElementById('playPauseButton');
+        muteButton.addEventListener('click', function () {
+          video.muted = !video.muted;
+          muteButton.innerHTML = video.muted ?
+            '<i class="ri-volume-mute-fill"></i>' :
+            '<i class="ri-volume-up-fill"></i>';
+        });
+        playPauseButton.addEventListener('click', function () {
+          if (video.paused) {
+            video.play();
+            playPauseButton.innerHTML = '<i class="ri-pause-fill"></i>';
+          } else {
+            video.pause();
+            playPauseButton.innerHTML = '<i class="ri-play-fill"></i>';
+          }
+        });
+      });
+    </script>
+    <div class="px-4">
+      <div class="flex items-center gap-4 overflow-x-auto pb-4 mb-8">
+        <a href="recommend.html" data-readdy="true" class="flex flex-col items-center gap-2 min-w-[80px]">
+          <i class="ri-robot-line text-2xl text-primary"></i>
+          <span class="text-xs whitespace-nowrap">AI 추천</span>
+        </a>
+        <a href="weather.html" data-readdy="true" class="flex flex-col items-center gap-2 min-w-[80px]">
+          <i class="ri-cloud-line text-2xl text-primary"></i>
+          <span class="text-xs whitespace-nowrap">날씨 예측</span>
+        </a>
+        <button class="flex flex-col items-center gap-2 min-w-[80px]">
+          <i class="ri-route-line text-2xl text-primary"></i>
+          <span class="text-xs whitespace-nowrap">최적 경로</span>
+        </button>
+        <button class="flex flex-col items-center gap-2 min-w-[80px]">
+          <i class="ri-camera-line text-2xl text-primary"></i>
+          <span class="text-xs whitespace-nowrap">장비 인식</span>
+        </button>
+      </div>
+      <div class="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-xl p-4 mb-8">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+            <i class="ri-brain-line text-xl text-primary"></i>
+          </div>
+          <div>
+            <h3 class="font-medium">AI 맞춤 추천</h3>
+            <p class="text-sm text-gray-600">당신의 캠핑 스타일을 분석했어요</p>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="bg-white rounded-xl p-3">
+            <div class="flex items-center gap-2 mb-2">
+              <i class="ri-user-star-line text-primary"></i>
+              <span class="text-sm font-medium">선호 스타일</span>
+            </div>
+            <p class="text-xs text-gray-600">자연 친화적인 캠핑을 선호하시네요</p>
+          </div>
+          <div class="bg-white rounded-xl p-3">
+            <div class="flex items-center gap-2 mb-2">
+              <i class="ri-group-line text-primary"></i>
+              <span class="text-sm font-medium">추천 인원</span>
+            </div>
+            <p class="text-xs text-gray-600">2-3인 가족 캠핑에 적합해요</p>
+          </div>
+          <div class="bg-white rounded-xl p-3">
+            <div class="flex items-center gap-2 mb-2">
+              <i class="ri-map-pin-line text-primary"></i>
+              <span class="text-sm font-medium">추천 장소</span>
+            </div>
+            <p class="text-xs text-gray-600">계곡이 있는 캠핑장을 추천해요</p>
+          </div>
+          <div class="bg-white rounded-xl p-3">
+            <div class="flex items-center gap-2 mb-2">
+              <i class="ri-calendar-line text-primary"></i>
+              <span class="text-sm font-medium">최적 시기</span>
+            </div>
+            <p class="text-xs text-gray-600">9월 초순이 가장 좋아요</p>
+          </div>
+        </div>
+      </div>
+      <div class="mb-8">
+        <div class="flex items-center gap-2 mb-4">
+          <i class="ri-home-smile-line text-xl text-primary"></i>
+          <h3 class="text-lg font-medium">프리미엄 글램핑</h3>
+        </div>
+        <div class="flex gap-3 overflow-x-auto pb-2">
+          <a href="shop_detail.html" data-readdy="true"
+            class="min-w-[280px] bg-white rounded-xl overflow-hidden shadow-sm transition-transform hover:scale-[0.98] active:scale-95">
+            <div class="relative">
+              <img
+                src="https://readdy.ai/api/search-image?query=Luxury%20glamping%20tent%20interior%20with%20king%20size%20bed%2C%20warm%20lighting%2C%20premium%20camping%20experience%2C%20cozy%20atmosphere&width=560&height=300&seq=17&orientation=landscape"
+                class="w-full h-36 object-cover" alt="프리미엄 글램핑">
+              <span class="absolute top-2 right-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full">온라인예약</span>
+            </div>
+            <div class="p-4">
+              <h4 class="font-medium mb-1">프리미엄 글램핑 A</h4>
+              <p class="text-sm text-gray-600">₩280,000 부터</p>
+            </div>
+          </a>
+          <a href="shop_detail.html" data-readdy="true"
+            class="min-w-[280px] bg-white rounded-xl overflow-hidden shadow-sm transition-transform hover:scale-[0.98] active:scale-95">
+            <div class="relative">
+              <img
+                src="https://readdy.ai/api/search-image?query=Modern%20glamping%20dome%20with%20panoramic%20windows%2C%20forest%20view%2C%20luxury%20camping%20setup&width=560&height=300&seq=18&orientation=landscape"
+                class="w-full h-36 object-cover" alt="글램핑">
+              <span class="absolute top-2 right-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full">온라인예약</span>
+            </div>
+            <div class="p-4">
+              <h4 class="font-medium mb-1">글램핑 돔 B</h4>
+              <p class="text-sm text-gray-600">₩250,000 부터</p>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="mb-8">
+        <div class="flex items-center gap-2 mb-4">
+          <i class="ri-home-heart-line text-xl text-primary"></i>
+          <h3 class="text-lg font-medium">반려견 동반 풀빌라</h3>
+        </div>
+        <div class="flex gap-3 overflow-x-auto pb-2">
+          <a href="./shop_detail.html" data-readdy="true"
+            class="min-w-[280px] bg-white rounded-xl overflow-hidden shadow-sm transition-transform hover:scale-[0.98] active:scale-95">
+            <div class="relative">
+              <img
+                src="https://readdy.ai/api/search-image?query=Luxury%20pet-friendly%20villa%20with%20private%20pool%2C%20modern%20design%2C%20spacious%20outdoor%20area%2C%20perfect%20for%20dogs&width=560&height=300&seq=19&orientation=landscape"
+                class="w-full h-36 object-cover" alt="반려견 동반 풀빌라">
+              <span class="absolute top-2 right-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full">온라인예약</span>
+            </div>
+            <div class="p-4">
+              <h4 class="font-medium mb-1">프리미엄 펫 풀빌라</h4>
+              <p class="text-sm text-gray-600">₩320,000 부터</p>
+            </div>
+          </a>
+          <a href="./shop_detail.html" data-readdy="true"
+            class="min-w-[280px] bg-white rounded-xl overflow-hidden shadow-sm transition-transform hover:scale-[0.98] active:scale-95">
+            <div class="relative">
+              <img
+                src="https://readdy.ai/api/search-image?query=Pet-friendly%20luxury%20accommodation%20with%20garden%20view%2C%20dog%20amenities%2C%20modern%20interior&width=560&height=300&seq=20&orientation=landscape"
+                class="w-full h-36 object-cover" alt="반려견 동반 숙소">
+              <span class="absolute top-2 right-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full">온라인예약</span>
+            </div>
+            <div class="p-4">
+              <h4 class="font-medium mb-1">디럭스 펫 룸</h4>
+              <p class="text-sm text-gray-600">₩270,000 부터</p>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="mb-8">
+        <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4 mb-6">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+              <i class="ri-cloudy-line text-xl text-blue-500"></i>
+            </div>
+            <div>
+              <h3 class="font-medium">AI 날씨 분석</h3>
+              <p class="text-sm text-gray-600">이번 주말 캠핑하기 좋은 날씨예요</p>
+            </div>
+          </div>
+          <div class="flex gap-3 overflow-x-auto">
+            <div class="min-w-[100px] bg-white rounded-xl p-3 text-center">
+              <p class="text-sm font-medium mb-2">금요일</p>
+              <i class="ri-sun-line text-2xl text-yellow-500 mb-2"></i>
+              <p class="text-xs text-gray-600">맑음 24°</p>
+            </div>
+            <div class="min-w-[100px] bg-white rounded-xl p-3 text-center">
+              <p class="text-sm font-medium mb-2">토요일</p>
+              <i class="ri-sun-cloudy-line text-2xl text-blue-500 mb-2"></i>
+              <p class="text-xs text-gray-600">구름 22°</p>
+            </div>
+            <div class="min-w-[100px] bg-white rounded-xl p-3 text-center">
+              <p class="text-sm font-medium mb-2">일요일</p>
+              <i class="ri-sun-line text-2xl text-yellow-500 mb-2"></i>
+              <p class="text-xs text-gray-600">맑음 23°</p>
+            </div>
+          </div>
+        </div>
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-medium">실시간 리뷰</h3>
+          <button class="text-sm text-primary">전체보기</button>
+        </div>
+        <div class="space-y-4">
+          <div class="bg-white rounded-xl p-4 shadow-sm">
+            <div class="flex items-start gap-3 mb-3">
+              <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                <i class="ri-user-smile-line text-xl text-gray-400"></i>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="font-medium">김서연</span>
+                  <div class="flex text-yellow-400">
+                    <i class="ri-star-fill text-sm"></i>
+                    <i class="ri-star-fill text-sm"></i>
+                    <i class="ri-star-fill text-sm"></i>
+                    <i class="ri-star-fill text-sm"></i>
+                    <i class="ri-star-fill text-sm"></i>
+                  </div>
+                </div>
+                <p class="text-sm text-gray-600">뷰가 너무 좋았고 조식도 맛있었어요. 다음에 또 방문하고 싶네요!</p>
+              </div>
+            </div>
+            <div class="grid grid-cols-3 gap-2">
+              <img
+                src="https://readdy.ai/api/search-image?query=Hotel%20room%20view%20of%20city%20skyline%20at%20sunset&width=200&height=200&seq=21&orientation=squarish"
+                class="w-full h-24 object-cover rounded-lg" alt="리뷰사진">
+              <img
+                src="https://readdy.ai/api/search-image?query=Luxury%20hotel%20breakfast%20spread%20with%20fresh%20fruits&width=200&height=200&seq=22&orientation=squarish"
+                class="w-full h-24 object-cover rounded-lg" alt="리뷰사진">
+              <img
+                src="https://readdy.ai/api/search-image?query=Modern%20hotel%20bathroom%20with%20premium%20amenities&width=200&height=200&seq=23&orientation=squarish"
+                class="w-full h-24 object-cover rounded-lg" alt="리뷰사진">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mb-8 px-4">
+      <h3 class="text-lg font-medium mb-4">추천 캠핑장</h3>
+      <div class="space-y-4">
+        <a href="./shop_detail.html" data-readdy="true" class="block bg-white rounded-xl overflow-hidden shadow-sm">
+          <img
+            src="https://readdy.ai/api/search-image?query=Luxurious%20camping%20site%20at%20night%20with%20warm%20lighting%2C%20comfortable%20tents%2C%20and%20natural%20surroundings%2C%20professional%20photography&width=800&height=400&seq=11&orientation=landscape"
+            class="w-full h-48 object-cover" alt="캠핑장">
+          <div class="p-4">
+            <div class="flex justify-between items-start mb-2">
+              <h4 class="font-medium">서울 글램핑 파크</h4>
+              <span class="text-primary">₩120,000~</span>
+            </div>
+            <p class="text-sm text-gray-600 mb-2">도심 속 프리미엄 글램핑</p>
+            <div class="flex items-center gap-2 text-sm text-gray-500">
+              <i class="ri-map-pin-line"></i>
+              <span>서울시 강동구</span>
+            </div>
+          </div>
+        </a>
+        <a href="./shop_detail.html" data-readdy="true" class="block bg-white rounded-xl overflow-hidden shadow-sm">
+          <img
+            src="https://readdy.ai/api/search-image?query=Scenic%20mountain%20camping%20ground%20with%20modern%20facilities%2C%20tents%20surrounded%20by%20pine%20trees%2C%20morning%20atmosphere&width=800&height=400&seq=12&orientation=landscape"
+            class="w-full h-48 object-cover" alt="캠핑장">
+          <div class="p-4">
+            <div class="flex justify-between items-start mb-2">
+              <h4 class="font-medium">가평 숲속 캠핑장</h4>
+              <span class="text-primary">₩80,000~</span>
+            </div>
+            <p class="text-sm text-gray-600 mb-2">자연 그대로의 캠핑</p>
+            <div class="flex items-center gap-2 text-sm text-gray-500">
+              <i class="ri-map-pin-line"></i>
+              <span>경기도 가평군</span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="mb-8 px-4">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-medium">인기 카라반</h3>
+        <button class="text-sm text-primary">전체보기</button>
+      </div>
+      <div class="flex gap-3 overflow-x-auto pb-2">
+        <a href="./shop_detail.html" data-readdy="true"
+          class="min-w-[280px] bg-white rounded-xl overflow-hidden shadow-sm transition-transform hover:scale-[0.98] active:scale-95">
+          <img
+            src="https://readdy.ai/api/search-image?query=Modern%20luxury%20caravan%20camping%2C%20stylish%20interior%20and%20exterior%20view%2C%20sunset%20lighting&width=560&height=300&seq=13&orientation=landscape"
+            class="w-full h-36 object-cover" alt="카라반">
+          <div class="p-4">
+            <h4 class="font-medium mb-1">프리미엄 카라반 A동</h4>
+            <p class="text-sm text-gray-600">최대 4인 / 취사가능</p>
+          </div>
+        </a>
+        <a href="./shop_detail.html" data-readdy="true"
+          class="min-w-[280px] bg-white rounded-xl overflow-hidden shadow-sm transition-transform hover:scale-[0.98] active:scale-95">
+          <img
+            src="https://readdy.ai/api/search-image?query=Cozy%20caravan%20interior%20with%20modern%20amenities%2C%20warm%20lighting%2C%20comfortable%20living%20space&width=560&height=300&seq=14&orientation=landscape"
+            class="w-full h-36 object-cover" alt="카라반">
+          <div class="p-4">
+            <h4 class="font-medium mb-1">디럭스 카라반 B동</h4>
+            <p class="text-sm text-gray-600">최대 6인 / 바베큐존</p>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="mb-8 px-4">
+      <h3 class="text-lg font-medium mb-4">이번주 특가</h3>
+      <div class="grid grid-cols-2 gap-3">
+        <a href="./shop_detail.html" data-readdy="true"
+          class="bg-white rounded-xl overflow-hidden shadow-sm transition-transform hover:scale-[0.98] active:scale-95">
+          <div class="relative">
+            <img
+              src="https://readdy.ai/api/search-image?query=Peaceful%20lakeside%20camping%20spot%20with%20tent%20and%20campfire%2C%20evening%20atmosphere&width=400&height=300&seq=15&orientation=landscape"
+              class="w-full h-32 object-cover" alt="캠핑장">
+            <span class="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">30% OFF</span>
+          </div>
+          <div class="p-3">
+            <h4 class="text-sm font-medium mb-1">양평 리버뷰</h4>
+            <p class="text-xs text-gray-500">주중 특가</p>
+          </div>
+        </a>
+        <a href="./shop_detail.html" data-readdy="true"
+          class="bg-white rounded-xl overflow-hidden shadow-sm transition-transform hover:scale-[0.98] active:scale-95">
+          <div class="relative">
+            <img
+              src="https://readdy.ai/api/search-image?query=Forest%20camping%20ground%20with%20wooden%20deck%2C%20morning%20mist%20atmosphere&width=400&height=300&seq=16&orientation=landscape"
+              class="w-full h-32 object-cover" alt="캠핑장">
+            <span class="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">20% OFF</span>
+          </div>
+          <div class="p-3">
+            <h4 class="text-sm font-medium mb-1">포천 숲속캠핑</h4>
+            <p class="text-xs text-gray-500">주말 패키지</p>
+          </div>
+        </a>
+      </div>
+    </div>
+    </div>
+  </main>
+  <nav class="fixed bottom-0 left-0 right-0 bg-white border-t">
+    <div class="grid grid-cols-6 py-1">
+      <a href="#"
+        data-readdy="true" class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+          <i class="ri-map-pin-2-fill text-lg group-hover:text-primary"></i>
+        </div>
+        <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">내주변</span>
+      </a>
+
+      <a href="./index.html" class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+          <i class="ri-home-5-fill text-lg group-hover:text-primary"></i>
+        </div>
+        <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">홈</span>
+      </a>
+
+      <button class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+          <i class="ri-heart-3-fill text-lg group-hover:text-primary"></i>
+        </div>
+        <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">찜</span>
+      </button>
+
+      <a href="mypage.html" data-readdy="true" class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+          <i class="ri-user-3-fill text-lg group-hover:text-primary"></i>
+        </div>
+        <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">마이</span>
+      </a>
+
+      <button class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+          <i class="ri-wallet-3-fill text-lg group-hover:text-primary"></i>
+        </div>
+        <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">페이</span>
+      </button>
+      <button class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+          <i class="ri-menu-fill text-lg group-hover:text-primary"></i>
+        </div>
+        <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">전체</span>
+      </button>
+    </div>
+  </nav>
+  <div id="sideMenu"
+    class="fixed top-0 right-0 w-[280px] h-full bg-white transform translate-x-full transition-transform duration-300 z-50 shadow-lg flex flex-col">
+    <div class="flex items-center justify-between p-4 border-b">
+      <h2 class="text-lg font-medium">메뉴</h2>
+      <button id="closeMenu" class="w-8 h-8 flex items-center justify-center">
+        <i class="ri-close-line text-xl"></i>
+      </button>
+    </div>
+    <div class="flex-1 overflow-y-auto">
+      <div class="p-4 border-b">
+        <a href="./login.html" data-readdy="true" class="flex items-center gap-3 py-3 px-4 bg-gray-50 rounded-xl">
+          <i class="ri-user-add-line text-xl text-primary"></i>
+          <span>로그인/회원가입</span>
+        </a>
+      </div>
+      <div class="p-4 space-y-4">
+        <a href="./mypage.html" class="flex items-center gap-3">
+          <i class="ri-calendar-check-line text-xl text-gray-600"></i>
+          <span>예약 내역</span>
+        </a>
+        <a href="search.html" class="flex items-center gap-3">
+          <i class="ri-search-line text-xl text-gray-600"></i>
+          <span>캠핑장 검색</span>
+        </a>
+        <a href="search.html" class="flex items-center gap-3">
+          <i class="ri-home-smile-line text-xl text-gray-600"></i>
+          <span>글램핑</span>
+        </a>
+        <a href="search.html" class="flex items-center gap-3">
+          <i class="ri-caravan-line text-xl text-gray-600"></i>
+          <span>카라반</span>
+        </a>
+        <a href="search.html" class="flex items-center gap-3">
+          <i class="ri-hotel-line text-xl text-gray-600"></i>
+          <span>펜션</span>
+        </a>
+        <a href="search.html" class="flex items-center gap-3">
+          <i class="ri-building-line text-xl text-gray-600"></i>
+          <span>호텔</span>
+        </a>
+        <a href="#" class="flex items-center gap-3">
+          <i class="ri-gift-line text-xl text-gray-600"></i>
+          <span>이벤트</span>
+        </a>
+        <a href="#" class="flex items-center gap-3">
+          <i class="ri-customer-service-line text-xl text-gray-600"></i>
+          <span>고객센터</span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <script id="sideMenuScript">
+    document.addEventListener('DOMContentLoaded', function () {
+      const menuButton = document.getElementById('menuButton');
+      const closeMenu = document.getElementById('closeMenu');
+      const sideMenu = document.getElementById('sideMenu');
+      menuButton.addEventListener('click', function () {
+        sideMenu.classList.remove('translate-x-full');
+      });
+      closeMenu.addEventListener('click', function () {
+        sideMenu.classList.add('translate-x-full');
+      });
+      document.addEventListener('click', function (event) {
+        if (!sideMenu.contains(event.target) && !menuButton.contains(event.target)) {
+          sideMenu.classList.add('translate-x-full');
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>
