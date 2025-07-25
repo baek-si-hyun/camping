@@ -89,7 +89,8 @@
   <header class="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
     <div class="flex items-center justify-between px-4 py-3">
       <div class="flex items-center gap-2">
-        <a href="./index.html" data-readdy="true" class="w-8 h-8 flex items-center justify-center cursor-pointer">
+        <a href="#" onclick="event.preventDefault(); history.back();"
+          class="w-8 h-8 flex items-center justify-center cursor-pointer">
           <i class="ri-arrow-left-s-line text-xl"></i>
         </a>
         <h1 class="text-lg font-medium">캠핑의 모든 것</h1>
@@ -263,9 +264,11 @@
             </div>
             <div class="flex justify-between items-center">
               <span class="text-primary font-medium">₩150,000~</span>
-              <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/b17e06a2-c8bb-4255-901e-710cba572e47"
-                data-readdy="true"
-                class="px-4 py-2 bg-primary text-white !rounded-button text-sm cursor-pointer">예약하기</a>
+              <a href="./shop_detail.html"
+                class="detail-link px-4 py-2 bg-primary text-white !rounded-button text-sm cursor-pointer"
+                data-id="b17e06a2-c8bb-4255-901e-710cba572e47" data-title="가평 더 글램 글램핑" data-region="경기도 가평군 청평면">
+                예약하기
+              </a>
             </div>
           </div>
         </div>
@@ -299,9 +302,11 @@
             </div>
             <div class="flex justify-between items-center">
               <span class="text-primary font-medium">₩80,000~</span>
-              <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/b17e06a2-c8bb-4255-901e-710cba572e47"
-                data-readdy="true"
-                class="px-4 py-2 bg-primary text-white !rounded-button text-sm cursor-pointer">예약하기</a>
+              <a href="./shop_detail.html"
+                class="detail-link px-4 py-2 bg-primary text-white !rounded-button text-sm cursor-pointer"
+                data-id="b17e06a2-c8bb-4255-901e-710cba572e47" data-title="양평 숲속의 아침" data-region="경기도 양평군 강하면">
+                예약하기
+              </a>
             </div>
           </div>
         </div>
@@ -335,9 +340,11 @@
             </div>
             <div class="flex justify-between items-center">
               <span class="text-primary font-medium">₩180,000~</span>
-              <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/b17e06a2-c8bb-4255-901e-710cba572e47"
-                data-readdy="true"
-                class="px-4 py-2 bg-primary text-white !rounded-button text-sm cursor-pointer">예약하기</a>
+              <a href="./shop_detail.html"
+                class="detail-link px-4 py-2 bg-primary text-white !rounded-button text-sm cursor-pointer"
+                data-id="b17e06a2-c8bb-4255-901e-710cba572e47" data-title="가평 프리미엄 글램핑" data-region="경기도 가평군">
+                예약하기
+              </a>
             </div>
           </div>
         </div>
@@ -617,6 +624,25 @@
       if (valleyButton) {
         valleyButton.click();
       }
+    });
+  </script>
+  <script>
+    // 상세페이지 정보 넘기기
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('.detail-link').forEach(link => {
+        link.addEventListener('click', function (e) {
+          e.preventDefault();
+          const { id, title, region } = this.dataset;
+          // 이 링크가 속한 카드의 <img> src 가져오기
+          const card = this.closest('.bg-white.overflow-hidden');
+          const imgEl = card.querySelector('img');
+          const imgSrc = imgEl ? imgEl.src : '';
+
+          // URL 파라미터에 imgSrc 추가
+          const params = new URLSearchParams({ id, title, region, img: imgSrc });
+          window.location.href = `shop_detail.html?${params.toString()}`;
+        });
+      });
     });
   </script>
 </body>
