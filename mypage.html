@@ -15,8 +15,8 @@
       theme: {
         extend: {
           colors: {
-            primary: '#7F3DFF',
-            secondary: '#00D6B3'
+            primary: '#FF7A45',
+            secondary: '#4A90E2'
           },
           borderRadius: {
             'none': '0px',
@@ -37,6 +37,16 @@
   <style>
     :where([class^="ri-"])::before {
       content: "\f3c2";
+    }
+
+    /* 스크롤바 숨김 */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    
+    * {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
   </style>
 </head>
@@ -63,7 +73,7 @@
         </div>
       </div>
       <div class="grid grid-cols-2 gap-4">
-        <div class="bg-white rounded-[20px] p-5 shadow-2xl hover:shadow-2xl transition-all hover:-translate-y-1">
+        <div class="bg-white rounded-[20px] p-5 shadow-lg hover:shadow-xl transition-shadow">
           <div class="flex items-center gap-3 mb-3">
             <i class="ri-coins-fill text-2xl text-primary"></i>
             <span class="text-base font-bold">포인트</span>
@@ -82,56 +92,56 @@
     <div class="px-4 space-y-5">
       <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/b17e06a2-c8bb-4255-901e-710cba572e47"
         data-readdy="true"
-        class="flex items-center justify-between p-5 bg-white rounded-[24px] shadow-2xl hover:shadow-2xl transition-all transform hover:-translate-y-1">
+        class="flex items-center justify-between p-5 bg-white rounded-[24px] shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
         <div class="flex items-center gap-4">
           <div
             class="w-12 h-12 rounded-[16px] bg-gradient-to-br from-primary/30 to-primary/50 flex items-center justify-center">
             <i class="ri-calendar-2-fill text-xl text-primary"></i>
           </div>
           <div>
-            <h3 class="font-medium mb-1">예약 내역</h3>
+            <h3 class="font-medium mb-1 text-start">예약 내역</h3>
             <p class="text-sm text-gray-500">진행중인 예약 2건</p>
           </div>
         </div>
         <i class="ri-arrow-right-s-line text-xl text-gray-400"></i>
       </a>
-      <button
-        class="w-full flex items-center justify-between p-4 bg-white rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5">
-        <div class="flex items-center gap-3">
+      <a href="wishlist.html" data-readdy="true"
+        class="w-full flex items-center justify-between p-5 bg-white rounded-[24px] shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+        <div class="flex items-center gap-4">
           <div
-            class="w-10 h-10 rounded-lg bg-gradient-to-br from-primary/20 to-primary/30 flex items-center justify-center">
+            class="w-12 h-12 rounded-[16px] bg-gradient-to-br from-primary/30 to-primary/50 flex items-center justify-center">
             <i class="ri-heart-3-fill text-xl text-primary"></i>
           </div>
           <div>
-            <h3 class="font-medium mb-1">찜한 숙소</h3>
-            <p class="text-sm text-gray-500">5개의 숙소</p>
+            <h3 class="font-medium mb-1 text-star1">찜한 숙소</h3>
+            <p class="text-sm text-gray-500">2개의 숙소</p>
           </div>
         </div>
         <i class="ri-arrow-right-s-line text-xl text-gray-400"></i>
-      </button>
+      </a>
       <button
-        class="w-full flex items-center justify-between p-4 bg-white rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5">
-        <div class="flex items-center gap-3">
+        class="w-full flex items-center justify-between p-5 bg-white rounded-[24px] shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+        <div class="flex items-center gap-4">
           <div
-            class="w-10 h-10 rounded-lg bg-gradient-to-br from-primary/20 to-primary/30 flex items-center justify-center">
+            class="w-12 h-12 rounded-[16px] bg-gradient-to-br from-primary/30 to-primary/50 flex items-center justify-center">
             <i class="ri-star-fill text-xl text-primary"></i>
           </div>
           <div>
-            <h3 class="font-medium mb-1">리뷰 관리</h3>
+            <h3 class="font-medium mb-1 text-start">리뷰 관리</h3>
             <p class="text-sm text-gray-500">작성 가능한 리뷰 1건</p>
           </div>
         </div>
         <i class="ri-arrow-right-s-line text-xl text-gray-400"></i>
       </button>
       <button
-        class="w-full flex items-center justify-between p-4 bg-white rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5">
-        <div class="flex items-center gap-3">
+        class="w-full flex items-center justify-between p-5 bg-white rounded-[24px] shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+        <div class="flex items-center gap-4">
           <div
-            class="w-10 h-10 rounded-lg bg-gradient-to-br from-primary/20 to-primary/30 flex items-center justify-center">
+            class="w-12 h-12 rounded-[16px] bg-gradient-to-br from-primary/30 to-primary/50 flex items-center justify-center">
             <i class="ri-message-3-fill text-xl text-primary"></i>
           </div>
           <div>
-            <h3 class="font-medium mb-1">1:1 문의내역</h3>
+            <h3 class="font-medium mb-1 text-start">1:1 문의내역</h3>
             <p class="text-sm text-gray-500">답변 대기 1건</p>
           </div>
         </div>
@@ -142,31 +152,31 @@
       <h3 class="text-xl font-bold mb-6">설정</h3>
       <div class="space-y-5">
         <button
-          class="w-full flex items-center justify-between p-5 bg-white rounded-[24px] shadow-2xl hover:shadow-2xl transition-all transform hover:-translate-y-1">
-          <div class="flex items-center gap-3">
+          class="w-full flex items-center justify-between p-5 bg-white rounded-[24px] shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+          <div class="flex items-center gap-4">
             <div
-              class="w-10 h-10 rounded-lg bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+              class="w-12 h-12 rounded-[16px] bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
               <i class="ri-notification-4-fill text-xl text-gray-500"></i>
             </div>
-            <span class="font-medium">알림 설정</span>
+            <span class="font-medium text-start">알림 설정</span>
           </div>
           <i class="ri-arrow-right-s-line text-xl text-gray-400"></i>
         </button>
-        <button class="w-full flex items-center justify-between p-4 bg-white rounded-xl shadow-sm">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
+        <button class="w-full flex items-center justify-between p-5 bg-white rounded-[24px] shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-[16px] bg-gray-100 flex items-center justify-center">
               <i class="ri-user-settings-line text-xl text-gray-500"></i>
             </div>
-            <span class="font-medium">개인정보 수정</span>
+            <span class="font-medium text-start">개인정보 수정</span>
           </div>
           <i class="ri-arrow-right-s-line text-xl text-gray-400"></i>
         </button>
-        <button class="w-full flex items-center justify-between p-4 bg-white rounded-xl shadow-sm">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
+        <button class="w-full flex items-center justify-between p-5 bg-white rounded-[24px] shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-[16px] bg-gray-100 flex items-center justify-center">
               <i class="ri-customer-service-2-line text-xl text-gray-500"></i>
             </div>
-            <span class="font-medium">고객센터</span>
+            <span class="font-medium text-start">고객센터</span>
           </div>
           <i class="ri-arrow-right-s-line text-xl text-gray-400"></i>
         </button>
@@ -243,47 +253,133 @@
       });
     });
   </script>
-  <nav class="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg">
-    <div class="grid grid-cols-6 py-2">
-      <button class="flex flex-col items-center gap-1">
-        <div class="w-6 h-6 flex items-center justify-center">
-          <i class="ri-map-pin-2-line text-lg"></i>
+  <nav class="fixed bottom-0 left-0 right-0 bg-white border-t">
+    <div class="grid grid-cols-6 py-1">
+      <a href="search_map.html"
+        data-readdy="true" class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+          <i class="ri-map-pin-2-fill text-lg group-hover:text-primary"></i>
         </div>
-        <span class="text-[10px]">내주변</span>
-      </button>
-      <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/f0337728-efa7-4fab-800c-adcdbba971c8"
-        data-readdy="true" class="flex flex-col items-center gap-1">
-        <div class="w-6 h-6 flex items-center justify-center">
-          <i class="ri-home-5-line text-lg"></i>
-        </div>
-        <span class="text-[10px]">홈</span>
+        <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">내주변</span>
       </a>
-      <button class="flex flex-col items-center gap-1">
-        <div class="w-6 h-6 flex items-center justify-center">
-          <i class="ri-heart-3-line text-lg"></i>
+
+      <a href="./index.html" class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+          <i class="ri-home-5-fill text-lg group-hover:text-primary"></i>
         </div>
-        <span class="text-[10px]">찜</span>
-      </button>
-      <button class="flex flex-col items-center gap-1">
-        <div class="w-6 h-6 flex items-center justify-center">
+        <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">홈</span>
+      </a>
+
+      <a href="wishlist.html" data-readdy="true" class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+          <i class="ri-heart-3-fill text-lg group-hover:text-primary"></i>
+        </div>
+        <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">찜</span>
+      </a>
+
+      <a href="mypage.html" data-readdy="true" class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
           <i class="ri-user-3-fill text-lg text-primary"></i>
         </div>
         <span class="text-[10px] text-primary">마이</span>
-      </button>
-      <button class="flex flex-col items-center gap-1">
-        <div class="w-6 h-6 flex items-center justify-center">
-          <i class="ri-wallet-3-line text-lg"></i>
+      </a>
+
+      <button class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+          <i class="ri-wallet-3-fill text-lg group-hover:text-primary"></i>
         </div>
-        <span class="text-[10px]">페이</span>
+        <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">페이</span>
       </button>
-      <button class="flex flex-col items-center gap-1">
-        <div class="w-6 h-6 flex items-center justify-center">
-          <i class="ri-menu-line text-lg"></i>
+      <button class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+          <i class="ri-menu-fill text-lg group-hover:text-primary"></i>
         </div>
-        <span class="text-[10px]">전체</span>
+        <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">전체</span>
       </button>
     </div>
   </nav>
+  <div id="sideMenu"
+    class="fixed top-0 right-0 w-[280px] h-full bg-white transform translate-x-full transition-transform duration-300 z-50 shadow-lg flex flex-col">
+    <div class="flex items-center justify-between p-4 border-b">
+      <h2 class="text-lg font-medium">메뉴</h2>
+      <button id="closeMenu" class="w-8 h-8 flex items-center justify-center">
+        <i class="ri-close-line text-xl"></i>
+      </button>
+    </div>
+    <div class="flex-1 overflow-y-auto">
+      <div class="p-4 border-b">
+        <a href="./login.html" data-readdy="true" class="flex items-center gap-3 py-3 px-4 bg-gray-50 rounded-xl">
+          <i class="ri-user-add-line text-xl text-primary"></i>
+          <span>로그인/회원가입</span>
+        </a>
+      </div>
+      <div class="p-4 space-y-4">
+        <a href="./mypage.html" class="flex items-center gap-3">
+          <i class="ri-calendar-check-line text-xl text-gray-600"></i>
+          <span>예약 내역</span>
+        </a>
+        <a href="search.html" class="flex items-center gap-3">
+          <i class="ri-search-line text-xl text-gray-600"></i>
+          <span>캠핑장 검색</span>
+        </a>
+        <a href="shop_list.html?type=glamping" class="flex items-center gap-3">
+          <i class="ri-home-smile-line text-xl text-gray-600"></i>
+          <span>글램핑</span>
+        </a>
+        <a href="shop_list.html?type=caravan" class="flex items-center gap-3">
+          <i class="ri-caravan-line text-xl text-gray-600"></i>
+          <span>카라반</span>
+        </a>
+        <a href="shop_list.html?type=pension" class="flex items-center gap-3">
+          <i class="ri-hotel-line text-xl text-gray-600"></i>
+          <span>펜션</span>
+        </a>
+        <a href="shop_list.html?type=hotel" class="flex items-center gap-3">
+          <i class="ri-building-line text-xl text-gray-600"></i>
+          <span>호텔</span>
+        </a>
+        <a href="#" class="flex items-center gap-3">
+          <i class="ri-gift-line text-xl text-gray-600"></i>
+          <span>이벤트</span>
+        </a>
+        <a href="#" class="flex items-center gap-3">
+          <i class="ri-customer-service-line text-xl text-gray-600"></i>
+          <span>고객센터</span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <script id="sideMenuScript">
+    document.addEventListener('DOMContentLoaded', function () {
+      const menuButton = document.querySelector('button:has(i.ri-menu-fill)');
+      const closeMenu = document.getElementById('closeMenu');
+      const sideMenu = document.getElementById('sideMenu');
+      
+      if (menuButton) {
+        menuButton.addEventListener('click', function () {
+          sideMenu.classList.remove('translate-x-full');
+        });
+      }
+      
+      if (closeMenu) {
+        closeMenu.addEventListener('click', function () {
+          sideMenu.classList.add('translate-x-full');
+        });
+      }
+      
+      document.addEventListener('click', function (event) {
+        if (sideMenu && !sideMenu.contains(event.target) && !menuButton?.contains(event.target)) {
+          sideMenu.classList.add('translate-x-full');
+        }
+      });
+    });
+  </script>
 </body>
 
 </html>

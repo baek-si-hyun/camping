@@ -45,6 +45,23 @@
       display: none;
     }
 
+    #media-slider {
+      display: flex;
+      transition: transform 0.3s ease;
+    }
+
+    #media-slider > div {
+      flex-shrink: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    #media-slider img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
     .tab-content {
       display: none;
     }
@@ -78,6 +95,16 @@
       color: #D1D5DB;
       pointer-events: none;
     }
+
+    /* 스크롤바 숨김 */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    
+    * {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
   </style>
 </head>
 
@@ -97,7 +124,7 @@
     </div>
   </nav>
   <!-- 메인 컨텐츠 -->
-  <main class="pt-16 pb-20 ">
+  <main class="pt-16">
     <!-- 비디오 섹션 -->
     <section id="main-media-container" class="relative h-[300px] overflow-hidden">
       <div id="media-slider" class="flex w-full h-full transition-transform duration-300">
@@ -184,7 +211,7 @@
     <section class="px-4 py-4">
       <h1 id="detail-title" class="text-2xl font-bold">숙소명</h1>
       <div class="flex items-center mt-2">
-        <div class="flex items-center text-yellow-500">
+        <div class="flex items-center text-yellow-500 rating-display">
           <i class="ri-star-fill ri-sm"></i>
           <span class="ml-1 text-sm font-medium">4.8</span>
         </div>
@@ -192,6 +219,23 @@
         <span class="text-sm text-gray-600">리뷰 128개</span>
         <span class="mx-2 text-gray-300">|</span>
         <span id="detail-region" class="text-sm text-gray-600">지역</span>
+      </div>
+      <!-- 배지 표시 -->
+      <div class="mt-2 badge-display"></div>
+      <!-- 설명 표시 -->
+      <p class="mt-2 text-gray-600 description-display">숙소 설명이 여기에 표시됩니다.</p>
+      <!-- 거리 정보 표시 -->
+      <div class="mt-2 text-sm text-gray-500 distance-display">
+        <i class="ri-car-line"></i>
+        <span>거리 정보</span>
+      </div>
+      <!-- 시설 정보 표시 -->
+      <div class="mt-3 facilities-display">
+        <span class="px-2 py-1 bg-blue-50 text-blue-600 rounded text-xs">기본 시설</span>
+      </div>
+      <!-- 가격 정보 표시 -->
+      <div class="mt-3">
+        <span id="detail-price" class="text-xl font-bold text-primary">가격 정보</span>
       </div>
     </section>
     <!-- 탭 메뉴 -->
@@ -924,7 +968,7 @@
       const confirmReservationBtn = document.getElementById('confirm-reservation');
       const modalDatesEl = document.getElementById('modal-dates');
 
-      // “예약하기” 클릭 → 날짜·객실 체크 후 모달 오픈
+      // "예약하기" 클릭 → 날짜·객실 체크 후 모달 오픈
       reservationBtn.addEventListener('click', e => {
         const checkIn = document.getElementById('check-in-date').textContent;
         const checkOut = document.getElementById('check-out-date').textContent;
@@ -947,7 +991,7 @@
       closeModalBtn.addEventListener('click', () => modal.classList.add('hidden'));
       modal.addEventListener('click', e => { if (e.target === modal) modal.classList.add('hidden'); });
 
-      // “예약 진행하기” 클릭 → URL 파라미터와 함께 이동
+      // "예약 진행하기" 클릭 → URL 파라미터와 함께 이동
       confirmReservationBtn.addEventListener('click', () => {
         const { id, name, price, capacity, area, img } = window.roomData;
         const checkIn = encodeURIComponent(document.getElementById('check-in-date').textContent);
@@ -984,7 +1028,11 @@
   <script id="media-slider-handler">
     document.addEventListener('DOMContentLoaded', () => {
       const params = new URLSearchParams(location.search);
-      const firstImg = params.get('img');                     // 첫 번째 이미지 URL (optional)
+      const firstImg = params.get('image') ? decodeURIComponent(params.get('image')) : null;  // 'img'에서 'image'로 변경
+      
+      // 디버깅용 로그
+      console.log('URL 파라미터:', params.toString());
+      console.log('전달받은 이미지 URL:', firstImg);
       const mediaSlider = document.getElementById('media-slider');
       const thumbSection = document.getElementById('media-thumbnails');
       const mediaCounter = document.getElementById('media-counter');
@@ -1008,11 +1056,13 @@
         `https://readdy.ai/api/search-image?query=${encodeURIComponent(text)}&width=800&height=600&seq=${seq}&orientation=landscape`
       );
 
-
       // — 3) firstImg가 있으면 앞에, 없으면 그냥 페일백 8개
       let images = firstImg
         ? [firstImg, ...fallbackImgs.slice(0, 7)]  // 총 1 + 7 = 8장
         : fallbackImgs;                           // 총 8장
+      
+      // 디버깅용 로그
+      console.log('최종 이미지 배열:', images);
 
       // — 4) 컨테이너 초기화
       mediaSlider.innerHTML = '';
@@ -1155,9 +1205,26 @@
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const params = new URLSearchParams(window.location.search);
+      
+      // 숙소 정보
       const title = params.get('title') || '숙소명이 없습니다';
       const region = params.get('region') || '';
       const price = params.get('price') ? '₩' + Number(params.get('price')).toLocaleString() + '~' : '';
+      const rating = params.get('rating') || '';
+      const description = params.get('description') || '';
+      const distance = params.get('distance') || '';
+      const facilities = params.get('facilities') || '';
+      const image = params.get('image') || '';
+      const badge = params.get('badge') || '';
+      
+      // 설문 데이터
+      const surveyPeople = params.get('survey_people') || '';
+      const surveyStyle = params.get('survey_style') || '';
+      const surveyBudget = params.get('survey_budget') || '';
+      const surveyRegions = params.get('survey_regions') || '';
+      const surveyPet = params.get('survey_pet') || '';
+      const surveyFacilities = params.get('survey_facilities') || '';
+      const surveyMbti = params.get('survey_mbti') || '';
 
       // id는 필요하다면 이후 API 호출 등에 사용
       const id = params.get('id');
@@ -1166,6 +1233,69 @@
       document.getElementById('detail-title').textContent = title;
       document.getElementById('detail-region').textContent = region;
       document.getElementById('detail-price').textContent = price;
+      
+      // 평점 표시
+      if (rating) {
+        const ratingElement = document.querySelector('.rating-display');
+        if (ratingElement) {
+          ratingElement.innerHTML = `
+            <i class="ri-star-fill ri-sm"></i>
+            <span class="ml-1 text-sm font-medium">${rating}</span>
+          `;
+        }
+      }
+      
+      // 설명 표시
+      if (description) {
+        const descElement = document.querySelector('.description-display');
+        if (descElement) {
+          descElement.textContent = description;
+        }
+      }
+      
+      // 거리 정보 표시
+      if (distance) {
+        const distanceElement = document.querySelector('.distance-display');
+        if (distanceElement) {
+          distanceElement.innerHTML = `
+            <i class="ri-car-line"></i>
+            <span>${distance}</span>
+          `;
+        }
+      }
+      
+      // 시설 정보 표시
+      if (facilities) {
+        const facilitiesArray = facilities.split(',');
+        const facilitiesContainer = document.querySelector('.facilities-display');
+        if (facilitiesContainer) {
+          facilitiesContainer.innerHTML = facilitiesArray.map(facility => 
+            `<span class="px-2 py-1 bg-blue-50 text-blue-600 rounded text-xs mr-2">${facility}</span>`
+          ).join('');
+        }
+      }
+      
+      // 배지 표시
+      if (badge) {
+        const badgeElement = document.querySelector('.badge-display');
+        if (badgeElement) {
+          badgeElement.innerHTML = `
+            <div class="bg-primary text-white px-2 py-1 rounded text-xs font-medium inline-block">
+              ${badge}
+            </div>
+          `;
+        }
+      }
+      
+      // 설문 데이터를 콘솔에 출력 (디버깅용)
+      console.log('전달받은 숙소 정보:', {
+        title, region, price, rating, description, distance, facilities, image, badge
+      });
+      
+      console.log('전달받은 설문 데이터:', {
+        surveyPeople, surveyStyle, surveyBudget, surveyRegions, 
+        surveyPet, surveyFacilities, surveyMbti
+      });
 
     });
   </script>

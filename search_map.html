@@ -97,6 +97,16 @@
       transform: translateY(-5px);
       transition: transform 0.3s ease;
     }
+
+    /* 스크롤바 숨김 */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    
+    * {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
   </style>
 </head>
 
@@ -112,6 +122,10 @@
         <button
           class="text-primary font-medium relative after:absolute after:bottom-[-14px] after:left-0 after:w-full after:h-[2px] after:bg-primary">지도검색</button>
       </div>
+      <a href="./index.html" data-readdy="true"
+        class="w-10 h-10 flex items-center justify-center cursor-pointer hover:bg-gray-50 rounded-full">
+        <i class="ri-home-5-line text-xl"></i>
+      </a>
     </div>
   </nav>
   <div class="fixed top-16 left-0 right-0 bg-white z-40 shadow-sm">

@@ -45,16 +45,30 @@
 
     .step-transition {
       transition: transform 0.3s ease, opacity 0.3s ease;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
     }
 
     .step-hidden {
       transform: translateX(100%);
       opacity: 0;
+      z-index: 0;
     }
 
     .step-visible {
       transform: translateX(0);
       opacity: 1;
+      z-index: 10;
+    }
+
+    .step-slide-left {
+      transform: translateX(-100%);
+      opacity: 0;
+      z-index: 0;
     }
 
     .result-card {
@@ -82,6 +96,16 @@
         transform: translateX(100%);
       }
     }
+
+    /* 스크롤바 숨김 */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    
+    * {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
   </style>
 </head>
 
@@ -101,9 +125,9 @@
       </div>
     </div>
   </header>
-  <main class="relative pt-20 pb-[76px] min-h-screen overflow-hidden">
+  <main class="relative pt-20 pb-[76px] overflow-hidden h-screen">
     <div id="stepsWrapper" class="relative w-full h-full">
-      <div id="step1" class="absolute inset-0 step-transition step-visible px-4 overflow-y-auto">
+      <div id="step1" class="step-transition step-visible px-4 h-full overflow-y-auto">
       <div class="text-center mb-8">
         <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
           <i class="ri-group-line text-2xl text-primary"></i>
@@ -149,12 +173,12 @@
           <i class="ri-check-line text-xl text-transparent"></i>
         </button>
       </div>
-      <div class="bg-white rounded-xl p-4 mb-8">
-        <label class="flex items-center gap-3 cursor-pointer transition-all" id="petLabel">
+      <div class="bg-white rounded-xl mb-8">
+        <label class="flex items-center gap-3 cursor-pointer transition-all p-4 w-full h-full" id="petLabel">
           <input type="checkbox" class="w-5 h-5 text-primary rounded border-gray-300" id="petCheckbox">
           <div class="flex items-center gap-2">
             <i class="ri-heart-3-line text-xl text-primary"></i>
-            <span class="font-medium cursor-pointer" id="petText">반려동물과 함께 여행해요</span>
+            <span class="font-medium">반려동물과 함께 여행해요</span>
           </div>
         </label>
       </div>
@@ -260,7 +284,7 @@
         </div>
       </div>
     </div>
-    <div id="step2" class="step-transition step-hidden px-4">
+    <div id="step2" class="step-transition step-hidden px-4 h-full overflow-y-auto">
       <div class="text-center mb-8">
         <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
           <i class="ri-wallet-3-line text-2xl text-primary"></i>
@@ -301,7 +325,7 @@
         </button>
       </div>
     </div>
-    <div id="step3" class="step-transition step-hidden px-4">
+    <div id="step3" class="step-transition step-hidden px-4 h-full overflow-y-auto">
       <div class="text-center mb-8">
         <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
           <i class="ri-map-pin-2-line text-2xl text-primary"></i>
@@ -469,7 +493,7 @@
         </button>
       </div>
     </div>
-    <div id="step4" class="step-transition step-hidden px-4">
+    <div id="step4" class="step-transition step-hidden px-4 h-full overflow-y-auto">
       <div class="text-center mb-8">
         <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
           <i class="ri-tent-line text-2xl text-primary"></i>
@@ -536,7 +560,7 @@
         </button>
       </div>
     </div>
-    <div id="step5" class="step-transition step-hidden px-4">
+    <div id="step5" class="step-transition step-hidden px-4 h-full overflow-y-auto">
       <div class="text-center mb-8">
         <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
           <i class="ri-heart-3-line text-2xl text-primary"></i>
@@ -589,8 +613,8 @@
         </div>
       </div>
     </div>
-    <div id="aiAnalysisStep" class="step-transition step-hidden px-4">
-      <div class="h-screen flex flex-col items-center justify-center">
+    <div id="aiAnalysisStep" class="step-transition step-hidden px-4 h-full overflow-y-auto">
+      <div class="h-full flex flex-col items-center justify-center">
         <div class="relative w-32 h-32 mb-6">
           <div class="absolute inset-0 border-4 border-primary/30 rounded-full"></div>
           <div
@@ -615,7 +639,7 @@
         </div>
       </div>
     </div>
-    <div id="resultStep" class="step-transition step-hidden px-4">
+    <div id="resultStep" class="step-transition step-hidden px-4 h-full overflow-y-auto">
       <div class="text-center mb-8">
         <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
           <i class="ri-brain-line text-2xl text-white"></i>
@@ -648,7 +672,16 @@
         </div>
       </div>
       <div class="space-y-4">
-        <div class="result-card bg-white rounded-xl overflow-hidden shadow-sm">
+        <a href="#" class="result-card bg-white rounded-xl overflow-hidden shadow-sm block cursor-pointer"
+           data-title="가평 프리미엄 글램핑"
+           data-region="경기도 가평군"
+           data-price="180000"
+           data-rating="4.8"
+           data-description="자연 속 럭셔리 글램핑 체험"
+           data-distance="차량 1시간"
+           data-facilities="수영장,바베큐장,와이파이"
+           data-image="https://readdy.ai/api/search-image?query=Luxury%20glamping%20tent%20with%20panoramic%20windows%20surrounded%20by%20forest%2C%20premium%20camping%20experience%2C%20cozy%20interior%20lighting%2C%20evening%20atmosphere%2C%20professional%20photography&width=800&height=400&seq=51&orientation=landscape"
+           data-badge="AI 추천">
           <img
             src="https://readdy.ai/api/search-image?query=Luxury%20glamping%20tent%20with%20panoramic%20windows%20surrounded%20by%20forest%2C%20premium%20camping%20experience%2C%20cozy%20interior%20lighting%2C%20evening%20atmosphere%2C%20professional%20photography&width=800&height=400&seq=51&orientation=landscape"
             class="w-full h-48 object-cover" alt="추천 숙소">
@@ -669,8 +702,17 @@
               <span class="text-primary font-medium">180,000원~</span>
             </div>
           </div>
-        </div>
-        <div class="result-card bg-white rounded-xl overflow-hidden shadow-sm">
+        </a>
+        <a href="#" class="result-card bg-white rounded-xl overflow-hidden shadow-sm block cursor-pointer"
+           data-title="양평 힐링 글램핑"
+           data-region="경기도 양평군"
+           data-price="150000"
+           data-rating="4.6"
+           data-description="계곡 옆 힐링 글램핑"
+           data-distance="차량 50분"
+           data-facilities="바베큐장,와이파이,주차장"
+           data-image="https://readdy.ai/api/search-image?query=Modern%20glamping%20dome%20with%20mountain%20view%2C%20luxury%20outdoor%20accommodation%2C%20comfortable%20interior%20setup%2C%20sunset%20lighting%2C%20high-quality%20photography&width=800&height=400&seq=52&orientation=landscape"
+           data-badge="인기">
           <img
             src="https://readdy.ai/api/search-image?query=Modern%20glamping%20dome%20with%20mountain%20view%2C%20luxury%20outdoor%20accommodation%2C%20comfortable%20interior%20setup%2C%20sunset%20lighting%2C%20high-quality%20photography&width=800&height=400&seq=52&orientation=landscape"
             class="w-full h-48 object-cover" alt="추천 숙소">
@@ -691,8 +733,17 @@
               <span class="text-primary font-medium">150,000원~</span>
             </div>
           </div>
-        </div>
-        <div class="result-card bg-white rounded-xl overflow-hidden shadow-sm">
+        </a>
+        <a href="#" class="result-card bg-white rounded-xl overflow-hidden shadow-sm block cursor-pointer"
+           data-title="포천 숲속 글램핑"
+           data-region="경기도 포천시"
+           data-price="160000"
+           data-rating="4.7"
+           data-description="숲속 프라이빗 글램핑"
+           data-distance="차량 1시간 10분"
+           data-facilities="바베큐장,와이파이"
+           data-image="https://readdy.ai/api/search-image?query=Cozy%20glamping%20tent%20with%20private%20deck%2C%20forest%20setting%2C%20romantic%20atmosphere%2C%20warm%20interior%20lighting%2C%20couple-friendly%20accommodation&width=800&height=400&seq=53&orientation=landscape"
+           data-badge="">
           <img
             src="https://readdy.ai/api/search-image?query=Cozy%20glamping%20tent%20with%20private%20deck%2C%20forest%20setting%2C%20romantic%20atmosphere%2C%20warm%20interior%20lighting%2C%20couple-friendly%20accommodation&width=800&height=400&seq=53&orientation=landscape"
             class="w-full h-48 object-cover" alt="추천 숙소">
@@ -713,13 +764,10 @@
               <span class="text-primary font-medium">160,000원~</span>
             </div>
           </div>
-        </div>
+        </a>
       </div>
-      <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/60d1a10f-cb42-4096-8ea5-a95c69bd769c"
-        data-readdy="true">
-        <button class="w-full bg-primary text-white py-4 !rounded-button font-medium mt-6 cursor-pointer">
-          더 많은 추천 보기
-        </button>
+      <a href="#" class="w-full bg-primary text-white py-4 !rounded-button font-medium mt-6 cursor-pointer block text-center" onclick="goToResultList(); return false;">
+        더 많은 추천 보기
       </a>
     </div>
   </main>
@@ -769,18 +817,60 @@
           }
         }
       }
-      function showStep(stepNumber) {
+      function showStep(stepNumber, direction = 'next') {
+        console.log('showStep called with stepNumber:', stepNumber, 'direction:', direction);
+        
+        // 현재 활성 스텝 찾기
+        let currentActiveStep = null;
         for (let i = 1; i <= totalSteps; i++) {
           const step = document.getElementById('step' + i);
-          if (i === stepNumber) {
-            step.classList.remove('step-hidden');
-            step.classList.add('step-visible');
-          } else {
-            step.classList.remove('step-visible');
-            step.classList.add('step-hidden');
+          if (step.classList.contains('step-visible')) {
+            currentActiveStep = i;
+            break;
           }
         }
+
+        // 새 스텝 요소
+        const newStep = document.getElementById('step' + stepNumber);
+        
+        if (direction === 'prev') {
+          // 이전으로 갈 때: 현재 스텝이 오른쪽으로 사라지고, 새 스텝이 왼쪽에서 나타남
+          
+          // 현재 스텝을 오른쪽으로 슬라이드 아웃
+          if (currentActiveStep) {
+            const currentStep = document.getElementById('step' + currentActiveStep);
+            currentStep.classList.remove('step-visible');
+            currentStep.classList.add('step-hidden');
+          }
+          
+          // 새 스텝을 왼쪽에서 슬라이드 인
+          newStep.classList.remove('step-hidden');
+          newStep.classList.add('step-slide-left');
+          
+          // 강제 리플로우
+          newStep.offsetHeight;
+          
+          // 슬라이드 인
+          newStep.classList.remove('step-slide-left');
+          newStep.classList.add('step-visible');
+          
+        } else {
+          // 다음으로 갈 때: 현재 스텝이 왼쪽으로 사라지고, 새 스텝이 오른쪽에서 나타남
+          
+          // 현재 스텝을 왼쪽으로 슬라이드 아웃
+          if (currentActiveStep) {
+            const currentStep = document.getElementById('step' + currentActiveStep);
+            currentStep.classList.remove('step-visible');
+            currentStep.classList.add('step-slide-left');
+          }
+          
+          // 새 스텝을 오른쪽에서 슬라이드 인
+          newStep.classList.remove('step-hidden');
+          newStep.classList.add('step-visible');
+        }
+
         if (stepNumber === totalSteps + 1) {
+          console.log('AI 분석 스텝으로 이동');
           document.querySelector('.fixed.bottom-0').style.display = 'none';
           document.getElementById('aiAnalysisStep').classList.remove('step-hidden');
           document.getElementById('aiAnalysisStep').classList.add('step-visible');
@@ -808,6 +898,7 @@
           document.querySelector('.grid.grid-cols-2.gap-3.text-sm').appendChild(facilitiesDiv);
         }
       }
+      
       document.querySelectorAll('#step1 button[data-value]').forEach(button => {
         button.addEventListener('click', function () {
           document.querySelectorAll('#step1 button[data-value]').forEach(btn => {
@@ -874,22 +965,9 @@
           petLabel.classList.remove('bg-primary/5', 'border-primary');
           petLabel.classList.add('border-2', 'border-transparent', '!rounded-xl');
         }
-        surveyData.pet = isChecked;
       }
-      document.getElementById('petLabel').addEventListener('click', function (e) {
-        if (e.target !== document.getElementById('petCheckbox')) {
-          const checkbox = document.getElementById('petCheckbox');
-          checkbox.checked = !checkbox.checked;
-          updatePetCheckboxStyle();
-        }
-      });
-      document.getElementById('petText').addEventListener('click', function (e) {
-        e.preventDefault();
-        const checkbox = document.getElementById('petCheckbox');
-        checkbox.checked = !checkbox.checked;
-        updatePetCheckboxStyle();
-      });
       document.getElementById('petCheckbox').addEventListener('change', function () {
+        surveyData.pet = this.checked;
         updatePetCheckboxStyle();
       });
       document.addEventListener('DOMContentLoaded', function () {
@@ -919,6 +997,8 @@
         });
       });
       nextBtn.addEventListener('click', function () {
+        console.log('nextBtn clicked, currentStep:', currentStep, 'totalSteps:', totalSteps);
+        
         if (currentStep < totalSteps) {
           currentStep++;
           updateProgress();
@@ -926,9 +1006,35 @@
           if (currentStep === totalSteps) {
             nextBtn.textContent = '추천 받기';
           }
-        } else {
-          currentStep++;
-          showStep(currentStep);
+        } else if (currentStep === totalSteps) {
+          // 마지막 스텝에서 "추천 받기" 버튼 클릭 시
+          console.log('추천 받기 버튼 클릭됨');
+          
+          // 현재 활성 스텝을 왼쪽으로 슬라이드 아웃
+          const currentActiveStep = document.getElementById('step' + currentStep);
+          currentActiveStep.classList.remove('step-visible');
+          currentActiveStep.classList.add('step-slide-left');
+          
+          // 하단 버튼 숨기기
+          document.querySelector('.fixed.bottom-0').style.display = 'none';
+          
+          // AI 분석 스텝을 오른쪽에서 슬라이드 인
+          const aiStep = document.getElementById('aiAnalysisStep');
+          aiStep.classList.remove('step-hidden');
+          aiStep.classList.add('step-visible');
+          
+          // 3초 후 결과 스텝으로 슬라이드 전환
+          setTimeout(() => {
+            // AI 분석 스텝을 왼쪽으로 슬라이드 아웃
+            aiStep.classList.remove('step-visible');
+            aiStep.classList.add('step-slide-left');
+            
+            // 결과 스텝을 오른쪽에서 슬라이드 인
+            const resultStep = document.getElementById('resultStep');
+            resultStep.classList.remove('step-hidden');
+            resultStep.classList.add('step-visible');
+            showResults();
+          }, 3000);
         }
       });
       updateProgress();
@@ -952,7 +1058,7 @@
         if (!isDragging) return;
         const dx = endX - startX;
         const threshold = 50;  // 50px 이상 이동 시 인식
-        if (dx < -threshold && currentStep < totalSteps) {
+        if (dx < -threshold && currentStep <= totalSteps) {
           // ← swipe → 다음
           currentStep++;
           showStep(currentStep);
@@ -961,7 +1067,7 @@
         } else if (dx > threshold && currentStep > 1) {
           // → swipe → 이전
           currentStep--;
-          showStep(currentStep);
+          showStep(currentStep, 'prev'); // 이전 스텝으로 돌아갈 때는 'prev' 방향 전달
           updateProgress();
           nextBtn.textContent = '다음';
         }
@@ -972,6 +1078,72 @@
       slider.addEventListener('touchend', e => handleSwipe(e.changedTouches[0].clientX));
       slider.addEventListener('mouseup', e => handleSwipe(e.clientX));
       slider.addEventListener('mouseleave', () => { isDragging = false; });
+
+      // goToResultList 함수 정의
+      window.goToResultList = function() {
+        // 설문 데이터를 쿼리스트링으로 구성
+        const queryParams = [];
+        
+        // 필수 설문 데이터 추가
+        queryParams.push(`people=${encodeURIComponent(surveyData.people || '2인')}`);
+        queryParams.push(`style=${encodeURIComponent(surveyData.style || '글램핑')}`);
+        queryParams.push(`budget=${encodeURIComponent(surveyData.budget || 15)}`);
+        queryParams.push(`regions=${encodeURIComponent(surveyData.regions.join(',') || '경기도')}`);
+        queryParams.push(`pet=${encodeURIComponent(surveyData.pet ? 'true' : 'false')}`);
+        queryParams.push(`facilities=${encodeURIComponent(surveyData.facilities.join(',') || '')}`);
+        queryParams.push(`mbti=${encodeURIComponent(surveyData.mbti || '')}`);
+        
+        // 쿼리스트링 생성
+        const queryString = queryParams.join('&');
+        
+        // recommend_result_list.html로 이동
+        window.location.href = `recommend_result_list.html?${queryString}`;
+      };
+
+      // 결과 카드 클릭 이벤트 추가
+      document.querySelectorAll('.result-card').forEach((card) => {
+        card.addEventListener('click', function(e) {
+          // 앵커의 기본 동작 방지
+          e.preventDefault();
+          
+          // data 속성에서 숙소 정보 읽기
+          const title = this.dataset.title || '';
+          const region = this.dataset.region || '';
+          const price = this.dataset.price || '';
+          const rating = this.dataset.rating || '';
+          const description = this.dataset.description || '';
+          const distance = this.dataset.distance || '';
+          const facilities = this.dataset.facilities || '';
+          const image = this.dataset.image || '';
+          const badge = this.dataset.badge || '';
+          
+          // 상세보기 페이지로 이동하면서 숙소 정보와 설문 데이터 전달
+          const params = new URLSearchParams();
+          
+          // 숙소 정보
+          params.append('title', title);
+          params.append('region', region);
+          params.append('price', price);
+          params.append('rating', rating);
+          params.append('description', description);
+          params.append('distance', distance);
+          params.append('facilities', facilities);
+          params.append('image', image);
+          params.append('badge', badge);
+          
+          // 설문 데이터도 함께 전달
+          params.append('survey_people', surveyData.people || '2인');
+          params.append('survey_style', surveyData.style || '글램핑');
+          params.append('survey_budget', surveyData.budget || 15);
+          params.append('survey_regions', surveyData.regions.join(',') || '경기도');
+          params.append('survey_pet', surveyData.pet ? 'true' : 'false');
+          params.append('survey_facilities', surveyData.facilities.join(',') || '');
+          params.append('survey_mbti', surveyData.mbti || '');
+          
+          // shop_detail.html로 이동
+          window.location.href = `shop_detail.html?${params.toString()}`;
+        });
+      });
     });
   </script>
 </body>
