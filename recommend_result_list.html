@@ -90,11 +90,21 @@
     .sort-dropdown.show {
       max-height: 200px;
     }
+
+    /* 스크롤바 숨김 */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    
+    * {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
   </style>
 </head>
 
 <body class="  min-h-[762px] mx-auto bg-gray-50">
-  <header class="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
+  <header class="fixed top-0 left-0 right-0 z-50 bg-white">
     <div class="flex items-center justify-between px-4 py-3">
       <a href="#" onclick="event.preventDefault(); history.back();" data-readdy="true"
         class="w-8 h-8 flex items-center justify-center cursor-pointer">
@@ -154,7 +164,7 @@
       </div>
     </div>
     <div id="listView" class="px-4 py-4 space-y-4">
-      <div class="accommodation-card bg-white rounded-xl overflow-hidden shadow-sm cursor-pointer">
+      <div class="accommodation-card bg-white rounded-xl overflow-hidden shadow-sm cursor-pointer block">
         <div class="relative">
           <img
             src="https://readdy.ai/api/search-image?query=Luxury%20glamping%20tent%20with%20panoramic%20windows%20surrounded%20by%20forest%2C%20premium%20camping%20experience%2C%20cozy%20interior%20lighting%2C%20evening%20atmosphere%2C%20professional%20photography%2C%20high-quality%20resort%20accommodation&width=375&height=200&seq=101&orientation=landscape"
@@ -197,14 +207,22 @@
               <span class="text-lg font-bold text-primary">180,000원</span>
               <span class="text-sm text-gray-500">/ 박</span>
             </div>
-            <button
-              class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium cursor-pointer !rounded-button">
+            <a href="#" class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium cursor-pointer !rounded-button reservation-btn"
+               data-title="가평 프리미엄 글램핑"
+               data-region="경기도 가평군"
+               data-price="180000"
+               data-rating="4.8"
+               data-description="자연 속 럭셔리 글램핑 체험 • 반려동물 동반 가능"
+               data-distance="차량 1시간"
+               data-facilities="수영장,바베큐장,와이파이"
+               data-image="https://readdy.ai/api/search-image?query=Luxury%20glamping%20tent%20with%20panoramic%20windows%20surrounded%20by%20forest%2C%20premium%20camping%20experience%2C%20cozy%20interior%20lighting%2C%20evening%20atmosphere%2C%20professional%20photography%2C%20high-quality%20resort%20accommodation&width=375&height=200&seq=101&orientation=landscape"
+               data-badge="AI 추천">
               예약하기
-            </button>
+            </a>
           </div>
         </div>
       </div>
-      <div class="accommodation-card bg-white rounded-xl overflow-hidden shadow-sm cursor-pointer">
+      <div class="accommodation-card bg-white rounded-xl overflow-hidden shadow-sm cursor-pointer block">
         <div class="relative">
           <img
             src="https://readdy.ai/api/search-image?query=Modern%20glamping%20dome%20with%20mountain%20view%2C%20luxury%20outdoor%20accommodation%2C%20comfortable%20interior%20setup%2C%20sunset%20lighting%2C%20high-quality%20photography%2C%20romantic%20couple-friendly%20atmosphere&width=375&height=200&seq=102&orientation=landscape"
@@ -247,14 +265,22 @@
               <span class="text-lg font-bold text-primary">150,000원</span>
               <span class="text-sm text-gray-500">/ 박</span>
             </div>
-            <button
-              class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium cursor-pointer !rounded-button">
+            <a href="#" class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium cursor-pointer !rounded-button reservation-btn"
+               data-title="양평 힐링 글램핑"
+               data-region="경기도 양평군"
+               data-price="150000"
+               data-rating="4.6"
+               data-description="계곡 옆 힐링 글램핑 • 커플 추천"
+               data-distance="차량 50분"
+               data-facilities="바베큐장,와이파이,주차장"
+               data-image="https://readdy.ai/api/search-image?query=Modern%20glamping%20dome%20with%20mountain%20view%2C%20luxury%20outdoor%20accommodation%2C%20comfortable%20interior%20setup%2C%20sunset%20lighting%2C%20high-quality%20photography%2C%20romantic%20couple-friendly%20atmosphere&width=375&height=200&seq=102&orientation=landscape"
+               data-badge="인기">
               예약하기
-            </button>
+            </a>
           </div>
         </div>
       </div>
-      <div class="accommodation-card bg-white rounded-xl overflow-hidden shadow-sm cursor-pointer">
+      <div class="accommodation-card bg-white rounded-xl overflow-hidden shadow-sm cursor-pointer block">
         <div class="relative">
           <img
             src="https://readdy.ai/api/search-image?query=Cozy%20glamping%20tent%20with%20private%20deck%2C%20forest%20setting%2C%20romantic%20atmosphere%2C%20warm%20interior%20lighting%2C%20couple-friendly%20accommodation%2C%20premium%20outdoor%20experience&width=375&height=200&seq=103&orientation=landscape"
@@ -293,14 +319,22 @@
               <span class="text-lg font-bold text-primary">160,000원</span>
               <span class="text-sm text-gray-500">/ 박</span>
             </div>
-            <button
-              class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium cursor-pointer !rounded-button">
+            <a href="#" class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium cursor-pointer !rounded-button reservation-btn"
+               data-title="포천 숲속 글램핑"
+               data-region="경기도 포천시"
+               data-price="160000"
+               data-rating="4.7"
+               data-description="숲속 프라이빗 글램핑 • 조용한 휴식"
+               data-distance="차량 1시간 10분"
+               data-facilities="바베큐장,와이파이"
+               data-image="https://readdy.ai/api/search-image?query=Cozy%20glamping%20tent%20with%20private%20deck%2C%20forest%20setting%2C%20romantic%20atmosphere%2C%20warm%20interior%20lighting%2C%20couple-friendly%20accommodation%2C%20premium%20outdoor%20experience&width=375&height=200&seq=103&orientation=landscape"
+               data-badge="">
               예약하기
-            </button>
+            </a>
           </div>
         </div>
       </div>
-      <div class="accommodation-card bg-white rounded-xl overflow-hidden shadow-sm cursor-pointer">
+      <div class="accommodation-card bg-white rounded-xl overflow-hidden shadow-sm cursor-pointer block">
         <div class="relative">
           <img
             src="https://readdy.ai/api/search-image?query=Luxury%20glamping%20village%20with%20multiple%20tents%2C%20family-friendly%20outdoor%20resort%2C%20beautiful%20landscape%20setting%2C%20professional%20hospitality%20photography%2C%20premium%20camping%20facilities&width=375&height=200&seq=104&orientation=landscape"
@@ -340,14 +374,22 @@
               <span class="text-lg font-bold text-primary">140,000원</span>
               <span class="text-sm text-gray-500">/ 박</span>
             </div>
-            <button
-              class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium cursor-pointer !rounded-button">
+            <a href="#" class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium cursor-pointer !rounded-button reservation-btn"
+               data-title="용인 패밀리 글램핑"
+               data-region="경기도 용인시"
+               data-price="140000"
+               data-rating="4.5"
+               data-description="가족 단위 추천 글램핑 • 다양한 액티비티"
+               data-distance="차량 40분"
+               data-facilities="수영장,바베큐장,주차장"
+               data-image="https://readdy.ai/api/search-image?query=Luxury%20glamping%20village%20with%20multiple%20tents%2C%20family-friendly%20outdoor%20resort%2C%20beautiful%20landscape%20setting%2C%20professional%20hospitality%20photography%2C%20premium%20camping%20facilities&width=375&height=200&seq=104&orientation=landscape"
+               data-badge="">
               예약하기
-            </button>
+            </a>
           </div>
         </div>
       </div>
-      <div class="accommodation-card bg-white rounded-xl overflow-hidden shadow-sm cursor-pointer">
+      <div class="accommodation-card bg-white rounded-xl overflow-hidden shadow-sm cursor-pointer block">
         <div class="relative">
           <img
             src="https://readdy.ai/api/search-image?query=Riverside%20glamping%20tents%20with%20water%20view%2C%20peaceful%20natural%20setting%2C%20luxury%20camping%20experience%2C%20serene%20atmosphere%2C%20high-quality%20outdoor%20accommodation%20photography&width=375&height=200&seq=105&orientation=landscape"
@@ -386,14 +428,22 @@
               <span class="text-lg font-bold text-primary">135,000원</span>
               <span class="text-sm text-gray-500">/ 박</span>
             </div>
-            <button
-              class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium cursor-pointer !rounded-button">
+            <a href="#" class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium cursor-pointer !rounded-button reservation-btn"
+               data-title="남양주 리버사이드 글램핑"
+               data-region="경기도 남양주시"
+               data-price="135000"
+               data-rating="4.4"
+               data-description="강변 뷰 글램핑 • 수상 액티비티 가능"
+               data-distance="차량 45분"
+               data-facilities="바베큐장,와이파이"
+               data-image="https://readdy.ai/api/search-image?query=Riverside%20glamping%20tents%20with%20water%20view%2C%20peaceful%20natural%20setting%2C%20luxury%20camping%20experience%2C%20serene%20atmosphere%2C%20high-quality%20outdoor%20accommodation%20photography&width=375&height=200&seq=105&orientation=landscape"
+               data-badge="">
               예약하기
-            </button>
+            </a>
           </div>
         </div>
       </div>
-      <div class="accommodation-card bg-white rounded-xl overflow-hidden shadow-sm cursor-pointer">
+      <div class="accommodation-card bg-white rounded-xl overflow-hidden shadow-sm cursor-pointer block">
         <div class="relative">
           <img
             src="https://readdy.ai/api/search-image?query=Mountain%20view%20glamping%20resort%20with%20panoramic%20scenery%2C%20premium%20outdoor%20accommodation%2C%20luxury%20camping%20facilities%2C%20beautiful%20natural%20landscape%2C%20professional%20resort%20photography&width=375&height=200&seq=106&orientation=landscape"
@@ -432,10 +482,18 @@
               <span class="text-lg font-bold text-primary">170,000원</span>
               <span class="text-sm text-gray-500">/ 박</span>
             </div>
-            <button
-              class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium cursor-pointer !rounded-button">
+            <a href="#" class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium cursor-pointer !rounded-button reservation-btn"
+               data-title="이천 마운틴뷰 글램핑"
+               data-region="경기도 이천시"
+               data-price="170000"
+               data-rating="4.6"
+               data-description="산 전망 글램핑 • 일출 명소"
+               data-distance="차량 1시간 20분"
+               data-facilities="바베큐장,주차장"
+               data-image="https://readdy.ai/api/search-image?query=Mountain%20view%20glamping%20resort%20with%20panoramic%20scenery%2C%20premium%20outdoor%20accommodation%2C%20luxury%20camping%20facilities%2C%20beautiful%20natural%20landscape%2C%20professional%20resort%20photography&width=375&height=200&seq=106&orientation=landscape"
+               data-badge="">
               예약하기
-            </button>
+            </a>
           </div>
         </div>
       </div>
@@ -515,6 +573,57 @@
       </div>
     </div>
   </main>
+  <div id="sideMenu"
+    class="fixed top-0 right-0 w-[280px] h-full bg-white transform translate-x-full transition-transform duration-300 z-50 shadow-lg flex flex-col">
+    <div class="flex items-center justify-between p-4 border-b">
+      <h2 class="text-lg font-medium">메뉴</h2>
+      <button id="closeMenu" class="w-8 h-8 flex items-center justify-center">
+        <i class="ri-close-line text-xl"></i>
+      </button>
+    </div>
+    <div class="flex-1 overflow-y-auto">
+      <div class="p-4 border-b">
+        <a href="./login.html" data-readdy="true" class="flex items-center gap-3 py-3 px-4 bg-gray-50 rounded-xl">
+          <i class="ri-user-add-line text-xl text-primary"></i>
+          <span>로그인/회원가입</span>
+        </a>
+      </div>
+      <div class="p-4 space-y-4">
+        <a href="./mypage.html" class="flex items-center gap-3">
+          <i class="ri-calendar-check-line text-xl text-gray-600"></i>
+          <span>예약 내역</span>
+        </a>
+        <a href="search.html" class="flex items-center gap-3">
+          <i class="ri-search-line text-xl text-gray-600"></i>
+          <span>캠핑장 검색</span>
+        </a>
+        <a href="shop_list.html?type=glamping" class="flex items-center gap-3">
+          <i class="ri-home-smile-line text-xl text-gray-600"></i>
+          <span>글램핑</span>
+        </a>
+        <a href="shop_list.html?type=caravan" class="flex items-center gap-3">
+          <i class="ri-caravan-line text-xl text-gray-600"></i>
+          <span>카라반</span>
+        </a>
+        <a href="shop_list.html?type=pension" class="flex items-center gap-3">
+          <i class="ri-hotel-line text-xl text-gray-600"></i>
+          <span>펜션</span>
+        </a>
+        <a href="shop_list.html?type=hotel" class="flex items-center gap-3">
+          <i class="ri-building-line text-xl text-gray-600"></i>
+          <span>호텔</span>
+        </a>
+        <a href="#" class="flex items-center gap-3">
+          <i class="ri-gift-line text-xl text-gray-600"></i>
+          <span>이벤트</span>
+        </a>
+        <a href="#" class="flex items-center gap-3">
+          <i class="ri-customer-service-line text-xl text-gray-600"></i>
+          <span>고객센터</span>
+        </a>
+      </div>
+    </div>
+  </div>
   <div id="filterModal" class="fixed inset-0 bg-black/50 z-50 hidden">
     <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-xl p-4 max-h-[80vh] overflow-y-auto">
       <div class="flex items-center justify-between mb-4">
@@ -607,27 +716,133 @@
       </div>
     </div>
   </div>
-  <nav class="fixed bottom-0 left-0 right-0 bg-white border-t z-40">
-    <div class="grid grid-cols-4 h-16">
-      <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/38b634fa-6e20-4a01-9a7e-0c863c9750dd"
-        data-readdy="true" class="flex flex-col items-center justify-center gap-1 cursor-pointer">
-        <i class="ri-home-4-line text-lg text-gray-400"></i>
-        <span class="text-xs text-gray-400">홈</span>
+  <nav class="fixed bottom-0 left-0 right-0 bg-white border-t">
+    <div class="grid grid-cols-6 py-1">
+      <a href="search_map.html"
+        data-readdy="true" class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+          <i class="ri-map-pin-2-fill text-lg group-hover:text-primary"></i>
+        </div>
+        <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">내주변</span>
       </a>
-      <a href="#" class="flex flex-col items-center justify-center gap-1 cursor-pointer">
-        <i class="ri-search-line text-lg text-gray-400"></i>
-        <span class="text-xs text-gray-400">검색</span>
+
+      <a href="./index.html" class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+          <i class="ri-home-5-fill text-lg group-hover:text-primary"></i>
+        </div>
+        <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">홈</span>
       </a>
-      <a href="#" class="flex flex-col items-center justify-center gap-1 cursor-pointer">
-        <i class="ri-tent-line text-lg text-primary"></i>
-        <span class="text-xs text-primary">추천</span>
+
+      <a href="wishlist.html" data-readdy="true" class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+          <i class="ri-heart-3-fill text-lg group-hover:text-primary"></i>
+        </div>
+        <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">찜</span>
       </a>
-      <a href="#" class="flex flex-col items-center justify-center gap-1 cursor-pointer">
-        <i class="ri-user-line text-lg text-gray-400"></i>
-        <span class="text-xs text-gray-400">마이</span>
+
+      <a href="mypage.html" data-readdy="true" class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+          <i class="ri-user-3-fill text-lg group-hover:text-primary"></i>
+        </div>
+        <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">마이</span>
       </a>
+
+      <button class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+          <i class="ri-wallet-3-fill text-lg group-hover:text-primary"></i>
+        </div>
+        <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">페이</span>
+      </button>
+      <button class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+          <i class="ri-menu-fill text-lg group-hover:text-primary"></i>
+        </div>
+        <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">전체</span>
+      </button>
     </div>
   </nav>
+  <div id="sideMenu"
+    class="fixed top-0 right-0 w-[280px] h-full bg-white transform translate-x-full transition-transform duration-300 z-50 shadow-lg flex flex-col">
+    <div class="flex items-center justify-between p-4 border-b">
+      <h2 class="text-lg font-medium">메뉴</h2>
+      <button id="closeMenu" class="w-8 h-8 flex items-center justify-center">
+        <i class="ri-close-line text-xl"></i>
+      </button>
+    </div>
+    <div class="flex-1 overflow-y-auto">
+      <div class="p-4 border-b">
+        <a href="./login.html" data-readdy="true" class="flex items-center gap-3 py-3 px-4 bg-gray-50 rounded-xl">
+          <i class="ri-user-add-line text-xl text-primary"></i>
+          <span>로그인/회원가입</span>
+        </a>
+      </div>
+      <div class="p-4 space-y-4">
+        <a href="./mypage.html" class="flex items-center gap-3">
+          <i class="ri-calendar-check-line text-xl text-gray-600"></i>
+          <span>예약 내역</span>
+        </a>
+        <a href="search.html" class="flex items-center gap-3">
+          <i class="ri-search-line text-xl text-gray-600"></i>
+          <span>캠핑장 검색</span>
+        </a>
+        <a href="shop_list.html?type=glamping" class="flex items-center gap-3">
+          <i class="ri-home-smile-line text-xl text-gray-600"></i>
+          <span>글램핑</span>
+        </a>
+        <a href="shop_list.html?type=caravan" class="flex items-center gap-3">
+          <i class="ri-caravan-line text-xl text-gray-600"></i>
+          <span>카라반</span>
+        </a>
+        <a href="shop_list.html?type=pension" class="flex items-center gap-3">
+          <i class="ri-hotel-line text-xl text-gray-600"></i>
+          <span>펜션</span>
+        </a>
+        <a href="shop_list.html?type=hotel" class="flex items-center gap-3">
+          <i class="ri-building-line text-xl text-gray-600"></i>
+          <span>호텔</span>
+        </a>
+        <a href="#" class="flex items-center gap-3">
+          <i class="ri-gift-line text-xl text-gray-600"></i>
+          <span>이벤트</span>
+        </a>
+        <a href="#" class="flex items-center gap-3">
+          <i class="ri-customer-service-line text-xl text-gray-600"></i>
+          <span>고객센터</span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <script id="sideMenuScript">
+    document.addEventListener('DOMContentLoaded', function () {
+      const menuButton = document.querySelector('button:has(i.ri-menu-fill)');
+      const closeMenu = document.getElementById('closeMenu');
+      const sideMenu = document.getElementById('sideMenu');
+      
+      if (menuButton) {
+        menuButton.addEventListener('click', function () {
+          sideMenu.classList.remove('translate-x-full');
+        });
+      }
+      
+      if (closeMenu) {
+        closeMenu.addEventListener('click', function () {
+          sideMenu.classList.add('translate-x-full');
+        });
+      }
+      
+      document.addEventListener('click', function (event) {
+        if (sideMenu && !sideMenu.contains(event.target) && !menuButton?.contains(event.target)) {
+          sideMenu.classList.add('translate-x-full');
+        }
+      });
+    });
+  </script>
   <script id="viewToggleScript">
     document.addEventListener('DOMContentLoaded', function () {
       const listViewBtn = document.getElementById('listViewBtn');
@@ -755,6 +970,110 @@
           this.textContent = '더 많은 숙소 보기';
           this.disabled = false;
         }, 1000);
+      });
+    });
+  </script>
+  <script id="surveyDataScript">
+    document.addEventListener('DOMContentLoaded', function () {
+      // URL 파라미터에서 설문 데이터 읽기
+      const urlParams = new URLSearchParams(window.location.search);
+      const people = urlParams.get('people') || '2인';
+      const style = urlParams.get('style') || '글램핑';
+      const budget = urlParams.get('budget') || 15;
+      const regions = urlParams.get('regions') || '경기도';
+      const pet = urlParams.get('pet') || 'false';
+      const facilities = urlParams.get('facilities') || '';
+      const mbti = urlParams.get('mbti') || '';
+      
+      // AI 분석 결과 텍스트 업데이트
+      const aiResultText = document.querySelector('.px-4.py-2.bg-primary\\/5 p');
+      if (aiResultText) {
+        // 숙소 개수는 랜덤하게 생성 (실제로는 API에서 받아올 데이터)
+        const accommodationCount = Math.floor(Math.random() * 30) + 15; // 15-44개
+        
+        // 지역 정보 처리 (첫 번째 지역만 표시)
+        const firstRegion = regions.split(',')[0];
+        
+        // 반려동물 정보 추가
+        const petInfo = pet === 'true' ? ', 반려동물 동반' : '';
+        
+        aiResultText.innerHTML = `
+          <span class="font-medium text-primary">AI 분석 결과:</span> ${people}, ${style}, ${budget}만원 예산${petInfo}으로 <span class="font-medium">${accommodationCount}개</span> 숙소를 찾았어요
+        `;
+      }
+      
+      // 예약하기 버튼 클릭 이벤트 추가
+      document.querySelectorAll('.reservation-btn').forEach((btn) => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation(); // 부모 요소의 클릭 이벤트 방지
+          
+          // 예약하기 버튼에서 직접 숙소 정보 읽기
+          const title = this.dataset.title || '';
+          const region = this.dataset.region || '';
+          const price = this.dataset.price || '';
+          const rating = this.dataset.rating || '';
+          const description = this.dataset.description || '';
+          const distance = this.dataset.distance || '';
+          const facilities = this.dataset.facilities || '';
+          const image = this.dataset.image || '';
+          const badge = this.dataset.badge || '';
+          
+          // 상세보기 페이지로 이동하면서 숙소 정보와 설문 데이터 전달
+          const params = new URLSearchParams();
+          
+          // 숙소 정보
+          params.append('title', title);
+          params.append('region', region);
+          params.append('price', price);
+          params.append('rating', rating);
+          params.append('description', description);
+          params.append('distance', distance);
+          params.append('facilities', facilities);
+          params.append('image', image);
+          params.append('badge', badge);
+          
+          // 설문 데이터도 함께 전달
+          params.append('survey_people', people);
+          params.append('survey_style', style);
+          params.append('survey_budget', budget);
+          params.append('survey_regions', regions);
+          params.append('survey_pet', pet);
+          params.append('survey_facilities', facilities);
+          params.append('survey_mbti', mbti);
+          
+          // shop_detail.html로 이동
+          window.location.href = `shop_detail.html?${params.toString()}`;
+        });
+      });
+      
+      // 추가 정보를 콘솔에 출력 (디버깅용)
+      console.log('설문 데이터:', {
+        people,
+        style,
+        budget,
+        regions,
+        pet,
+        facilities,
+        mbti
+      });
+    });
+  </script>
+  <script id="sideMenuScript">
+    document.addEventListener('DOMContentLoaded', function () {
+      const menuButton = document.getElementById('menuButton');
+      const closeMenu = document.getElementById('closeMenu');
+      const sideMenu = document.getElementById('sideMenu');
+      menuButton.addEventListener('click', function () {
+        sideMenu.classList.remove('translate-x-full');
+      });
+      closeMenu.addEventListener('click', function () {
+        sideMenu.classList.add('translate-x-full');
+      });
+      document.addEventListener('click', function (event) {
+        if (!sideMenu.contains(event.target) && !menuButton.contains(event.target)) {
+          sideMenu.classList.add('translate-x-full');
+        }
       });
     });
   </script>

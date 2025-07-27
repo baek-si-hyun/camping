@@ -45,6 +45,23 @@
       display: none;
     }
 
+    #media-slider {
+      display: flex;
+      transition: transform 0.3s ease;
+    }
+
+    #media-slider > div {
+      flex-shrink: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    #media-slider img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
     .tab-content {
       display: none;
     }
@@ -78,6 +95,16 @@
       color: #D1D5DB;
       pointer-events: none;
     }
+
+    /* 스크롤바 숨김 */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    
+    * {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
   </style>
 </head>
 
@@ -85,7 +112,7 @@
   <!-- 상단 네비게이션 바 -->
   <nav class="fixed w-full top-0 bg-white shadow-sm z-50 px-4 py-3 flex items-center justify-between">
     <div class="flex items-center">
-      <button class="w-10 h-10 flex items-center justify-center cursor-pointer" id="backButton">
+      <button type="button" class="w-10 h-10 flex items-center justify-center cursor-pointer" id="backButton">
         <i class="ri-arrow-left-line ri-lg"></i>
       </button>
       <h1 class="text-lg font-medium ml-2">숙소 상세</h1>
@@ -97,104 +124,118 @@
     </div>
   </nav>
   <!-- 메인 컨텐츠 -->
-  <main class="pt-16 pb-20 transition-all duration-300 transform">
+  <main class="pt-16">
     <!-- 비디오 섹션 -->
     <section id="main-media-container" class="relative h-[300px] overflow-hidden">
       <div id="media-slider" class="flex w-full h-full transition-transform duration-300">
-        <div id="video-wrapper" class="flex-shrink-0 w-full h-full relative">
+        <!-- <div id="video-wrapper" class="flex-shrink-0 w-full h-full relative">
           <video class="w-full h-full object-cover" autoplay muted loop playsinline>
             <source src="https://public.readdy.ai/gen_page/sample_glamping.mp4" type="video/mp4">
           </video>
           <div class="absolute bottom-4 left-4 bg-black/60 text-white px-3 py-1 rounded-full text-xs">
             동영상
           </div>
-        </div>
-        <div class="flex-shrink-0 w-full h-full relative">
-          <img
-            src="https://readdy.ai/api/search-image?query=luxury%20glamping%20tent%20exterior%20with%20wooden%20deck%20at%20sunset%2C%20atmospheric%20lighting%2C%20premium%20accommodation&width=800&height=600&seq=18&orientation=landscape"
-            alt="글램핑 전경" class="w-full h-full object-cover">
-        </div>
-        <div class="flex-shrink-0 w-full h-full relative">
-          <img
-            src="https://readdy.ai/api/search-image?query=glamping%20interior%20with%20luxurious%20bed%20and%20modern%20amenities%2C%20cozy%20atmosphere%2C%20evening%20mood&width=800&height=600&seq=19&orientation=landscape"
-            alt="글램핑 내부" class="w-full h-full object-cover">
-        </div>
-        <div class="flex-shrink-0 w-full h-full relative">
-          <img
-            src="https://readdy.ai/api/search-image?query=glamping%20site%20at%20night%20with%20fire%20pit%20and%20ambient%20lighting%2C%20starry%20sky&width=800&height=600&seq=20&orientation=landscape"
-            alt="글램핑 야경" class="w-full h-full object-cover">
-        </div>
+        </div> -->
       </div>
       <div class="absolute bottom-4 right-4 bg-black/60 text-white px-3 py-1 rounded-full text-xs">
-        <span id="media-counter">1/4</span>
+        <span id="media-counter">1/1</span>
       </div>
-      <div class="absolute top-1/2 left-4 transform -translate-y-1/2">
-        <button id="prev-media" class="w-8 h-8 bg-black/60 text-white rounded-full flex items-center justify-center">
-          <i class="ri-arrow-left-s-line"></i>
-        </button>
-      </div>
-      <div class="absolute top-1/2 right-4 transform -translate-y-1/2">
-        <button id="next-media" class="w-8 h-8 bg-black/60 text-white rounded-full flex items-center justify-center">
-          <i class="ri-arrow-right-s-line"></i>
-        </button>
-      </div>
+      <button id="prev-media"
+        class="absolute top-1/2 left-4 transform -translate-y-1/2 w-8 h-8 bg-black/60 text-white rounded-full flex items-center justify-center">
+        <i class="ri-arrow-left-s-line"></i>
+      </button>
+      <button id="next-media"
+        class="absolute top-1/2 right-4 transform -translate-y-1/2 w-8 h-8 bg-black/60 text-white rounded-full flex items-center justify-center">
+        <i class="ri-arrow-right-s-line"></i>
+      </button>
     </section>
     <!-- 썸네일 슬라이더 -->
-    <section class="thumbnail-slider flex overflow-x-auto py-3 px-4 gap-2">
+    <section id="media-thumbnails" class="thumbnail-slider flex overflow-x-auto py-3 px-4 gap-2">
       <div class="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden cursor-pointer" data-index="0">
         <img
-          src="https://readdy.ai/api/search-image?query=luxury%20glamping%20tent%20interior%20with%20comfortable%20bed%20and%20modern%20amenities%2C%20cozy%20atmosphere&width=64&height=64&seq=2&orientation=squarish"
-          alt="숙소 이미지" class="w-full h-full object-cover"
-          data-full-image="https://readdy.ai/api/search-image?query=luxury%20glamping%20tent%20interior%20with%20comfortable%20bed%20and%20modern%20amenities%2C%20cozy%20atmosphere&width=800&height=600&seq=2&orientation=landscape">
-      </div>
-      <div class="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden cursor-pointer">
-        <img
-          src="https://readdy.ai/api/search-image?query=glamping%20site%20outdoor%20view%20with%20firepit%20and%20seating%20area%2C%20evening%20atmosphere&width=64&height=64&seq=3&orientation=squarish"
+          src="https://readdy.ai/api/search-image?query=luxury%20glamping%20tent%20exterior%20with%20wooden%20deck%20at%20sunset&width=64&height=64&seq=18&orientation=squarish"
+          data-full-image="https://readdy.ai/api/search-image?query=luxury%20glamping%20tent%20exterior%20with%20wooden%20deck%20at%20sunset&width=800&height=600&seq=18&orientation=landscape"
           alt="숙소 이미지" class="w-full h-full object-cover">
       </div>
-      <div class="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden cursor-pointer">
+      <!-- seq=19 -->
+      <div data-index="1" class="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden cursor-pointer">
         <img
-          src="https://readdy.ai/api/search-image?query=luxury%20bathroom%20in%20glamping%20accommodation%20with%20modern%20fixtures&width=64&height=64&seq=4&orientation=squarish"
+          src="https://readdy.ai/api/search-image?query=glamping%20interior%20with%20luxurious%20bed%20and%20modern%20amenities&width=64&height=64&seq=19&orientation=squarish"
+          data-full-image="https://readdy.ai/api/search-image?query=glamping%20interior%20with%20luxurious%20bed%20and%20modern%20amenities&width=800&height=600&seq=19&orientation=landscape"
           alt="숙소 이미지" class="w-full h-full object-cover">
       </div>
-      <div class="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden cursor-pointer">
+      <!-- seq=20 -->
+      <div data-index="2" class="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden cursor-pointer">
+        <img
+          src="https://readdy.ai/api/search-image?query=glamping%20site%20at%20night%20with%20fire%20pit%20and%20ambient%20lighting&width=64&height=64&seq=20&orientation=squarish"
+          data-full-image="https://readdy.ai/api/search-image?query=glamping%20site%20at%20night%20with%20fire%20pit%20and%20ambient%20lighting&width=800&height=600&seq=20&orientation=landscape"
+          alt="숙소 이미지" class="w-full h-full object-cover">
+      </div>
+      <!-- seq=2 -->
+      <div data-index="3" class="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden cursor-pointer">
+        <img
+          src="https://readdy.ai/api/search-image?query=luxury%20glamping%20tent%20interior%20with%20comfortable%20bed&width=64&height=64&seq=2&orientation=squarish"
+          data-full-image="https://readdy.ai/api/search-image?query=luxury%20glamping%20tent%20interior%20with%20comfortable%20bed&width=800&height=600&seq=2&orientation=landscape"
+          alt="숙소 이미지" class="w-full h-full object-cover">
+      </div>
+      <!-- seq=3 -->
+      <div data-index="4" class="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden cursor-pointer">
+        <img
+          src="https://readdy.ai/api/search-image?query=glamping%20site%20outdoor%20view%20with%20firepit%20and%20seating&width=64&height=64&seq=3&orientation=squarish"
+          data-full-image="https://readdy.ai/api/search-image?query=glamping%20site%20outdoor%20view%20with%20firepit%20and%20seating&width=800&height=600&seq=3&orientation=landscape"
+          alt="숙소 이미지" class="w-full h-full object-cover">
+      </div>
+      <!-- seq=4 -->
+      <div data-index="5" class="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden cursor-pointer">
+        <img
+          src="https://readdy.ai/api/search-image?query=luxury%20bathroom%20in%20glamping%20accommodation&width=64&height=64&seq=4&orientation=squarish"
+          data-full-image="https://readdy.ai/api/search-image?query=luxury%20bathroom%20in%20glamping%20accommodation&width=800&height=600&seq=4&orientation=landscape"
+          alt="숙소 이미지" class="w-full h-full object-cover">
+      </div>
+      <!-- seq=5 -->
+      <div data-index="6" class="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden cursor-pointer">
         <img
           src="https://readdy.ai/api/search-image?query=glamping%20site%20dining%20area%20with%20beautiful%20view&width=64&height=64&seq=5&orientation=squarish"
+          data-full-image="https://readdy.ai/api/search-image?query=glamping%20site%20dining%20area%20with%20beautiful%20view&width=800&height=600&seq=5&orientation=landscape"
           alt="숙소 이미지" class="w-full h-full object-cover">
       </div>
-      <div class="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden cursor-pointer">
+      <!-- seq=6 -->
+      <div data-index="7" class="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden cursor-pointer">
         <img
           src="https://readdy.ai/api/search-image?query=glamping%20site%20at%20night%20with%20starry%20sky%20and%20ambient%20lighting&width=64&height=64&seq=6&orientation=squarish"
-          alt="숙소 이미지" class="w-full h-full object-cover">
-      </div>
-      <div class="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden cursor-pointer">
-        <img
-          src="https://readdy.ai/api/search-image?query=glamping%20site%20kitchen%20area%20with%20modern%20appliances&width=64&height=64&seq=7&orientation=squarish"
-          alt="숙소 이미지" class="w-full h-full object-cover">
-      </div>
-      <div class="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden cursor-pointer">
-        <img
-          src="https://readdy.ai/api/search-image?query=aerial%20view%20of%20glamping%20site%20in%20forest&width=64&height=64&seq=8&orientation=squarish"
-          alt="숙소 이미지" class="w-full h-full object-cover">
-      </div>
-      <div class="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden cursor-pointer">
-        <img
-          src="https://readdy.ai/api/search-image?query=glamping%20site%20outdoor%20shower%20with%20privacy&width=64&height=64&seq=9&orientation=squarish"
+          data-full-image="https://readdy.ai/api/search-image?query=glamping%20site%20at%20night%20with%20starry%20sky%20and%20ambient%20lighting&width=800&height=600&seq=6&orientation=landscape"
           alt="숙소 이미지" class="w-full h-full object-cover">
       </div>
     </section>
     <!-- 숙소 제목 및 기본 정보 -->
     <section class="px-4 py-4">
-      <h1 class="text-2xl font-bold">포레스트 글램핑 리조트</h1>
+      <h1 id="detail-title" class="text-2xl font-bold">숙소명</h1>
       <div class="flex items-center mt-2">
-        <div class="flex items-center text-yellow-500">
+        <div class="flex items-center text-yellow-500 rating-display">
           <i class="ri-star-fill ri-sm"></i>
           <span class="ml-1 text-sm font-medium">4.8</span>
         </div>
         <span class="mx-2 text-gray-300">|</span>
         <span class="text-sm text-gray-600">리뷰 128개</span>
         <span class="mx-2 text-gray-300">|</span>
-        <span class="text-sm text-gray-600">강원도 홍천군</span>
+        <span id="detail-region" class="text-sm text-gray-600">지역</span>
+      </div>
+      <!-- 배지 표시 -->
+      <div class="mt-2 badge-display"></div>
+      <!-- 설명 표시 -->
+      <p class="mt-2 text-gray-600 description-display">숙소 설명이 여기에 표시됩니다.</p>
+      <!-- 거리 정보 표시 -->
+      <div class="mt-2 text-sm text-gray-500 distance-display">
+        <i class="ri-car-line"></i>
+        <span>거리 정보</span>
+      </div>
+      <!-- 시설 정보 표시 -->
+      <div class="mt-3 facilities-display">
+        <span class="px-2 py-1 bg-blue-50 text-blue-600 rounded text-xs">기본 시설</span>
+      </div>
+      <!-- 가격 정보 표시 -->
+      <div class="mt-3">
+        <span id="detail-price" class="text-xl font-bold text-primary">가격 정보</span>
       </div>
     </section>
     <!-- 탭 메뉴 -->
@@ -629,7 +670,7 @@
         <span class="ml-1 text-xl font-bold">4.8</span>
         <span class="ml-2 text-gray-500">(128개 리뷰)</span>
       </div>
-      <div class="space-y-4">
+      <div id="reviews-container" class="space-y-4">
         <!-- 리뷰 1 -->
         <div class="border border-gray-200 rounded-lg p-4">
           <div class="flex justify-between items-start mb-2">
@@ -700,7 +741,8 @@
             좋았어요. 다만 욕실이 조금 좁은 느낌이 있었지만, 전체적으로는 매우 만족스러웠습니다!</p>
         </div>
       </div>
-      <button class="w-full mt-4 py-3 text-primary border border-primary rounded-button font-medium cursor-pointer">리뷰
+      <button id="load-more-reviews"
+        class="w-full mt-4 py-3 text-primary border border-primary rounded-button font-medium cursor-pointer">리뷰
         더보기</button>
     </section>
   </main>
@@ -884,32 +926,36 @@
   </script>
   <script id="room-selection-handler">
     document.addEventListener('DOMContentLoaded', function () {
+      // ① 선택된 객실 정보를 담을 전역 객체
+      window.roomData = {};
+
       const roomButtons = document.querySelectorAll('.room-select-btn');
-      let selectedRoom = null;
       roomButtons.forEach(button => {
         button.addEventListener('click', () => {
-          // 이전에 선택된 버튼 스타일 초기화
+          // 스타일 토글
           roomButtons.forEach(btn => {
             btn.classList.remove('bg-primary', 'text-white');
             btn.classList.add('bg-white', 'text-primary', 'border', 'border-primary');
             btn.textContent = '선택';
           });
-          // 현재 버튼 스타일 변경
           button.classList.remove('bg-white', 'text-primary', 'border', 'border-primary');
           button.classList.add('bg-primary', 'text-white');
           button.textContent = '선택됨';
-          // 선택된 객실 ID 저장
-          selectedRoom = button.getAttribute('data-room-id');
-          // 객실 이름 매핑
-          const roomNames = {
-            'premium': '프리미엄 글램핑 텐트',
-            'standard': '스탠다드 글램핑 텐트',
-            'family': '패밀리 글램핑 텐트',
-            'dome': '스타게이징 돔',
-            'treehouse': '트리하우스'
-          };
-          // 모달에 선택된 객실 표시
-          document.getElementById('modal-room').textContent = roomNames[selectedRoom] || '객실을 선택해주세요';
+
+          // ② 카드 DOM에서 정보 추출
+          const card = button.closest('.border-gray-200');
+          const name = card.querySelector('h3').textContent.trim();
+          const priceTxt = card.querySelector('p.text-lg').textContent.replace(/[^0-9]/g, '');
+          const capacity = card.querySelector('.ri-user-line + span').textContent.trim();
+          const area = card.querySelector('.ri-home-line + span').textContent.trim();
+          const img = card.querySelector('img').src;
+          const id = button.getAttribute('data-room-id');
+
+          // ③ roomData에 저장
+          window.roomData = { id, name, price: Number(priceTxt), capacity, area, img };
+
+          // ④ 모달 텍스트 업데이트
+          document.getElementById('modal-room').textContent = name;
         });
       });
     });
@@ -921,125 +967,159 @@
       const closeModalBtn = document.getElementById('close-modal');
       const confirmReservationBtn = document.getElementById('confirm-reservation');
       const modalDatesEl = document.getElementById('modal-dates');
-      // 예약하기 버튼 클릭
-      reservationBtn.addEventListener('click', (e) => {
-        const checkInDate = document.getElementById('check-in-date').textContent;
-        const checkOutDate = document.getElementById('check-out-date').textContent;
-        const nightsCount = document.getElementById('nights-count').textContent;
-        if (checkInDate === '날짜 선택' || checkOutDate === '날짜 선택') {
-          // 날짜가 선택되지 않은 경우
+
+      // "예약하기" 클릭 → 날짜·객실 체크 후 모달 오픈
+      reservationBtn.addEventListener('click', e => {
+        const checkIn = document.getElementById('check-in-date').textContent;
+        const checkOut = document.getElementById('check-out-date').textContent;
+        const nights = document.getElementById('nights-count').textContent;
+
+        if (checkIn === '날짜 선택' || checkOut === '날짜 선택') {
           e.preventDefault();
-          showCustomAlert('날짜를 선택해주세요.');
-          return;
+          return showCustomAlert('날짜를 선택해주세요.');
         }
-        // 선택된 객실이 있는지 확인
-        const selectedRoomEl = document.querySelector('.room-select-btn.bg-primary');
-        if (!selectedRoomEl) {
+        if (!window.roomData.id) {
           e.preventDefault();
-          showCustomAlert('객실을 선택해주세요.');
-          return;
+          return showCustomAlert('객실을 선택해주세요.');
         }
-        // 모달에 선택 정보 표시
-        modalDatesEl.textContent = `${checkInDate} ~ ${checkOutDate} (${nightsCount})`;
-        // 모달 표시
+
+        modalDatesEl.textContent = `${checkIn} ~ ${checkOut} (${nights})`;
         modal.classList.remove('hidden');
       });
+
       // 모달 닫기
-      closeModalBtn.addEventListener('click', () => {
-        modal.classList.add('hidden');
-      });
-      // 모달 외부 클릭 시 닫기
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-          modal.classList.add('hidden');
-        }
-      });
+      closeModalBtn.addEventListener('click', () => modal.classList.add('hidden'));
+      modal.addEventListener('click', e => { if (e.target === modal) modal.classList.add('hidden'); });
 
-      // 예약 진행하기 버튼
+      // "예약 진행하기" 클릭 → URL 파라미터와 함께 이동
       confirmReservationBtn.addEventListener('click', () => {
-        showCustomAlert('예약이 완료되었습니다. 예약 내역 페이지로 이동합니다.');
-        modal.classList.add('hidden');
-        // 여기에 예약 완료 후 이동할 페이지 로직 추가
+        const { id, name, price, capacity, area, img } = window.roomData;
+        const checkIn = encodeURIComponent(document.getElementById('check-in-date').textContent);
+        const checkOut = encodeURIComponent(document.getElementById('check-out-date').textContent);
 
-        location.href = './reservation.html';
+        const qs = new URLSearchParams({
+          checkIn,
+          checkOut,
+          roomId: id,
+          roomName: name,
+          roomPrice: price,
+          roomCapacity: capacity,
+          roomArea: area,
+          roomImg: img
+        }).toString();
+
+        modal.classList.add('hidden');
+        location.href = `./reservation.html?${qs}`;
       });
 
-      // 커스텀 알림 표시 함수
-      function showCustomAlert(message) {
+      function showCustomAlert(msg) {
         const alertEl = document.createElement('div');
-        alertEl.classList.add('fixed', 'top-16', 'left-0', 'right-0', 'mx-auto', 'w-[80%]', 'bg-gray-800', 'text-white', 'py-3', 'px-4', 'rounded-lg', 'text-center', 'z-50');
+        alertEl.className = 'fixed top-16 left-0 right-0 mx-auto w-[80%] bg-gray-800 text-white py-3 px-4 rounded-lg text-center z-50';
         alertEl.style.maxWidth = '300px';
-        alertEl.textContent = message;
+        alertEl.textContent = msg;
         document.body.appendChild(alertEl);
         setTimeout(() => {
           alertEl.classList.add('opacity-0', 'transition-opacity', 'duration-300');
-          setTimeout(() => {
-            document.body.removeChild(alertEl);
-          }, 300);
+          setTimeout(() => document.body.removeChild(alertEl), 300);
         }, 2000);
       }
     });
   </script>
-
   <script id="media-slider-handler">
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(location.search);
+      const firstImg = params.get('image') ? decodeURIComponent(params.get('image')) : null;  // 'img'에서 'image'로 변경
+      
+      // 디버깅용 로그
+      console.log('URL 파라미터:', params.toString());
+      console.log('전달받은 이미지 URL:', firstImg);
       const mediaSlider = document.getElementById('media-slider');
+      const thumbSection = document.getElementById('media-thumbnails');
       const mediaCounter = document.getElementById('media-counter');
-      const prevButton = document.getElementById('prev-media');
-      const nextButton = document.getElementById('next-media');
+      const prevBtn = document.getElementById('prev-media');
+      const nextBtn = document.getElementById('next-media');
+
+      // — 1) seq 번호와 검색어를 묶어서 정의
+      const queries = [
+        { seq: 18, text: 'luxury glamping tent exterior with wooden deck at sunset, atmospheric lighting, premium accommodation' },
+        { seq: 19, text: 'glamping interior with luxurious bed and modern amenities, cozy atmosphere, evening mood' },
+        { seq: 20, text: 'glamping site at night with fire pit and ambient lighting, starry sky' },
+        { seq: 2, text: 'luxury glamping tent interior with comfortable bed and modern amenities, cozy atmosphere' },
+        { seq: 3, text: 'glamping site outdoor view with firepit and seating area, evening atmosphere' },
+        { seq: 4, text: 'luxury bathroom in glamping accommodation with modern fixtures, elegant design' },
+        { seq: 7, text: 'glamping outdoor kitchen area with modern appliances and dining table' },
+        { seq: 8, text: 'aerial view of forest glamping site with tents and trees overhead' }
+      ];
+
+      // 2) 페일백 이미지 URL 생성
+      const fallbackImgs = queries.map(({ seq, text }) =>
+        `https://readdy.ai/api/search-image?query=${encodeURIComponent(text)}&width=800&height=600&seq=${seq}&orientation=landscape`
+      );
+
+      // — 3) firstImg가 있으면 앞에, 없으면 그냥 페일백 8개
+      let images = firstImg
+        ? [firstImg, ...fallbackImgs.slice(0, 7)]  // 총 1 + 7 = 8장
+        : fallbackImgs;                           // 총 8장
+      
+      // 디버깅용 로그
+      console.log('최종 이미지 배열:', images);
+
+      // — 4) 컨테이너 초기화
+      mediaSlider.innerHTML = '';
+      thumbSection.innerHTML = '';
+
+      // — 5) 슬라이드 & 썸네일 생성
+      images.forEach((url, idx) => {
+        // 메인 슬라이드
+        const slide = document.createElement('div');
+        slide.className = 'flex-shrink-0 w-full h-full relative';
+        slide.innerHTML = `<img src="${url}" alt="슬라이드 ${idx + 1}" class="w-full h-full object-cover">`;
+        mediaSlider.appendChild(slide);
+
+        // 썸네일
+        const thumb = document.createElement('div');
+        thumb.className = 'flex-shrink-0 w-16 h-16 rounded-md overflow-hidden cursor-pointer';
+        thumb.dataset.index = idx;
+        thumb.innerHTML = `<img src="${url}" alt="썸네일 ${idx + 1}" class="w-full h-full object-cover">`;
+        thumb.addEventListener('click', () => { currentIndex = idx; update(); });
+        thumbSection.appendChild(thumb);
+      });
+
+      // — 6) 슬라이더 제어 로직
       let currentIndex = 0;
-      let startX = 0;
-      let currentX = 0;
-      let isDragging = false;
-      const totalSlides = mediaSlider.children.length;
-      function updateSlider() {
+      const totalSlides = images.length;
+      function update() {
         mediaSlider.style.transform = `translateX(-${currentIndex * 100}%)`;
         mediaCounter.textContent = `${currentIndex + 1}/${totalSlides}`;
       }
-      function handleNext() {
-        if (currentIndex < totalSlides - 1) {
-          currentIndex++;
-          updateSlider();
-        }
-      }
-      function handlePrev() {
-        if (currentIndex > 0) {
-          currentIndex--;
-          updateSlider();
-        }
-      }
-      // Touch events for swipe
-      mediaSlider.addEventListener('touchstart', (e) => {
-        startX = e.touches[0].clientX;
-        isDragging = true;
+      prevBtn.addEventListener('click', () => {
+        if (currentIndex > 0) { currentIndex--; update(); }
+      });
+      nextBtn.addEventListener('click', () => {
+        if (currentIndex < totalSlides - 1) { currentIndex++; update(); }
+      });
+
+      // — 7) 터치 스와이프 (선택)
+      let startX = 0, currentX = 0, isDragging = false;
+      mediaSlider.addEventListener('touchstart', e => {
+        startX = e.touches[0].clientX; isDragging = true;
         mediaSlider.style.transition = 'none';
       });
-      mediaSlider.addEventListener('touchmove', (e) => {
+      mediaSlider.addEventListener('touchmove', e => {
         if (!isDragging) return;
-        e.preventDefault();
         currentX = e.touches[0].clientX - startX;
-        const translateX = (-currentIndex * 100) + (currentX / mediaSlider.offsetWidth * 100);
-        mediaSlider.style.transform = `translateX(${translateX}%)`;
+        const offset = -currentIndex * 100 + (currentX / mediaSlider.offsetWidth * 100);
+        mediaSlider.style.transform = `translateX(${offset}%)`;
       });
       mediaSlider.addEventListener('touchend', () => {
         isDragging = false;
-        mediaSlider.style.transition = 'transform 0.3s';
-        if (Math.abs(currentX) > 100) {
-          if (currentX > 0) {
-            handlePrev();
-          } else {
-            handleNext();
-          }
-        } else {
-          updateSlider();
-        }
+        mediaSlider.style.transition = 'transform .3s';
+        Math.abs(currentX) > 50 ? (currentX > 0 ? prevBtn.click() : nextBtn.click()) : update();
         currentX = 0;
       });
-      // Button controls
-      prevButton.addEventListener('click', handlePrev);
-      nextButton.addEventListener('click', handleNext);
-      // Initialize counter
-      updateSlider();
+
+      // — 8) 초기 렌더링
+      update();
     });
   </script>
   <script id="favorite-handler">
@@ -1076,44 +1156,204 @@
     document.addEventListener('DOMContentLoaded', function () {
       const backButton = document.getElementById('backButton');
       const mainContent = document.querySelector('main');
+
+      // 예약 정보 입력 여부 체크
       function hasReservationData() {
-        const checkInDate = document.getElementById('check-in-date').textContent;
-        const checkOutDate = document.getElementById('check-out-date').textContent;
+        const checkIn = document.getElementById('check-in-date').textContent;
+        const checkOut = document.getElementById('check-out-date').textContent;
         const selectedRoom = document.querySelector('.room-select-btn.bg-primary');
-        return (checkInDate !== '날짜 선택' || checkOutDate !== '날짜 선택' || selectedRoom);
+        return (checkIn !== '날짜 선택' || checkOut !== '날짜 선택' || selectedRoom);
       }
+
+      // 나가기 확인 모달 생성
       function showConfirmDialog() {
         const dialogEl = document.createElement('div');
-        dialogEl.classList.add('fixed', 'inset-0', 'bg-black', 'bg-opacity-50', 'z-50', 'flex', 'items-center', 'justify-center');
+        dialogEl.classList.add('fixed', 'inset-0', 'bg-black/50', 'z-50', 'flex', 'items-center', 'justify-center');
         dialogEl.innerHTML = `
-<div class="bg-white rounded-lg w-[80%] max-w-sm p-5 transform scale-95 opacity-0 transition-all duration-200">
-<h3 class="text-lg font-medium mb-3">작성 중인 내용이 있습니다</h3>
-<p class="text-gray-600 mb-4">정말 나가시겠습니까?</p>
-<div class="flex justify-end gap-2">
-<button class="px-4 py-2 text-gray-500 rounded-button" id="cancelExit">취소</button>
-<button class="px-4 py-2 bg-primary text-white rounded-button" id="confirmExit">나가기</button>
-</div>
-</div>`;
+  <div class="bg-white rounded-lg w-[80%] max-w-sm p-5">
+    <h3 class="text-lg font-medium mb-3">작성 중인 내용이 있습니다</h3>
+    <p class="text-gray-600 mb-4">정말 나가시겠습니까?</p>
+    <div class="flex justify-end gap-2">
+      <button id="cancelExit" class="px-4 py-2 text-gray-500 rounded">취소</button>
+      <button id="confirmExit" class="px-4 py-2 bg-primary text-white rounded">나가기</button>
+    </div>
+  </div>`;
         document.body.appendChild(dialogEl);
-        requestAnimationFrame(() => {
-          dialogEl.querySelector('div').classList.remove('scale-95', 'opacity-0');
-        });
-        dialogEl.querySelector('#cancelExit').addEventListener('click', () => {
-          dialogEl.querySelector('div').classList.add('scale-95', 'opacity-0');
-          setTimeout(() => dialogEl.remove(), 200);
-        });
-        dialogEl.querySelector('#confirmExit').addEventListener('click', () => {
-          mainContent.classList.add('-translate-x-full', 'opacity-0');
-          setTimeout(() => window.history.back(), 300);
-        });
+
+        // 취소 버튼
+        dialogEl.querySelector('#cancelExit')
+          .addEventListener('click', () => dialogEl.remove());
+
+        // 나가기 버튼
+        dialogEl.querySelector('#confirmExit')
+          .addEventListener('click', () => {
+            dialogEl.remove();
+            history.back();
+          });
       }
+
+      // 백 버튼 클릭
       backButton.addEventListener('click', () => {
         if (hasReservationData()) {
           showConfirmDialog();
         } else {
-          mainContent.classList.add('-translate-x-full', 'opacity-0');
-          setTimeout(() => window.history.back(), 300);
+          history.back();
         }
+      });
+    });
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const params = new URLSearchParams(window.location.search);
+      
+      // 숙소 정보
+      const title = params.get('title') || '숙소명이 없습니다';
+      const region = params.get('region') || '';
+      const price = params.get('price') ? '₩' + Number(params.get('price')).toLocaleString() + '~' : '';
+      const rating = params.get('rating') || '';
+      const description = params.get('description') || '';
+      const distance = params.get('distance') || '';
+      const facilities = params.get('facilities') || '';
+      const image = params.get('image') || '';
+      const badge = params.get('badge') || '';
+      
+      // 설문 데이터
+      const surveyPeople = params.get('survey_people') || '';
+      const surveyStyle = params.get('survey_style') || '';
+      const surveyBudget = params.get('survey_budget') || '';
+      const surveyRegions = params.get('survey_regions') || '';
+      const surveyPet = params.get('survey_pet') || '';
+      const surveyFacilities = params.get('survey_facilities') || '';
+      const surveyMbti = params.get('survey_mbti') || '';
+
+      // id는 필요하다면 이후 API 호출 등에 사용
+      const id = params.get('id');
+
+      // 화면에 반영
+      document.getElementById('detail-title').textContent = title;
+      document.getElementById('detail-region').textContent = region;
+      document.getElementById('detail-price').textContent = price;
+      
+      // 평점 표시
+      if (rating) {
+        const ratingElement = document.querySelector('.rating-display');
+        if (ratingElement) {
+          ratingElement.innerHTML = `
+            <i class="ri-star-fill ri-sm"></i>
+            <span class="ml-1 text-sm font-medium">${rating}</span>
+          `;
+        }
+      }
+      
+      // 설명 표시
+      if (description) {
+        const descElement = document.querySelector('.description-display');
+        if (descElement) {
+          descElement.textContent = description;
+        }
+      }
+      
+      // 거리 정보 표시
+      if (distance) {
+        const distanceElement = document.querySelector('.distance-display');
+        if (distanceElement) {
+          distanceElement.innerHTML = `
+            <i class="ri-car-line"></i>
+            <span>${distance}</span>
+          `;
+        }
+      }
+      
+      // 시설 정보 표시
+      if (facilities) {
+        const facilitiesArray = facilities.split(',');
+        const facilitiesContainer = document.querySelector('.facilities-display');
+        if (facilitiesContainer) {
+          facilitiesContainer.innerHTML = facilitiesArray.map(facility => 
+            `<span class="px-2 py-1 bg-blue-50 text-blue-600 rounded text-xs mr-2">${facility}</span>`
+          ).join('');
+        }
+      }
+      
+      // 배지 표시
+      if (badge) {
+        const badgeElement = document.querySelector('.badge-display');
+        if (badgeElement) {
+          badgeElement.innerHTML = `
+            <div class="bg-primary text-white px-2 py-1 rounded text-xs font-medium inline-block">
+              ${badge}
+            </div>
+          `;
+        }
+      }
+      
+      // 설문 데이터를 콘솔에 출력 (디버깅용)
+      console.log('전달받은 숙소 정보:', {
+        title, region, price, rating, description, distance, facilities, image, badge
+      });
+      
+      console.log('전달받은 설문 데이터:', {
+        surveyPeople, surveyStyle, surveyBudget, surveyRegions, 
+        surveyPet, surveyFacilities, surveyMbti
+      });
+
+    });
+  </script>
+  <script>
+    // 리뷰 더보기
+    document.addEventListener('DOMContentLoaded', () => {
+      const btn = document.getElementById('load-more-reviews');
+      const box = document.getElementById('reviews-container');
+      // 추가할 3개 리뷰 데이터
+      const more = [
+        {
+          user: '홍길동',
+          date: '2025.05.20',
+          rating: 5,
+          text: '자연 속 글램핑이 예상보다 훨씬 좋았습니다! 텐트 내부가 깨끗하고 침구도 포근했으며, 밤에는 반짝이는 별빛 아래 캠프파이어를 즐길 수 있어 정말 로맨틱했어요. 아침에는 새소리와 함께 눈을 뜨고, 준비된 조식도 깔끔하고 맛있었습니다. 직원분들의 친절한 안내 덕분에 불편함 없이 편안하게 지낼 수 있었습니다. 다음에도 꼭 다시 방문하고 싶습니다!'
+        },
+        {
+          user: '유재석',
+          date: '2025.05.18',
+          rating: 4.5,
+          text: '가족 여행으로 글램핑장을 이용했는데 모두가 만족했어요. 아이들이 뛰어놀 수 있는 안전한 산책로와 넓은 데크 공간이 있어서 마음 놓고 시간을 보낼 수 있었습니다. 텐트마다 준비된 조명과 전기시설 덕분에 편리했고, 주변 경관이 아름다워 사진도 많이 찍었어요. 다만 주말이라 다소 북적였던 점만 빼면 전체적으로 완벽한 힐링이었습니다.'
+        },
+        {
+          user: '강호동',
+          date: '2025.05.15',
+          rating: 4,
+          text: '고즈넉한 숲속에서 보내는 시간이 정말 소중했습니다. 아침 일찍 일어나 산책로를 따라 걸으며 마주친 청량한 공기와 새소리가 아직도 생생하네요. 저녁에는 모닥불을 피우고 고기를 구워먹으며 온 가족이 둘러앉아 즐거운 대화를 나눴습니다. 욕실·샤워 시설도 깔끔하게 관리되어 있었고, 불편함 없이 편안하게 사용할 수 있었어요. 다만 간혹 바비큐 그릴 예약이 빨리 차서 미리 확인하시면 좋을 것 같아요.'
+        }
+      ];
+      // 별표 HTML 생성
+      function stars(r) {
+        let full = Math.floor(r), half = r % 1 >= 0.5, out = '';
+        for (let i = 0; i < full; i++) out += '<i class="ri-star-fill ri-xs"></i>';
+        if (half) out += '<i class="ri-star-half-line ri-xs"></i>';
+        return out;
+      }
+      btn.addEventListener('click', () => {
+        more.forEach(({ user, date, rating, text }) => {
+          const div = document.createElement('div');
+          div.className = 'border border-gray-200 rounded-lg p-4';
+          div.innerHTML = `
+            <div class="flex justify-between items-start mb-2">
+              <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+                  <i class="ri-user-fill ri-lg text-gray-500"></i>
+                </div>
+                <div class="ml-3">
+                  <p class="font-medium">${user}</p>
+                  <div class="flex items-center text-yellow-500">${stars(rating)}</div>
+                </div>
+              </div>
+              <p class="text-sm text-gray-500">${date}</p>
+            </div>
+            <p class="text-gray-600">${text}</p>
+          `;
+          box.appendChild(div);
+        });
+        btn.remove();  // 한 번만 로드하고 버튼은 숨김
       });
     });
   </script>

@@ -73,6 +73,16 @@
       z-index: 9999;
       transition: all 0.3s ease;
     }
+
+    /* 스크롤바 숨김 */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    
+    * {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
   </style>
 </head>
 
@@ -80,7 +90,7 @@
   <!-- 네비게이션 바 -->
   <nav class="fixed top-0 left-0 right-0 bg-white z-50 shadow-sm">
     <div class="flex items-center px-4 h-16">
-      <a href="./index.html" data-readdy="true"
+      <a href="#" onclick="event.preventDefault(); history.back();" data-readdy="true"
         class="w-10 h-10 flex items-center justify-center cursor-pointer hover:bg-gray-50 rounded-full">
         <i class="ri-arrow-left-s-line text-xl"></i>
       </a>
@@ -164,34 +174,34 @@
       </div>
       <div class="mt-4 flex justify-between text-sm">
         <div class="text-gray-600">총 <span id="total-nights" class="font-medium">1</span>박</div>
-        <div class="text-primary font-medium">₩130,000 / 1박</div>
+        <div class="text-primary font-medium" id="nightly-price">₩130,000 / 1박</div>
       </div>
     </section>
     <!-- 선택된 객실 정보 섹션 -->
     <section class="mb-8">
       <h2 class="text-lg font-medium mb-4">선택된 객실</h2>
-      <div class="bg-white border border-gray-200 rounded-xl p-4">
+      <div class="bg-white border border-gray-200 rounded-xl p-4" id="selected-room-info">
         <div class="flex gap-3">
           <img
             src="https://readdy.ai/api/search-image?query=Luxury%20glamping%20tent%20interior%20with%20queen%20size%20bed%2C%20cozy%20lighting%2C%20wooden%20furniture%2C%20professional%20photography%2C%20no%20people&width=120&height=120&seq=301&orientation=squarish"
-            class="w-[80px] h-[80px] rounded-md object-cover" alt="디럭스 글램핑 텐트">
+            class="w-[80px] h-[80px] rounded-md object-cover" alt="디럭스 글램핑 텐트" id="selected-room-img">
           <div class="flex-1">
             <div class="flex items-center gap-2">
-              <h4 class="font-medium">디럭스 글램핑 텐트</h4>
+              <h4 class="font-medium" id="selected-room-name">디럭스 글램핑 텐트</h4>
               <span class="px-2 py-0.5 bg-primary/10 text-primary text-xs rounded-full">선택됨</span>
             </div>
             <div class="flex flex-wrap gap-x-3 gap-y-1 mt-1 text-sm text-gray-600">
-              <span>면적: 25㎡</span>
-              <span>기준 2인 / 최대 3인</span>
+              <span id="selected-room-area">면적: 25㎡</span>
+              <span id="selected-room-capacity">기준 2인 / 최대 3인</span>
             </div>
-            <div class="flex flex-wrap gap-x-2 gap-y-1 mt-2">
+            <div class="flex flex-wrap gap-x-2 gap-y-1 mt-2" id="selected-room-features">
               <span class="px-2 py-1 bg-gray-100 rounded-full text-xs text-gray-600">퀸 사이즈 침대</span>
               <span class="px-2 py-1 bg-gray-100 rounded-full text-xs text-gray-600">욕실</span>
             </div>
-            <div class="mt-2 text-primary font-medium">₩130,000 / 1박</div>
+            <div class="mt-2 text-primary font-medium" id="selected-room-price">₩130,000 / 1박</div>
           </div>
         </div>
-        <input type="hidden" name="room-type" value="deluxe">
+        <input type="hidden" name="room-type" id="selected-room-type" value="deluxe">
       </div>
     </section>
     <!-- 인원 선택 섹션 -->
@@ -249,13 +259,13 @@
           </div>
           <div class="flex items-center gap-3">
             <span class="text-sm font-medium">₩30,000</span>
-            <div class="relative w-[52px] h-8">
-              <input type="checkbox" id="bbq-option" class="peer sr-only">
-              <div class="w-full h-full bg-gray-200 rounded-full peer-checked:bg-primary transition-colors"></div>
+            <button type="button" id="bbq-toggle"
+              class="relative w-[52px] h-8 bg-gray-200 rounded-full transition-colors duration-200" data-option="bbq"
+              data-price="30000">
               <div
-                class="absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform duration-200 ease-in-out peer-checked:translate-x-6 cursor-pointer shadow-md">
+                class="absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform duration-200 ease-in-out shadow-md">
               </div>
-            </div>
+            </button>
           </div>
         </div>
         <div class="flex justify-between items-center">
@@ -265,13 +275,13 @@
           </div>
           <div class="flex items-center gap-3">
             <span class="text-sm font-medium">₩15,000</span>
-            <div class="relative w-[52px] h-8">
-              <input type="checkbox" id="breakfast-option" class="peer sr-only">
-              <div class="w-full h-full bg-gray-200 rounded-full peer-checked:bg-primary transition-colors"></div>
+            <button type="button" id="breakfast-toggle"
+              class="relative w-[52px] h-8 bg-gray-200 rounded-full transition-colors duration-200"
+              data-option="breakfast" data-price="15000">
               <div
-                class="absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform duration-200 ease-in-out peer-checked:translate-x-6 cursor-pointer shadow-md">
+                class="absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform duration-200 ease-in-out shadow-md">
               </div>
-            </div>
+            </button>
           </div>
         </div>
         <div class="flex justify-between items-center">
@@ -281,13 +291,13 @@
           </div>
           <div class="flex items-center gap-3">
             <span class="text-sm font-medium">₩45,000</span>
-            <div class="relative w-[52px] h-8">
-              <input type="checkbox" id="wine-option" class="peer sr-only">
-              <div class="w-full h-full bg-gray-200 rounded-full peer-checked:bg-primary transition-colors"></div>
+            <button type="button" id="wine-toggle"
+              class="relative w-[52px] h-8 bg-gray-200 rounded-full transition-colors duration-200" data-option="wine"
+              data-price="45000">
               <div
-                class="absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform duration-200 ease-in-out peer-checked:translate-x-6 cursor-pointer shadow-md">
+                class="absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform duration-200 ease-in-out shadow-md">
               </div>
-            </div>
+            </button>
           </div>
         </div>
       </div>
@@ -564,8 +574,7 @@
       <h3 class="text-xl font-medium text-center mb-2">예약이 완료되었습니다</h3>
       <p class="text-gray-600 text-center mb-6">예약 확인 메일이 발송되었습니다.</p>
       <div class="space-y-3">
-        <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/1cf0d814-6ea9-40e4-9232-9102e310c481"
-          data-readdy="true"
+        <a href="index.html"
           class="block w-full py-3 bg-primary text-white text-center font-medium rounded-lg !rounded-button">
           확인
         </a>
@@ -574,126 +583,144 @@
   </div>
   <script id="calendarScript">
     document.addEventListener('DOMContentLoaded', function () {
+      const params = new URLSearchParams(window.location.search);
+      const inParam = params.get('checkIn');    // ex: "2025.07.25"
+      const outParam = params.get('checkOut');   // ex: "2025.07.26"
+
+      function parseYmd(s) {
+        if (!s) return null;
+        const [y, m, d] = s.split('.');
+        return new Date(+y, +m - 1, +d);
+      }
+
+      let selectedStartDate = parseYmd(inParam) || new Date(2025, 6, 8);
+      let selectedEndDate = parseYmd(outParam) || new Date(2025, 6, 9);
+
+      // DOM 요소
       const calendarDays = document.getElementById('calendar-days');
-      const currentMonthElement = document.getElementById('current-month');
-      const prevMonthButton = document.getElementById('prev-month');
-      const nextMonthButton = document.getElementById('next-month');
-      const checkInDateElement = document.getElementById('check-in-date');
-      const checkOutDateElement = document.getElementById('check-out-date');
-      const totalNightsElement = document.getElementById('total-nights');
-      let currentDate = new Date(2025, 6, 8); // 2025년 7월 8일
-      let selectedStartDate = new Date(2025, 6, 8);
-      let selectedEndDate = new Date(2025, 6, 9);
-      // 날짜 포맷 함수
+      const currentMonthEl = document.getElementById('current-month');
+      const prevMonthBtn = document.getElementById('prev-month');
+      const nextMonthBtn = document.getElementById('next-month');
+      const checkInDateEl = document.getElementById('check-in-date');
+      const checkOutDateEl = document.getElementById('check-out-date');
+      const totalNightsEl = document.getElementById('total-nights');
+
       function formatDate(date) {
         const days = ['일', '월', '화', '수', '목', '금', '토'];
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        const dayOfWeek = days[date.getDay()];
-        return `${year}.${month}.${day} (${dayOfWeek})`;
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, '0');
+        const d = String(date.getDate()).padStart(2, '0');
+        return `${y}.${m}.${d} (${days[date.getDay()]})`;
       }
-      // 캘린더 렌더링 함수
+
+      // 초기 화면 반영
+      checkInDateEl.textContent = formatDate(selectedStartDate);
+      checkOutDateEl.textContent = formatDate(selectedEndDate);
+      const initNights = Math.round((selectedEndDate - selectedStartDate) / (1000 * 60 * 60 * 24));
+      totalNightsEl.textContent = initNights;
+
+      // 초기 박 수 표시 업데이트
+      updateNightsDisplay(initNights);
+
+      // 달력 렌더링 함수
       function renderCalendar() {
-        const year = currentDate.getFullYear();
-        const month = currentDate.getMonth();
-        currentMonthElement.textContent = `${year}년 ${month + 1}월`;
-        // 해당 월의 첫 날과 마지막 날
+        calendarDays.innerHTML = '';
+        const year = selectedStartDate.getFullYear(); // 현재 보고 있는 달
+        const month = selectedStartDate.getMonth();
+        currentMonthEl.textContent = `${year}년 ${month + 1}월`;
+
         const firstDay = new Date(year, month, 1);
         const lastDay = new Date(year, month + 1, 0);
-        // 이전 달의 마지막 날들
-        const firstDayIndex = firstDay.getDay();
-        // 캘린더 초기화
-        calendarDays.innerHTML = '';
-        // 이전 달의 날짜들
-        for (let i = firstDayIndex; i > 0; i--) {
-          const prevDate = new Date(year, month, 1 - i);
-          const dayElement = document.createElement('div');
-          dayElement.className = 'calendar-day disabled';
-          dayElement.textContent = prevDate.getDate();
-          calendarDays.appendChild(dayElement);
+        const startIdx = firstDay.getDay();
+
+        // 이전 달 남은 칸
+        for (let i = 0; i < startIdx; i++) {
+          const el = document.createElement('div');
+          el.className = 'calendar-day disabled';
+          el.textContent = new Date(year, month, 1 - startIdx + i).getDate();
+          calendarDays.appendChild(el);
         }
-        // 현재 달의 날짜들
+        // 이번 달 날짜
+        const today = new Date(); today.setHours(0, 0, 0, 0);
         for (let i = 1; i <= lastDay.getDate(); i++) {
           const date = new Date(year, month, i);
-          const dayElement = document.createElement('div');
-          dayElement.className = 'calendar-day';
-          dayElement.textContent = i;
-          // 예약 불가능한 날짜 (과거 날짜)
-          if (date < new Date(2025, 6, 7)) {
-            dayElement.classList.add('disabled');
+          const el = document.createElement('div');
+          el.className = 'calendar-day';
+          el.textContent = i;
+          if (date < today) {
+            el.classList.add('disabled');
           } else {
-            // 선택된 날짜 범위 표시
+            // 범위 스타일
             if (date.getTime() === selectedStartDate.getTime()) {
-              dayElement.classList.add('selected');
-              if (selectedEndDate && selectedEndDate > selectedStartDate) {
-                dayElement.classList.add('range-start');
-              }
-            } else if (selectedEndDate && date.getTime() === selectedEndDate.getTime()) {
-              dayElement.classList.add('selected');
-              dayElement.classList.add('range-end');
-            } else if (selectedEndDate && date > selectedStartDate && date < selectedEndDate) {
-              dayElement.classList.add('range');
+              el.classList.add('selected');
             }
-            // 날짜 선택 이벤트
-            dayElement.addEventListener('click', function () {
-              if (dayElement.classList.contains('disabled')) return;
-              if (!selectedStartDate || (selectedStartDate && selectedEndDate) || date < selectedStartDate) {
-                // 새로운 선택 시작
+            if (selectedEndDate && date.getTime() === selectedEndDate.getTime()) {
+              el.classList.add('selected');
+            }
+            if (selectedEndDate && date > selectedStartDate && date < selectedEndDate) {
+              el.classList.add('in-range');
+            }
+            // 클릭 이벤트
+            el.addEventListener('click', () => {
+              if (date < today) return;
+              if (!selectedStartDate || (selectedStartDate && selectedEndDate)) {
                 selectedStartDate = date;
                 selectedEndDate = null;
-                checkInDateElement.textContent = formatDate(selectedStartDate);
-                checkOutDateElement.textContent = '선택해주세요';
-                totalNightsElement.textContent = '0';
+                checkInDateEl.textContent = formatDate(selectedStartDate);
+                checkOutDateEl.textContent = '선택해주세요';
+                totalNightsEl.textContent = '0';
+                updateNightsDisplay(0);
               } else {
-                // 선택 종료
-                if (date.getTime() === selectedStartDate.getTime()) {
-                  // 같은 날짜 선택 시 하루 예약
-                  selectedEndDate = new Date(date);
-                  selectedEndDate.setDate(selectedEndDate.getDate() + 1);
-                } else if (date > selectedStartDate) {
+                if (date < selectedStartDate) {
+                  selectedEndDate = selectedStartDate;
+                  selectedStartDate = date;
+                } else {
                   selectedEndDate = date;
                 }
-                checkOutDateElement.textContent = formatDate(selectedEndDate);
-                // 숙박 일수 계산
+                checkInDateEl.textContent = formatDate(selectedStartDate);
+                checkOutDateEl.textContent = formatDate(selectedEndDate);
                 const nights = Math.round((selectedEndDate - selectedStartDate) / (1000 * 60 * 60 * 24));
-                totalNightsElement.textContent = nights;
-                // 가격 업데이트
-                updateTotalPrice();
+                totalNightsEl.textContent = nights;
+
+                // 박 수 관련 UI 업데이트
+                updateNightsDisplay(nights);
+
+                // 날짜 변경 시 가격 계산 업데이트
+                if (window.updateTotalPrice) {
+                  window.updateTotalPrice();
+                  console.log('날짜 변경으로 인한 가격 업데이트 - 숙박일수:', nights);
+                }
               }
               renderCalendar();
             });
           }
-          calendarDays.appendChild(dayElement);
+          calendarDays.appendChild(el);
         }
-        // 다음 달의 시작 날짜들 (필요한 경우)
-        const lastDayIndex = lastDay.getDay();
-        if (lastDayIndex < 6) {
-          for (let i = 1; i <= 6 - lastDayIndex; i++) {
-            const nextDate = new Date(year, month + 1, i);
-            const dayElement = document.createElement('div');
-            dayElement.className = 'calendar-day disabled';
-            dayElement.textContent = nextDate.getDate();
-            calendarDays.appendChild(dayElement);
-          }
+        // 다음 달 빈 칸
+        const endIdx = lastDay.getDay();
+        for (let i = 1; i < 7 - endIdx; i++) {
+          const el = document.createElement('div');
+          el.className = 'calendar-day disabled';
+          el.textContent = i;
+          calendarDays.appendChild(el);
         }
       }
-      // 이전 달 버튼
-      prevMonthButton.addEventListener('click', function () {
-        currentDate.setMonth(currentDate.getMonth() - 1);
-        renderCalendar();
-      });
-      // 다음 달 버튼
-      nextMonthButton.addEventListener('click', function () {
-        currentDate.setMonth(currentDate.getMonth() + 1);
-        renderCalendar();
-      });
-      // 초기 캘린더 렌더링
+
+      // 박 수 표시 업데이트 함수
+      function updateNightsDisplay(nights) {
+        // 결제 정보 섹션의 "객실 요금 (1박)" 텍스트 업데이트
+        const roomPriceLabel = document.querySelector('#room-price').previousElementSibling;
+        if (roomPriceLabel && roomPriceLabel.textContent.includes('객실 요금')) {
+          roomPriceLabel.textContent = `객실 요금 (${nights}박)`;
+        }
+
+        console.log('박 수 표시 업데이트:', nights + '박');
+      }
+
+      prevMonthBtn.addEventListener('click', () => { selectedStartDate.setMonth(selectedStartDate.getMonth() - 1); renderCalendar(); });
+      nextMonthBtn.addEventListener('click', () => { selectedStartDate.setMonth(selectedStartDate.getMonth() + 1); renderCalendar(); });
+
       renderCalendar();
-      // 초기 날짜 표시
-      checkInDateElement.textContent = formatDate(selectedStartDate);
-      checkOutDateElement.textContent = formatDate(selectedEndDate);
-      totalNightsElement.textContent = '1';
     });
   </script>
   <script id="roomTypeSelector">
@@ -713,14 +740,26 @@
             roomRadioIndicators[index].classList.remove('border-gray-300');
             roomRadioIndicators[index].classList.add('border-primary');
             roomRadioIndicators[index].querySelector('div').classList.remove('hidden');
-            // 가격 업데이트
-            let roomPrice = 130000; // 기본 가격 (디럭스)
-            if (this.value === 'premium') {
-              roomPrice = 180000;
-            } else if (this.value === 'family') {
-              roomPrice = 220000;
+            // 가격 업데이트 - URL 파라미터 우선 사용
+            const params = new URLSearchParams(window.location.search);
+            const urlRoomPrice = params.get('roomPrice');
+
+            if (urlRoomPrice) {
+              // URL 파라미터가 있으면 그 가격 사용 (객실 타입 변경 시에도 유지)
+              const roomPrice = Number(urlRoomPrice);
+              document.getElementById('room-price').textContent = `₩${roomPrice.toLocaleString()}`;
+              console.log('URL 파라미터 가격 사용:', roomPrice);
+            } else {
+              // 없으면 기본 가격 사용
+              let roomPrice = 130000; // 기본 가격 (디럭스)
+              if (this.value === 'premium') {
+                roomPrice = 180000;
+              } else if (this.value === 'family') {
+                roomPrice = 220000;
+              }
+              document.getElementById('room-price').textContent = `₩${roomPrice.toLocaleString()}`;
+              console.log('기본 가격 사용:', roomPrice);
             }
-            document.getElementById('room-price').textContent = `₩${roomPrice.toLocaleString()}`;
             updateTotalPrice();
           }
         });
@@ -752,12 +791,23 @@
           let count = parseInt(countElement.textContent);
           // 최대값 설정 (객실 타입에 따라 다름)
           let maxValue = 6;
-          const selectedRoomType = document.querySelector('input[name="room-type"]:checked').value;
-          if (selectedRoomType === 'deluxe') {
-            maxValue = 3;
-          } else if (selectedRoomType === 'premium') {
-            maxValue = 4;
-          }
+
+          // URL 파라미터에서 객실 ID 가져오기
+          const params = new URLSearchParams(window.location.search);
+          const roomId = params.get('roomId');
+
+          // 객실 타입별 최대 인원 설정
+          const maxCapacityMap = {
+            'premium': 4,
+            'standard': 3,
+            'family': 6,
+            'dome': 2,
+            'treehouse': 3,
+            'deluxe': 3
+          };
+
+          maxValue = maxCapacityMap[roomId] || 6;
+          console.log('객실 타입:', roomId, '최대 인원:', maxValue);
           const adultCount = parseInt(document.getElementById('adult-count').textContent);
           const childCount = parseInt(document.getElementById('child-count').textContent);
           const totalCount = adultCount + childCount;
@@ -771,10 +821,8 @@
         });
       });
       function updateBreakfastPrice() {
-        const breakfastCheckbox = document.getElementById('breakfast-option');
-        if (breakfastCheckbox.checked) {
-          updateTotalPrice();
-        }
+        // 인원 수 변경 시 가격 업데이트 제거 (인원수는 가격에 영향을 미치지 않음)
+        console.log('인원 수 변경됨 (가격에 영향 없음)');
       }
       function showToast(message) {
         // 기존 토스트 제거
@@ -801,20 +849,29 @@
   </script>
   <script id="additionalOptionsManager">
     document.addEventListener('DOMContentLoaded', function () {
-      const optionCheckboxes = document.querySelectorAll('#bbq-option, #breakfast-option, #wine-option');
-      optionCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function () {
-          const dotElement = this.parentElement.querySelector('.dot');
-          if (this.checked) {
-            this.parentElement.querySelector('div:first-child').classList.remove('bg-gray-200');
-            this.parentElement.querySelector('div:first-child').classList.add('bg-primary');
-            dotElement.classList.add('transform', 'translate-x-6', 'bg-white');
+      const optionToggles = document.querySelectorAll('#bbq-toggle, #breakfast-toggle, #wine-toggle');
+
+      optionToggles.forEach(toggle => {
+        toggle.addEventListener('click', function () {
+          const isActive = this.classList.contains('bg-primary');
+          const dot = this.querySelector('div');
+
+          if (isActive) {
+            // 비활성화
+            this.classList.remove('bg-primary');
+            this.classList.add('bg-gray-200');
+            dot.classList.remove('translate-x-5');
+            this.setAttribute('data-active', 'false');
           } else {
-            this.parentElement.querySelector('div:first-child').classList.remove('bg-primary');
-            this.parentElement.querySelector('div:first-child').classList.add('bg-gray-200');
-            dotElement.classList.remove('transform', 'translate-x-6');
+            // 활성화
+            this.classList.remove('bg-gray-200');
+            this.classList.add('bg-primary');
+            dot.classList.add('translate-x-5');
+            this.setAttribute('data-active', 'true');
           }
+
           updateTotalPrice();
+          console.log('추가 옵션 토글:', this.getAttribute('data-option'), isActive ? '비활성화' : '활성화');
         });
       });
     });
@@ -960,6 +1017,13 @@
       const guestEmailInput = document.getElementById('guest-email');
       const agreeTermsCheckbox = document.getElementById('agree-terms');
       const agreePrivacyCheckbox = document.getElementById('agree-privacy');
+      // 이름 한글/영어만 입력 가능
+      guestNameInput.addEventListener('input', function (e) {
+        const input = e.target;
+        // 한글, 영어, 공백만 허용하는 정규식
+        input.value = input.value.replace(/[^가-힣a-zA-Z\s]/g, '');
+      });
+
       // 전화번호 자동 하이픈 포맷팅
       guestPhoneInput.addEventListener('input', function (e) {
         const input = e.target;
@@ -971,6 +1035,41 @@
         }
         input.value = value;
       });
+
+      // 카드번호 자동 하이픈 포맷팅
+      const cardNumberInput = document.getElementById('card-number');
+      cardNumberInput.addEventListener('input', function (e) {
+        const input = e.target;
+        let value = input.value.replace(/[^0-9]/g, '');
+        if (value.length > 4) {
+          value = value.slice(0, 4) + '-' + value.slice(4);
+        }
+        if (value.length > 9) {
+          value = value.slice(0, 9) + '-' + value.slice(9);
+        }
+        if (value.length > 14) {
+          value = value.slice(0, 14) + '-' + value.slice(14);
+        }
+        input.value = value.slice(0, 19); // 최대 16자리 + 하이픈 3개
+      });
+
+      // 카드 유효기간 자동 슬래시 포맷팅
+      const cardExpiryInput = document.getElementById('card-expiry');
+      cardExpiryInput.addEventListener('input', function (e) {
+        const input = e.target;
+        let value = input.value.replace(/[^0-9]/g, '');
+        if (value.length > 2) {
+          value = value.slice(0, 2) + '/' + value.slice(2);
+        }
+        input.value = value.slice(0, 5); // MM/YY 형식
+      });
+
+      // CVC 숫자만 입력 가능
+      const cardCvcInput = document.getElementById('card-cvc');
+      cardCvcInput.addEventListener('input', function (e) {
+        const input = e.target;
+        input.value = input.value.replace(/[^0-9]/g, '').slice(0, 3);
+      });
       // 이메일 유효성 검사
       function isValidEmail(email) {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -980,31 +1079,68 @@
       function validateForm() {
         let isValid = true;
         let errorMessage = '';
+        let focusElement = null;
+        
         // 이름 검사
         if (!guestNameInput.value.trim()) {
           isValid = false;
           errorMessage = '예약자 이름을 입력해주세요';
-          guestNameInput.focus();
+          focusElement = guestNameInput;
         }
         // 전화번호 검사
         else if (!guestPhoneInput.value.trim() || guestPhoneInput.value.replace(/[^0-9]/g, '').length < 10) {
           isValid = false;
           errorMessage = '올바른 연락처를 입력해주세요';
-          guestPhoneInput.focus();
+          focusElement = guestPhoneInput;
         }
         // 이메일 검사
         else if (!guestEmailInput.value.trim() || !isValidEmail(guestEmailInput.value)) {
           isValid = false;
           errorMessage = '올바른 이메일을 입력해주세요';
-          guestEmailInput.focus();
+          focusElement = guestEmailInput;
         }
         // 필수 약관 동의 검사
         else if (!agreeTermsCheckbox.checked || !agreePrivacyCheckbox.checked) {
           isValid = false;
           errorMessage = '필수 약관에 동의해주세요';
         }
+        // 결제 정보 검사
+        else {
+          const selectedPaymentMethod = document.querySelector('input[name="payment-method"]:checked');
+          if (!selectedPaymentMethod) {
+            isValid = false;
+            errorMessage = '결제 수단을 선택해주세요';
+          } else {
+            // 신용카드 선택 시 카드 정보 검사
+            if (selectedPaymentMethod.value === 'card') {
+              const cardNumber = document.getElementById('card-number').value.trim();
+              const cardExpiry = document.getElementById('card-expiry').value.trim();
+              const cardCvc = document.getElementById('card-cvc').value.trim();
+              
+              if (!cardNumber || cardNumber.replace(/[^0-9]/g, '').length < 16) {
+                isValid = false;
+                errorMessage = '올바른 카드번호를 입력해주세요';
+                focusElement = document.getElementById('card-number');
+              } else if (!cardExpiry || !/^\d{2}\/\d{2}$/.test(cardExpiry)) {
+                isValid = false;
+                errorMessage = '올바른 유효기간을 입력해주세요 (MM/YY)';
+                focusElement = document.getElementById('card-expiry');
+              } else if (!cardCvc || cardCvc.length < 3) {
+                isValid = false;
+                errorMessage = '올바른 CVC를 입력해주세요';
+                focusElement = document.getElementById('card-cvc');
+              }
+            }
+            // 계좌이체 선택 시 추가 검증 없음 (입금 안내만 표시)
+            // 간편결제 선택 시 추가 검증 없음 (앱 연동)
+          }
+        }
+        
         if (!isValid && errorMessage) {
           showToast(errorMessage);
+          if (focusElement) {
+            focusElement.focus();
+          }
         }
         return isValid;
       }
@@ -1039,45 +1175,197 @@
   </script>
   <script id="priceCalculator">
     document.addEventListener('DOMContentLoaded', function () {
+      // URL 파라미터에서 객실 가격 가져오기
+      const params = new URLSearchParams(window.location.search);
+      const urlRoomPrice = params.get('roomPrice');
+
       // 전역 함수로 가격 업데이트 함수 정의
       window.updateTotalPrice = function () {
-        // 객실 가격 계산
-        const selectedRoomType = document.querySelector('input[name="room-type"]:checked').value;
-        let roomPrice = 130000; // 디럭스 기본 가격
-        if (selectedRoomType === 'premium') {
-          roomPrice = 180000;
-        } else if (selectedRoomType === 'family') {
-          roomPrice = 220000;
-        }
+        // 객실 가격 계산 - URL 파라미터 우선, 없으면 기본값
+        const currentParams = new URLSearchParams(window.location.search);
+        const currentRoomPrice = currentParams.get('roomPrice');
+        let roomPrice = currentRoomPrice ? Number(currentRoomPrice) : 130000;
+
+        console.log('가격 계산 - URL 파라미터:', currentRoomPrice, '최종 가격:', roomPrice);
+
         // 숙박 일수 계산
         const nights = parseInt(document.getElementById('total-nights').textContent) || 1;
         const totalRoomPrice = roomPrice * nights;
+
+        console.log('가격 계산 - 숙박일수:', nights, '객실가격:', roomPrice, '총 객실가격:', totalRoomPrice);
+
         // 추가 옵션 가격 계산
         let optionsPrice = 0;
+
         // 바베큐 옵션
-        if (document.getElementById('bbq-option').checked) {
+        const bbqToggle = document.getElementById('bbq-toggle');
+        if (bbqToggle && bbqToggle.getAttribute('data-active') === 'true') {
           optionsPrice += 30000;
         }
-        // 조식 옵션
-        if (document.getElementById('breakfast-option').checked) {
-          const adultCount = parseInt(document.getElementById('adult-count').textContent);
-          const childCount = parseInt(document.getElementById('child-count').textContent);
-          optionsPrice += (15000 * adultCount) + (10000 * childCount); // 아동 조식 가격은 10,000원
+
+        // 조식 옵션 (인원수와 관계없이 고정 가격)
+        const breakfastToggle = document.getElementById('breakfast-toggle');
+        if (breakfastToggle && breakfastToggle.getAttribute('data-active') === 'true') {
+          optionsPrice += 15000; // 1인당 가격이지만 인원수와 관계없이 고정
         }
+
         // 와인 패키지
-        if (document.getElementById('wine-option').checked) {
+        const wineToggle = document.getElementById('wine-toggle');
+        if (wineToggle && wineToggle.getAttribute('data-active') === 'true') {
           optionsPrice += 45000;
         }
+
         // 총 가격 계산 및 표시
         const totalPrice = totalRoomPrice + optionsPrice;
-        document.getElementById('room-price').textContent = `₩${totalRoomPrice.toLocaleString()}`;
-        document.getElementById('options-price').textContent = `₩${optionsPrice.toLocaleString()}`;
-        document.getElementById('total-price').textContent = `₩${totalPrice.toLocaleString()}`;
-        document.getElementById('bottom-total-price').textContent = `₩${totalPrice.toLocaleString()}`;
+
+        console.log('최종 가격 계산 - 객실가격:', totalRoomPrice, '추가옵션:', optionsPrice, '총합:', totalPrice);
+
+        // 가격 표시 업데이트
+        const priceElements = {
+          'room-price': totalRoomPrice,
+          'options-price': optionsPrice,
+          'total-price': totalPrice,
+          'bottom-total-price': totalPrice
+        };
+
+        // 1박 가격 업데이트
+        const nightlyPriceEl = document.getElementById('nightly-price');
+        if (nightlyPriceEl) {
+          nightlyPriceEl.textContent = `₩${roomPrice.toLocaleString()} / 1박`;
+        }
+
+        Object.entries(priceElements).forEach(([id, price]) => {
+          const element = document.getElementById(id);
+          if (element) {
+            element.textContent = `₩${price.toLocaleString()}`;
+          }
+        });
       };
-      // 초기 가격 계산
-      updateTotalPrice();
+
+      // 초기 가격 계산 - DOM이 완전히 로드된 후 실행
+      setTimeout(() => {
+        updateTotalPrice();
+      }, 200);
     });
+  </script>
+  <script id="hydrateRoomData">
+    document.addEventListener('DOMContentLoaded', function () {
+      const params = new URLSearchParams(window.location.search);
+      const roomName = params.get('roomName');
+      const roomPrice = params.get('roomPrice');
+      const roomCapacity = params.get('roomCapacity');
+      const roomArea = params.get('roomArea');
+      const roomImg = params.get('roomImg');
+      const roomId = params.get('roomId');
+
+      console.log('쿼리스트링 데이터:', { roomName, roomPrice, roomCapacity, roomArea, roomImg, roomId });
+
+      // 1) 상단 요약 이미지 · 제목 업데이트
+      const summaryImg = document.querySelector('section.mb-6 img');
+      const summaryTitle = document.querySelector('section.mb-6 h2');
+
+      if (roomImg && summaryImg) {
+        summaryImg.src = decodeURIComponent(roomImg);
+        summaryImg.alt = roomName ? decodeURIComponent(roomName) : '숙소 이미지';
+        console.log('상단 이미지 업데이트:', decodeURIComponent(roomImg));
+      }
+
+      if (roomName && summaryTitle) {
+        summaryTitle.textContent = decodeURIComponent(roomName);
+        console.log('상단 제목 업데이트:', decodeURIComponent(roomName));
+      }
+
+      // 2) 선택된 객실 정보 영역 업데이트 - 더 정확한 선택자 사용
+      const selCard = document.querySelector('#selected-room-info');
+      if (!selCard) {
+        console.warn('선택된 객실 정보 카드를 찾을 수 없습니다. (#selected-room-info)');
+        return;
+      }
+
+      const imgEl = selCard.querySelector('#selected-room-img');
+      const nameEl = selCard.querySelector('#selected-room-name');
+      const areaEl = selCard.querySelector('#selected-room-area');
+      const capacityEl = selCard.querySelector('#selected-room-capacity');
+      const priceEl = selCard.querySelector('#selected-room-price');
+      const hidden = selCard.querySelector('#selected-room-type');
+
+      // 이미지 업데이트
+      if (roomImg && imgEl) {
+        imgEl.src = decodeURIComponent(roomImg);
+        imgEl.alt = roomName ? decodeURIComponent(roomName) : '객실 이미지';
+        console.log('객실 이미지 업데이트:', decodeURIComponent(roomImg));
+      }
+
+      // 객실명 업데이트
+      if (roomName && nameEl) {
+        nameEl.textContent = decodeURIComponent(roomName);
+        console.log('객실명 업데이트:', decodeURIComponent(roomName));
+      }
+
+      // 면적 정보 업데이트
+      if (roomArea && areaEl) {
+        areaEl.textContent = `면적: ${decodeURIComponent(roomArea)}`;
+        console.log('면적 업데이트:', decodeURIComponent(roomArea));
+      }
+
+      // 수용 인원 업데이트
+      if (roomCapacity && capacityEl) {
+        capacityEl.textContent = decodeURIComponent(roomCapacity);
+        console.log('수용 인원 업데이트:', decodeURIComponent(roomCapacity));
+      }
+
+      // 가격 정보 업데이트
+      if (roomPrice && priceEl) {
+        const num = Number(roomPrice);
+        priceEl.textContent = `₩${num.toLocaleString()} / 1박`;
+        console.log('객실 가격 업데이트:', num);
+
+        // 1박 가격도 업데이트
+        const nightlyPriceEl = document.getElementById('nightly-price');
+        if (nightlyPriceEl) {
+          nightlyPriceEl.textContent = `₩${num.toLocaleString()} / 1박`;
+          console.log('1박 가격 업데이트:', num);
+        }
+      }
+
+      // 숨겨진 객실 타입 업데이트
+      if (roomId && hidden) {
+        hidden.value = roomId;
+        console.log('객실 타입 업데이트:', roomId);
+      }
+
+      // 3) 객실 특징 업데이트 (객실 타입에 따라)
+      const featuresContainer = selCard.querySelector('#selected-room-features');
+      if (featuresContainer && roomId) {
+        const features = getRoomFeatures(roomId);
+        featuresContainer.innerHTML = features.map(feature =>
+          `<span class="px-2 py-1 bg-gray-100 rounded-full text-xs text-gray-600">${feature}</span>`
+        ).join('');
+        console.log('객실 특징 업데이트:', features);
+      }
+
+      // 4) 가격 계산 함수 호출 (객실 정보 업데이트 후)
+      setTimeout(() => {
+        if (window.updateTotalPrice) {
+          window.updateTotalPrice();
+          console.log('가격 계산 함수 실행 완료');
+        }
+      }, 100);
+    });
+
+    // 객실 타입별 특징 반환 함수
+    function getRoomFeatures(roomId) {
+      const featuresMap = {
+        'premium': ['퀸 사이즈 침대', '소파베드', '욕실', '테라스', '전용 주차'],
+        'standard': ['퀸 사이즈 침대', '욕실', '기본 편의시설'],
+        'family': ['퀸 사이즈 침대 2개', '소파베드', '욕실', '대형 테라스', '전용 주차'],
+        'dome': ['퀸 사이즈 침대', '욕실', '스타게이징 돔', '로맨틱 분위기'],
+        'treehouse': ['퀸 사이즈 침대', '욕실', '숲 전망', '고급스러운 인테리어'],
+        'deluxe': ['퀸 사이즈 침대', '욕실', '프리미엄 편의시설']
+      };
+
+      return featuresMap[roomId] || ['퀸 사이즈 침대', '욕실'];
+    }
   </script>
 </body>
 

@@ -82,6 +82,16 @@
     .scroll-smooth::-webkit-scrollbar {
       display: none;
     }
+
+    /* 스크롤바 숨김 */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    
+    * {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
   </style>
 </head>
 
@@ -89,7 +99,8 @@
   <header class="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
     <div class="flex items-center justify-between px-4 py-3">
       <div class="flex items-center gap-2">
-        <a href="./index.html" data-readdy="true" class="w-8 h-8 flex items-center justify-center cursor-pointer">
+        <a href="#" onclick="event.preventDefault(); history.back();"
+          class="w-8 h-8 flex items-center justify-center cursor-pointer">
           <i class="ri-arrow-left-s-line text-xl"></i>
         </a>
         <h1 class="text-lg font-medium">캠핑의 모든 것</h1>
@@ -117,36 +128,53 @@
           </div>
           <span class="text-xs font-medium whitespace-nowrap">일반캠핑</span>
         </button>
-        <button class="flex flex-col items-center gap-1 px-3 py-2 bg-gray-50 rounded-xl cursor-pointer">
+        <button class="flex flex-col items-center gap-1 px-3 py-2 bg-gray-50 rounded-xl cursor-pointer" data-type="glamping">
           <div class="w-10 h-10 flex items-center justify-center">
             <i class="ri-hotel-line text-xl text-gray-500"></i>
           </div>
           <span class="text-xs whitespace-nowrap">글램핑</span>
         </button>
-        <button class="flex flex-col items-center gap-1 px-3 py-2 bg-gray-50 rounded-xl cursor-pointer">
+        <button class="flex flex-col items-center gap-1 px-3 py-2 bg-gray-50 rounded-xl cursor-pointer" data-type="caravan">
           <div class="w-10 h-10 flex items-center justify-center">
             <i class="ri-truck-line text-xl text-gray-500"></i>
           </div>
           <span class="text-xs whitespace-nowrap">카라반</span>
         </button>
-        <button class="flex flex-col items-center gap-1 px-3 py-2 bg-gray-50 rounded-xl cursor-pointer">
+        <button class="flex flex-col items-center gap-1 px-3 py-2 bg-gray-50 rounded-xl cursor-pointer" data-type="pension">
           <div class="w-10 h-10 flex items-center justify-center">
-            <i class="ri-car-line text-xl text-gray-500"></i>
+            <i class="ri-building-line text-xl text-gray-500"></i>
           </div>
-          <span class="text-xs whitespace-nowrap">오토캠핑</span>
+          <span class="text-xs whitespace-nowrap">팬션</span>
         </button>
-        <button class="flex flex-col items-center gap-1 px-3 py-2 bg-primary/10 rounded-xl cursor-pointer"
-          data-type="valley">
+        <button class="flex flex-col items-center gap-1 px-3 py-2 bg-gray-50 rounded-xl cursor-pointer" data-type="hotel">
           <div class="w-10 h-10 flex items-center justify-center">
-            <i class="ri-water-flash-line text-xl text-primary"></i>
+            <i class="ri-hotel-line text-xl text-gray-500"></i>
           </div>
-          <span class="text-xs whitespace-nowrap text-primary font-medium">계곡캠핑</span>
+          <span class="text-xs whitespace-nowrap">호텔</span>
         </button>
-        <button class="flex flex-col items-center gap-1 px-3 py-2 bg-gray-50 rounded-xl cursor-pointer">
+        <button class="flex flex-col items-center gap-1 px-3 py-2 bg-gray-50 rounded-xl cursor-pointer" data-type="pet">
           <div class="w-10 h-10 flex items-center justify-center">
-            <i class="ri-sailboat-line text-xl text-gray-500"></i>
+            <i class="ri-heart-line text-xl text-gray-500"></i>
           </div>
-          <span class="text-xs whitespace-nowrap">해변캠핑</span>
+          <span class="text-xs whitespace-nowrap">반려동물</span>
+        </button>
+        <button class="flex flex-col items-center gap-1 px-3 py-2 bg-gray-50 rounded-xl cursor-pointer" data-type="sharing">
+          <div class="w-10 h-10 flex items-center justify-center">
+            <i class="ri-home-4-line text-xl text-gray-500"></i>
+          </div>
+          <span class="text-xs whitespace-nowrap">공유숙박</span>
+        </button>
+        <button class="flex flex-col items-center gap-1 px-3 py-2 bg-gray-50 rounded-xl cursor-pointer" data-type="hotspring">
+          <div class="w-10 h-10 flex items-center justify-center">
+            <i class="ri-water-flash-line text-xl text-gray-500"></i>
+          </div>
+          <span class="text-xs whitespace-nowrap">온천</span>
+        </button>
+        <button class="flex flex-col items-center gap-1 px-3 py-2 bg-gray-50 rounded-xl cursor-pointer" data-type="resort">
+          <div class="w-10 h-10 flex items-center justify-center">
+            <i class="ri-hotel-line text-xl text-gray-500"></i>
+          </div>
+          <span class="text-xs whitespace-nowrap">리조트</span>
         </button>
       </div>
     </div>
@@ -263,9 +291,11 @@
             </div>
             <div class="flex justify-between items-center">
               <span class="text-primary font-medium">₩150,000~</span>
-              <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/b17e06a2-c8bb-4255-901e-710cba572e47"
-                data-readdy="true"
-                class="px-4 py-2 bg-primary text-white !rounded-button text-sm cursor-pointer">예약하기</a>
+              <a href="./shop_detail.html"
+                class="detail-link px-4 py-2 bg-primary text-white !rounded-button text-sm cursor-pointer"
+                data-id="b17e06a2-c8bb-4255-901e-710cba572e47" data-title="가평 더 글램 글램핑" data-region="경기도 가평군 청평면">
+                예약하기
+              </a>
             </div>
           </div>
         </div>
@@ -299,9 +329,11 @@
             </div>
             <div class="flex justify-between items-center">
               <span class="text-primary font-medium">₩80,000~</span>
-              <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/b17e06a2-c8bb-4255-901e-710cba572e47"
-                data-readdy="true"
-                class="px-4 py-2 bg-primary text-white !rounded-button text-sm cursor-pointer">예약하기</a>
+              <a href="./shop_detail.html"
+                class="detail-link px-4 py-2 bg-primary text-white !rounded-button text-sm cursor-pointer"
+                data-id="b17e06a2-c8bb-4255-901e-710cba572e47" data-title="양평 숲속의 아침" data-region="경기도 양평군 강하면">
+                예약하기
+              </a>
             </div>
           </div>
         </div>
@@ -335,9 +367,11 @@
             </div>
             <div class="flex justify-between items-center">
               <span class="text-primary font-medium">₩180,000~</span>
-              <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/b17e06a2-c8bb-4255-901e-710cba572e47"
-                data-readdy="true"
-                class="px-4 py-2 bg-primary text-white !rounded-button text-sm cursor-pointer">예약하기</a>
+              <a href="./shop_detail.html"
+                class="detail-link px-4 py-2 bg-primary text-white !rounded-button text-sm cursor-pointer"
+                data-id="b17e06a2-c8bb-4255-901e-710cba572e47" data-title="가평 프리미엄 글램핑" data-region="경기도 가평군">
+                예약하기
+              </a>
             </div>
           </div>
         </div>
@@ -495,43 +529,132 @@
     </div>
   </main>
   <nav class="fixed bottom-0 left-0 right-0 bg-white border-t">
-    <div class="grid grid-cols-5 py-1">
-      <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/f0337728-efa7-4fab-800c-adcdbba971c8"
-        data-readdy="true" class="flex flex-col items-center gap-1 cursor-pointer">
-        <div class="w-6 h-6 flex items-center justify-center">
-          <i class="ri-home-5-line text-lg"></i>
+    <div class="grid grid-cols-6 py-1">
+      <a href="search_map.html"
+        data-readdy="true" class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+          <i class="ri-map-pin-2-fill text-lg group-hover:text-primary"></i>
         </div>
-        <span class="text-[10px]">홈</span>
+        <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">내주변</span>
       </a>
-      <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/78d7c18b-1946-4a61-a851-1f9c44029f8e"
-        data-readdy="true" class="flex flex-col items-center gap-1 cursor-pointer">
-        <div class="w-6 h-6 flex items-center justify-center">
-          <i class="ri-search-line text-lg"></i>
+
+      <a href="./index.html" class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+          <i class="ri-home-5-fill text-lg group-hover:text-primary"></i>
         </div>
-        <span class="text-[10px]">검색</span>
+        <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">홈</span>
       </a>
-      <button class="flex flex-col items-center gap-1 cursor-pointer">
-        <div class="w-6 h-6 flex items-center justify-center">
-          <i class="ri-heart-3-line text-lg"></i>
+
+      <a href="wishlist.html" data-readdy="true" class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+          <i class="ri-heart-3-fill text-lg group-hover:text-primary"></i>
         </div>
-        <span class="text-[10px]">찜목록</span>
+        <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">찜</span>
+      </a>
+
+      <a href="mypage.html" data-readdy="true" class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+          <i class="ri-user-3-fill text-lg group-hover:text-primary"></i>
+        </div>
+        <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">마이</span>
+      </a>
+
+      <button class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+          <i class="ri-wallet-3-fill text-lg group-hover:text-primary"></i>
+        </div>
+        <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">페이</span>
       </button>
-      <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/1cf0d814-6ea9-40e4-9232-9102e310c481"
-        data-readdy="true" class="flex flex-col items-center gap-1 cursor-pointer">
-        <div class="w-6 h-6 flex items-center justify-center">
-          <i class="ri-calendar-check-line text-lg"></i>
+      <button class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+          <i class="ri-menu-fill text-lg group-hover:text-primary"></i>
         </div>
-        <span class="text-[10px]">예약내역</span>
-      </a>
-      <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/90342344-0b95-4aa6-8759-a6c9bc513e09"
-        data-readdy="true" class="flex flex-col items-center gap-1 cursor-pointer">
-        <div class="w-6 h-6 flex items-center justify-center">
-          <i class="ri-user-3-line text-lg"></i>
-        </div>
-        <span class="text-[10px]">마이페이지</span>
-      </a>
+        <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">전체</span>
+      </button>
     </div>
   </nav>
+  <div id="sideMenu"
+    class="fixed top-0 right-0 w-[280px] h-full bg-white transform translate-x-full transition-transform duration-300 z-50 shadow-lg flex flex-col">
+    <div class="flex items-center justify-between p-4 border-b">
+      <h2 class="text-lg font-medium">메뉴</h2>
+      <button id="closeMenu" class="w-8 h-8 flex items-center justify-center">
+        <i class="ri-close-line text-xl"></i>
+      </button>
+    </div>
+    <div class="flex-1 overflow-y-auto">
+      <div class="p-4 border-b">
+        <a href="./login.html" data-readdy="true" class="flex items-center gap-3 py-3 px-4 bg-gray-50 rounded-xl">
+          <i class="ri-user-add-line text-xl text-primary"></i>
+          <span>로그인/회원가입</span>
+        </a>
+      </div>
+      <div class="p-4 space-y-4">
+        <a href="./mypage.html" class="flex items-center gap-3">
+          <i class="ri-calendar-check-line text-xl text-gray-600"></i>
+          <span>예약 내역</span>
+        </a>
+        <a href="search.html" class="flex items-center gap-3">
+          <i class="ri-search-line text-xl text-gray-600"></i>
+          <span>캠핑장 검색</span>
+        </a>
+        <a href="shop_list.html?type=glamping" class="flex items-center gap-3">
+          <i class="ri-home-smile-line text-xl text-gray-600"></i>
+          <span>글램핑</span>
+        </a>
+        <a href="shop_list.html?type=caravan" class="flex items-center gap-3">
+          <i class="ri-caravan-line text-xl text-gray-600"></i>
+          <span>카라반</span>
+        </a>
+        <a href="shop_list.html?type=pension" class="flex items-center gap-3">
+          <i class="ri-hotel-line text-xl text-gray-600"></i>
+          <span>펜션</span>
+        </a>
+        <a href="shop_list.html?type=hotel" class="flex items-center gap-3">
+          <i class="ri-building-line text-xl text-gray-600"></i>
+          <span>호텔</span>
+        </a>
+        <a href="#" class="flex items-center gap-3">
+          <i class="ri-gift-line text-xl text-gray-600"></i>
+          <span>이벤트</span>
+        </a>
+        <a href="#" class="flex items-center gap-3">
+          <i class="ri-customer-service-line text-xl text-gray-600"></i>
+          <span>고객센터</span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <script id="sideMenuScript">
+    document.addEventListener('DOMContentLoaded', function () {
+      const menuButton = document.querySelector('button:has(i.ri-menu-fill)');
+      const closeMenu = document.getElementById('closeMenu');
+      const sideMenu = document.getElementById('sideMenu');
+      
+      if (menuButton) {
+        menuButton.addEventListener('click', function () {
+          sideMenu.classList.remove('translate-x-full');
+        });
+      }
+      
+      if (closeMenu) {
+        closeMenu.addEventListener('click', function () {
+          sideMenu.classList.add('translate-x-full');
+        });
+      }
+      
+      document.addEventListener('click', function (event) {
+        if (sideMenu && !sideMenu.contains(event.target) && !menuButton?.contains(event.target)) {
+          sideMenu.classList.add('translate-x-full');
+        }
+      });
+    });
+  </script>
   <script id="accordionScript">
     document.addEventListener('DOMContentLoaded', function () {
       const accordionToggles = document.querySelectorAll('.accordion-toggle');
@@ -560,6 +683,11 @@
       let isDragging = false;
       let startX;
       let scrollLeft;
+      
+      // URL 파라미터에서 타입 확인
+      const urlParams = new URLSearchParams(window.location.search);
+      const typeParam = urlParams.get('type');
+      
       filterContainer.addEventListener('mousedown', (e) => {
         isDragging = true;
         startX = e.pageX - filterContainer.offsetLeft;
@@ -578,6 +706,7 @@
         const walk = (x - startX) * 2;
         filterContainer.scrollLeft = scrollLeft - walk;
       });
+      
       function updateContent(campingType) {
         contentSections.forEach(section => {
           if (campingType === 'valley') {
@@ -591,32 +720,101 @@
           }
         });
       }
+      
+      function selectButton(button, shouldScroll = false) {
+        filterButtons.forEach(btn => {
+          btn.classList.remove('bg-primary/10');
+          btn.classList.add('bg-gray-50');
+          const btnText = btn.querySelector('span');
+          btnText.classList.remove('text-primary', 'font-medium');
+          const btnIcon = btn.querySelector('i');
+          btnIcon.classList.remove('text-primary');
+          btnIcon.classList.add('text-gray-500');
+        });
+        button.classList.remove('bg-gray-50');
+        button.classList.add('bg-primary/10');
+        const text = button.querySelector('span');
+        text.classList.add('text-primary', 'font-medium');
+        const icon = button.querySelector('i');
+        icon.classList.remove('text-gray-500');
+        icon.classList.add('text-primary');
+        
+        // 라우팅으로 인한 선택일 때만 스크롤 조정
+        if (shouldScroll) {
+          setTimeout(() => {
+            const buttonLeft = button.offsetLeft;
+            const scrollContainer = filterContainer.parentElement; // overflow-x-auto가 적용된 상위 컨테이너
+            
+            // 선택된 버튼을 왼쪽으로 스크롤
+            scrollContainer.scrollTo({
+              left: buttonLeft - 16, // 16px 여백 추가
+              behavior: 'smooth'
+            });
+          }, 100);
+        }
+      }
+      
       filterButtons.forEach(button => {
         button.addEventListener('click', function () {
           const campingType = this.dataset.type;
-          filterButtons.forEach(btn => {
-            btn.classList.remove('bg-primary/10');
-            btn.classList.add('bg-gray-50');
-            const btnText = btn.querySelector('span');
-            btnText.classList.remove('text-primary', 'font-medium');
-            const btnIcon = btn.querySelector('i');
-            btnIcon.classList.remove('text-primary');
-            btnIcon.classList.add('text-gray-500');
-          });
-          this.classList.remove('bg-gray-50');
-          this.classList.add('bg-primary/10');
-          const text = this.querySelector('span');
-          text.classList.add('text-primary', 'font-medium');
-          const icon = this.querySelector('i');
-          icon.classList.remove('text-gray-500');
-          icon.classList.add('text-primary');
+          selectButton(this, false); // 사용자 클릭 시에는 스크롤 조정 안함
           updateContent(campingType);
         });
       });
-      const valleyButton = filterContainer.querySelector('[data-type="valley"]');
-      if (valleyButton) {
-        valleyButton.click();
+      
+      // URL 파라미터에 따라 초기 선택 설정
+      const typeMapping = {
+        'normal': '일반캠핑',
+        'glamping': '글램핑',
+        'caravan': '카라반',
+        'pension': '팬션',
+        'hotel': '호텔',
+        'pet': '반려동물',
+        'sharing': '공유숙박',
+        'hotspring': '온천',
+        'resort': '리조트'
+      };
+      
+      if (typeParam && typeMapping[typeParam]) {
+        // 해당 타입의 버튼 찾기 (텍스트로 찾기)
+        const targetButton = Array.from(filterButtons).find(btn => 
+          btn.querySelector('span').textContent === typeMapping[typeParam]
+        );
+        if (targetButton) {
+          selectButton(targetButton, true); // 라우팅 시에는 스크롤 조정 활성화
+        } else {
+          // 기본값: 일반캠핑 선택
+          const normalButton = filterContainer.querySelector('[data-type="normal"]');
+          if (normalButton) {
+            selectButton(normalButton, true);
+          }
+        }
+      } else {
+        // 기본값: 일반캠핑 선택
+        const normalButton = filterContainer.querySelector('[data-type="normal"]');
+        if (normalButton) {
+          selectButton(normalButton, true);
+        }
       }
+    });
+  </script>
+  <script>
+    // 상세페이지 정보 넘기기
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('.detail-link').forEach(link => {
+        link.addEventListener('click', function (e) {
+          e.preventDefault();
+          const { id, title, region } = this.dataset;
+          // 이 링크가 속한 카드의 <img> src 가져오기
+          const card = this.closest('.bg-white.overflow-hidden');
+          const imgEl = card.querySelector('img');
+          const imgSrc = imgEl ? imgEl.src : '';
+
+          // URL 파라미터에 imgSrc 추가
+          const params = new URLSearchParams({ id, title, region, img: imgSrc });
+          window.location.href = `shop_detail.html?${params.toString()}`;
+        });
+      });
     });
   </script>
 </body>

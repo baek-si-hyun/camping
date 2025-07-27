@@ -99,14 +99,23 @@
       display: block;
       animation: fadeIn 0.3s ease-out forwards;
     }
+
+    /* 스크롤바 숨김 */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    
+    * {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
   </style>
 </head>
 
 <body class="bg-white   min-h-[762px]">
   <nav class="fixed top-0 left-0 right-0 bg-white z-50 shadow-sm">
     <div class="flex items-center px-4 h-16">
-      <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/c03b7cf9-cc3e-48bc-88fb-76cc2684524b"
-        data-readdy="true"
+      <a href="#" onclick="event.preventDefault(); history.back();" data-readdy="true"
         class="w-10 h-10 flex items-center justify-center cursor-pointer hover:bg-gray-50 rounded-full">
         <i class="ri-arrow-left-s-line text-xl"></i>
       </a>

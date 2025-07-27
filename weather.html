@@ -43,13 +43,24 @@
     .search-input::-webkit-search-cancel-button {
       display: none;
     }
+
+    /* 스크롤바 숨김 */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    
+    * {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
   </style>
 </head>
 
 <body class="  min-h-[762px] mx-auto bg-gray-50">
   <header class="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
     <div class="flex items-center justify-between px-4 py-3">
-      <a href="./index.html" data-readdy="true" class="w-8 h-8 flex items-center justify-center cursor-pointer">
+      <a href="#" onclick="event.preventDefault(); history.back();"
+        class="w-8 h-8 flex items-center justify-center cursor-pointer">
         <i class="ri-arrow-left-line text-xl"></i>
       </a>
       <h1 class="text-lg font-medium">날씨 예측</h1>
@@ -501,6 +512,133 @@
       locationSearch.addEventListener('input', function () {
         if (this.value.length > 0) {
           console.log('검색:', this.value);
+        }
+      });
+    });
+  </script>
+  <nav class="fixed bottom-0 left-0 right-0 bg-white border-t">
+    <div class="grid grid-cols-6 py-1">
+      <a href="search_map.html"
+        data-readdy="true" class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+          <i class="ri-map-pin-2-fill text-lg group-hover:text-primary"></i>
+        </div>
+        <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">내주변</span>
+      </a>
+
+      <a href="./index.html" class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+          <i class="ri-home-5-fill text-lg group-hover:text-primary"></i>
+        </div>
+        <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">홈</span>
+      </a>
+
+      <a href="wishlist.html" data-readdy="true" class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+          <i class="ri-heart-3-fill text-lg group-hover:text-primary"></i>
+        </div>
+        <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">찜</span>
+      </a>
+
+      <a href="mypage.html" data-readdy="true" class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+          <i class="ri-user-3-fill text-lg group-hover:text-primary"></i>
+        </div>
+        <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">마이</span>
+      </a>
+
+      <button class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+          <i class="ri-wallet-3-fill text-lg group-hover:text-primary"></i>
+        </div>
+        <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">페이</span>
+      </button>
+      <button class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+          <i class="ri-menu-fill text-lg group-hover:text-primary"></i>
+        </div>
+        <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">전체</span>
+      </button>
+    </div>
+  </nav>
+  <div id="sideMenu"
+    class="fixed top-0 right-0 w-[280px] h-full bg-white transform translate-x-full transition-transform duration-300 z-50 shadow-lg flex flex-col">
+    <div class="flex items-center justify-between p-4 border-b">
+      <h2 class="text-lg font-medium">메뉴</h2>
+      <button id="closeMenu" class="w-8 h-8 flex items-center justify-center">
+        <i class="ri-close-line text-xl"></i>
+      </button>
+    </div>
+    <div class="flex-1 overflow-y-auto">
+      <div class="p-4 border-b">
+        <a href="./login.html" data-readdy="true" class="flex items-center gap-3 py-3 px-4 bg-gray-50 rounded-xl">
+          <i class="ri-user-add-line text-xl text-primary"></i>
+          <span>로그인/회원가입</span>
+        </a>
+      </div>
+      <div class="p-4 space-y-4">
+        <a href="./mypage.html" class="flex items-center gap-3">
+          <i class="ri-calendar-check-line text-xl text-gray-600"></i>
+          <span>예약 내역</span>
+        </a>
+        <a href="search.html" class="flex items-center gap-3">
+          <i class="ri-search-line text-xl text-gray-600"></i>
+          <span>캠핑장 검색</span>
+        </a>
+        <a href="shop_list.html?type=glamping" class="flex items-center gap-3">
+          <i class="ri-home-smile-line text-xl text-gray-600"></i>
+          <span>글램핑</span>
+        </a>
+        <a href="shop_list.html?type=caravan" class="flex items-center gap-3">
+          <i class="ri-caravan-line text-xl text-gray-600"></i>
+          <span>카라반</span>
+        </a>
+        <a href="shop_list.html?type=pension" class="flex items-center gap-3">
+          <i class="ri-hotel-line text-xl text-gray-600"></i>
+          <span>펜션</span>
+        </a>
+        <a href="shop_list.html?type=hotel" class="flex items-center gap-3">
+          <i class="ri-building-line text-xl text-gray-600"></i>
+          <span>호텔</span>
+        </a>
+        <a href="#" class="flex items-center gap-3">
+          <i class="ri-gift-line text-xl text-gray-600"></i>
+          <span>이벤트</span>
+        </a>
+        <a href="#" class="flex items-center gap-3">
+          <i class="ri-customer-service-line text-xl text-gray-600"></i>
+          <span>고객센터</span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <script id="sideMenuScript">
+    document.addEventListener('DOMContentLoaded', function () {
+      const menuButton = document.querySelector('button:has(i.ri-menu-fill)');
+      const closeMenu = document.getElementById('closeMenu');
+      const sideMenu = document.getElementById('sideMenu');
+      
+      if (menuButton) {
+        menuButton.addEventListener('click', function () {
+          sideMenu.classList.remove('translate-x-full');
+        });
+      }
+      
+      if (closeMenu) {
+        closeMenu.addEventListener('click', function () {
+          sideMenu.classList.add('translate-x-full');
+        });
+      }
+      
+      document.addEventListener('click', function (event) {
+        if (sideMenu && !sideMenu.contains(event.target) && !menuButton?.contains(event.target)) {
+          sideMenu.classList.add('translate-x-full');
         }
       });
     });
