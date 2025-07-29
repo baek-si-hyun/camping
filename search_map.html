@@ -10,6 +10,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <!-- 카카오 지도 API -->
+  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7c64a249ef8e3b9b648f20a50c07b249"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -102,15 +104,74 @@
     ::-webkit-scrollbar {
       display: none;
     }
-    
+
     * {
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
+
+    /* 캘린더 스타일 */
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+    }
+
+    .calendar-day {
+      aspect-ratio: 1/1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      margin: 1px;
+      transition: all 0.2s;
+    }
+
+    .calendar-day:hover {
+      background-color: rgba(124, 58, 237, 0.1);
+    }
+
+    .calendar-day.selected {
+      background-color: #7C3AED;
+      color: white;
+    }
+
+    .calendar-day.in-range {
+      background-color: rgba(124, 58, 237, 0.1);
+    }
+
+    .calendar-day.disabled {
+      color: #D1D5DB;
+      pointer-events: none;
+      cursor: not-allowed;
+    }
+
+    /* 캘린더 모달 마진 제거 */
+    #calendarModal {
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    /* 위시리스트 버튼 애니메이션 */
+    .wishlist-btn {
+      transition: all 0.3s ease;
+    }
+
+    .wishlist-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .wishlist-btn.active {
+      color: #ef4444 !important;
+      transform: scale(1.2);
+    }
+
+    .wishlist-btn i {
+      transition: all 0.2s ease;
+    }
   </style>
 </head>
 
-<body class="bg-[#F8F7FF]   min-h-[762px]">
+<body class="bg-[#F8F7FF] min-h-[762px]">
   <nav class="fixed top-0 left-0 right-0 bg-white z-50 shadow-sm">
     <div class="flex items-center px-4 h-16">
       <a href="#" onclick="event.preventDefault(); history.back();" data-readdy="true"
@@ -128,550 +189,1656 @@
       </a>
     </div>
   </nav>
-  <div class="fixed top-16 left-0 right-0 bg-white z-40 shadow-sm">
-    <div class="p-4 space-y-3">
-      <div class="flex gap-3 overflow-x-auto py-1 no-scrollbar">
-        <button id="datePickerBtn"
-          class="flex items-center gap-2 px-4 py-2 rounded-full bg-white shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 whitespace-nowrap transform hover:scale-105">
-          <i class="ri-calendar-fill text-primary text-lg"></i>
-          <span class="text-sm" id="dateDisplay">07.07 월 - 07.08 화, 1박</span>
-        </button>
-        <button id="guestPickerBtn"
-          class="flex items-center gap-2 px-4 py-2 rounded-full bg-white shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 whitespace-nowrap transform hover:scale-105">
-          <i class="ri-user-fill text-primary text-lg"></i>
-          <span class="text-sm" id="guestDisplay">성인 0, 소인 0</span>
+
+  <!-- 캘린더 모달 (search.html 스타일) -->
+  <div id="calendarModal" class="fixed inset-0 bg-black/50 z-50 hidden">
+    <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl p-6 max-h-[80vh] overflow-y-auto">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-lg font-medium">날짜 선택</h3>
+        <button type="button" id="closeCalendarModal"
+          class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100">
+          <i class="ri-close-line text-xl"></i>
         </button>
       </div>
-      <div id="datePickerModal"
-        class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-        <div class="bg-white rounded-xl p-4 w-[340px] animate-scaleIn">
-          <div class="flex justify-between items-center mb-4">
-            <h3 class="text-lg font-medium">날짜 선택</h3>
-            <button class="closeDatePicker">
-              <i class="ri-close-line text-xl"></i>
-            </button>
-          </div>
-          <div class="calendar-container">
-            <div class="flex justify-between items-center mb-4">
-              <button id="prevMonth" class="p-2"><i class="ri-arrow-left-s-line"></i></button>
-              <h4 id="currentMonth" class="text-lg font-medium">2025년 7월</h4>
-              <button id="nextMonth" class="p-2"><i class="ri-arrow-right-s-line"></i></button>
-            </div>
-            <div class="grid grid-cols-7 gap-1 text-center mb-2">
-              <div class="text-sm text-gray-500">일</div>
-              <div class="text-sm text-gray-500">월</div>
-              <div class="text-sm text-gray-500">화</div>
-              <div class="text-sm text-gray-500">수</div>
-              <div class="text-sm text-gray-500">목</div>
-              <div class="text-sm text-gray-500">금</div>
-              <div class="text-sm text-gray-500">토</div>
-            </div>
-            <div id="calendarDays" class="grid grid-cols-7 gap-1">
-            </div>
-          </div>
-          <button id="confirmDateSelection"
-            class="w-full mt-4 py-2 bg-gray-300 text-gray-500 rounded-lg !rounded-button cursor-not-allowed transition-all duration-300"
-            disabled>선택 완료</button>
+
+      <!-- 체크인/체크아웃 표시 -->
+      <div class="flex justify-between mb-4">
+        <div class="w-[48%] p-3 border border-gray-200 rounded-lg">
+          <p class="text-sm text-gray-500">체크인</p>
+          <p class="text-lg font-medium" id="check-in-date">날짜 선택</p>
+        </div>
+        <div class="w-[48%] p-3 border border-gray-200 rounded-lg">
+          <p class="text-sm text-gray-500">체크아웃</p>
+          <p class="text-lg font-medium" id="check-out-date">날짜 선택</p>
         </div>
       </div>
-      <div id="guestPickerModal"
-        class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-        <div class="bg-white rounded-xl p-4 w-[340px] animate-scaleIn">
-          <div class="flex justify-between items-center mb-4">
-            <h3 class="text-lg font-medium">인원 선택</h3>
-            <button class="closeGuestPicker">
-              <i class="ri-close-line text-xl"></i>
-            </button>
-          </div>
-          <div class="space-y-4">
-            <div class="flex justify-between items-center">
-              <span>성인</span>
-              <div class="flex items-center gap-3">
-                <button class="guest-btn minus" data-type="adult">
-                  <i class="ri-subtract-line"></i>
-                </button>
-                <span class="guest-count" data-type="adult">0</span>
-                <button class="guest-btn plus" data-type="adult">
-                  <i class="ri-add-line"></i>
-                </button>
-              </div>
-            </div>
-            <div class="flex justify-between items-center">
-              <span>소인</span>
-              <div class="flex items-center gap-3">
-                <button class="guest-btn minus" data-type="child">
-                  <i class="ri-subtract-line"></i>
-                </button>
-                <span class="guest-count" data-type="child">0</span>
-                <button class="guest-btn plus" data-type="child">
-                  <i class="ri-add-line"></i>
-                </button>
-              </div>
-            </div>
-            <div class="flex justify-between items-center">
-              <span>반려견</span>
-              <div class="flex items-center gap-3">
-                <button class="guest-btn minus" data-type="pet">
-                  <i class="ri-subtract-line"></i>
-                </button>
-                <span class="guest-count" data-type="pet">0</span>
-                <button class="guest-btn plus" data-type="pet">
-                  <i class="ri-add-line"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-          <button id="confirmDateSelection"
-            class="w-full mt-4 py-2 bg-gray-300 text-gray-500 rounded-lg !rounded-button cursor-not-allowed transition-all duration-300"
-            disabled>선택 완료</button>
-        </div>
+      <div class="mb-4 text-center">
+        <p class="text-gray-500" id="nights-count">0박</p>
       </div>
-      <div class="flex gap-3 overflow-x-auto py-1 no-scrollbar">
-        <button id="filterAll"
-          class="filter-btn px-5 py-2 rounded-full bg-primary text-white shadow-lg hover:shadow-xl transition-all duration-300 whitespace-nowrap transform hover:scale-105 flex items-center">
-          <i class="ri-apps-2-fill mr-2 text-lg"></i>전체
-        </button>
-        <button id="filterAutoCamping"
-          class="filter-btn px-5 py-2 rounded-full bg-white shadow-lg hover:shadow-xl transition-all duration-300 whitespace-nowrap text-gray-600 transform hover:scale-105 hover:bg-gray-50 flex items-center">
-          <i class="ri-tent-line mr-2 text-lg text-primary"></i>오토캠핑
-        </button>
-        <button id="filterGlamping"
-          class="filter-btn px-5 py-2 rounded-full bg-white shadow-lg hover:shadow-xl transition-all duration-300 whitespace-nowrap text-gray-600 transform hover:scale-105 hover:bg-gray-50 flex items-center">
-          <i class="ri-home-smile-2-line mr-2 text-lg text-primary"></i>글램핑
-        </button>
-        <button id="filterCaravan"
-          class="filter-btn px-5 py-2 rounded-full bg-white shadow-lg hover:shadow-xl transition-all duration-300 whitespace-nowrap text-gray-600 transform hover:scale-105 hover:bg-gray-50 flex items-center">
-          <i class="ri-caravan-line mr-2 text-lg text-primary"></i>카라반
-        </button>
-        <button id="filterPension"
-          class="filter-btn px-5 py-2 rounded-full bg-white shadow-lg hover:shadow-xl transition-all duration-300 whitespace-nowrap text-gray-600 transform hover:scale-105 hover:bg-gray-50 flex items-center">
-          <i class="ri-building-2-line mr-2 text-lg text-primary"></i>펜션
-        </button>
-      </div>
-    </div>
-  </div>
-  <main class="pt-44 pb-20 relative h-[762px]">
-    <div class="relative h-full w-full overflow-hidden">
-      <img src="https://public.readdy.ai/gen_page/map_placeholder_1280x720.png"
-        class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 min-w-full min-h-full object-cover"
-        alt="지도">
-      <!-- 지도 마커들 -->
-      <div class="absolute top-1/4 left-1/3 cursor-pointer" id="marker1">
-        <div
-          class="w-[90px] h-[36px] flex items-center justify-center bg-primary text-white rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-110 cursor-pointer">
-          <span class="text-sm font-medium">₩130,000</span>
-        </div>
-      </div>
-      <div class="absolute top-1/3 left-2/3 cursor-pointer" id="marker2">
-        <div
-          class="w-[90px] h-[36px] flex items-center justify-center bg-primary text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300">
-          <span class="text-sm font-medium">₩145,000</span>
-        </div>
-      </div>
-      <div class="absolute top-1/2 left-1/4 cursor-pointer" id="marker3">
-        <div
-          class="w-[90px] h-[36px] flex items-center justify-center bg-primary text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300">
-          <span class="text-sm font-medium">₩120,000</span>
-        </div>
-      </div>
-      <div class="absolute top-2/3 left-1/2 cursor-pointer" id="marker4">
-        <div
-          class="w-[90px] h-[36px] flex items-center justify-center bg-primary text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300">
-          <span class="text-sm font-medium">₩160,000</span>
-        </div>
-      </div>
-      <!-- 지도 컨트롤 -->
-      <div class="absolute bottom-24 right-4 flex flex-col gap-2">
-        <button class="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-md cursor-pointer">
-          <i class="ri-add-line text-xl"></i>
-        </button>
-        <button class="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-md cursor-pointer">
-          <i class="ri-subtract-line text-xl"></i>
-        </button>
-        <button class="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-md cursor-pointer">
-          <i class="ri-map-pin-user-line text-xl text-primary"></i>
-        </button>
-      </div>
-      <!-- 숙소 정보 팝업 (기본적으로 숨김) -->
-      <div id="infoPopup"
-        class="hidden absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[300px] bg-white rounded-xl shadow-2xl z-10 animate-scaleIn">
-        <div class="relative">
-          <img id="popupImage" src="" class="w-full h-36 object-cover rounded-t-xl" alt="숙소 이미지">
-          <button id="closePopup"
-            class="absolute top-2 right-2 w-8 h-8 flex items-center justify-center bg-black/50 rounded-full text-white cursor-pointer">
-            <i class="ri-close-line"></i>
+
+      <!-- 달력 -->
+      <div class="calendar-container mb-5">
+        <div class="flex justify-between items-center mb-4">
+          <button id="prev-month" class="w-10 h-10 flex items-center justify-center cursor-pointer">
+            <i class="ri-arrow-left-s-line ri-lg"></i>
+          </button>
+          <h3 class="text-lg font-medium" id="current-month">2025년 7월</h3>
+          <button id="next-month" class="w-10 h-10 flex items-center justify-center cursor-pointer">
+            <i class="ri-arrow-right-s-line ri-lg"></i>
           </button>
         </div>
-        <div class="p-4">
-          <h3 id="popupTitle" class="font-medium text-lg"></h3>
-          <div class="flex items-center gap-1 mt-1">
-            <i class="ri-star-fill text-yellow-400"></i>
-            <span id="popupRating" class="text-sm"></span>
-            <span class="text-gray-400 text-sm">·</span>
-            <span id="popupReviews" class="text-gray-400 text-sm"></span>
+        <div class="calendar-weekdays grid grid-cols-7 text-center mb-2">
+          <div class="text-sm text-red-500 font-medium">일</div>
+          <div class="text-sm text-gray-500 font-medium">월</div>
+          <div class="text-sm text-gray-500 font-medium">화</div>
+          <div class="text-sm text-gray-500 font-medium">수</div>
+          <div class="text-sm text-gray-500 font-medium">목</div>
+          <div class="text-sm text-gray-500 font-medium">금</div>
+          <div class="text-sm text-blue-500 font-medium">토</div>
+        </div>
+        <div class="calendar-grid" id="calendar-days">
+          <!-- 달력 날짜는 JavaScript로 동적 생성 -->
+        </div>
+      </div>
+
+      <!-- 확인 버튼 -->
+      <button type="button" id="confirmCalendarSelection"
+        class="w-full py-3 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-colors">
+        날짜 선택 완료
+      </button>
+    </div>
+  </div>
+
+  <main class="pt-20 px-4 pb-20">
+    <div class="space-y-4 pb-6">
+      <!-- 검색 조건 선택 영역 -->
+      <div class="space-y-4">
+        <!-- 날짜 선택 UI (search.html과 동일) -->
+        <div class="relative">
+          <div class="absolute inset-y-0 left-3 flex items-center">
+            <img
+              src="https://readdy.ai/api/search-image?query=3D%20icon%20of%20a%20calendar%2C%20modern%20design%2C%20soft%20gradients%2C%20centered%20composition%2C%20isolated%20on%20transparent%20background%2C%20smooth%20shading&width=32&height=32&seq=3&orientation=squarish"
+              class="w-6 h-6" alt="calendar">
           </div>
-          <div class="mt-2 flex justify-between items-center">
-            <div>
-              <p id="popupPrice" class="font-medium text-primary"></p>
-              <p class="text-xs text-gray-500">1박 기준</p>
+          <button type="button" id="dateSelector"
+            class="w-full h-14 pl-12 pr-4 rounded-xl bg-white shadow-sm hover:shadow-md transition-shadow duration-300 focus:outline-none text-left flex items-center justify-between">
+            <span id="selectedDateText">체크인 - 체크아웃 날짜를 선택하세요</span>
+            <i class="ri-arrow-down-s-line text-gray-400"></i>
+          </button>
+        </div>
+        <div class="flex gap-3 overflow-x-auto py-2 no-scrollbar">
+          <div class="flex gap-3 min-w-max pb-2" id="campingTypeFilter">
+            <button class="flex flex-col items-center gap-1 px-3 py-2 bg-primary/10 shadow-md rounded-xl cursor-pointer"
+              data-type="normal">
+              <div
+                class="w-12 h-12 flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5 rounded-xl">
+                <i class="ri-home-8-line text-xl text-primary hover:rotate-6"></i>
+              </div>
+              <span class="text-xs whitespace-nowrap text-primary font-medium">일반캠핑</span>
+            </button>
+            <button
+              class="flex flex-col items-center gap-1 px-3 py-2 bg-white shadow-sm hover:shadow-md rounded-xl cursor-pointer"
+              data-type="glamping">
+              <div class="w-10 h-10 flex items-center justify-center rounded-xl">
+                <i class="ri-hotel-line text-xl text-gray-500"></i>
+              </div>
+              <span class="text-xs whitespace-nowrap">글램핑</span>
+            </button>
+            <button
+              class="flex flex-col items-center gap-1 px-3 py-2 bg-white shadow-sm hover:shadow-md rounded-xl cursor-pointer"
+              data-type="caravan">
+              <div class="w-10 h-10 flex items-center justify-center rounded-xl">
+                <i class="ri-truck-line text-xl text-gray-500"></i>
+              </div>
+              <span class="text-xs whitespace-nowrap">카라반</span>
+            </button>
+            <button
+              class="flex flex-col items-center gap-1 px-3 py-2 bg-white shadow-sm hover:shadow-md rounded-xl cursor-pointer"
+              data-type="pension">
+              <div class="w-10 h-10 flex items-center justify-center rounded-xl">
+                <i class="ri-building-line text-xl text-gray-500"></i>
+              </div>
+              <span class="text-xs whitespace-nowrap">펜션</span>
+            </button>
+            <button
+              class="flex flex-col items-center gap-1 px-3 py-2 bg-white shadow-sm hover:shadow-md rounded-xl cursor-pointer"
+              data-type="hotel">
+              <div class="w-10 h-10 flex items-center justify-center rounded-xl">
+                <i class="ri-hotel-line text-xl text-gray-500"></i>
+              </div>
+              <span class="text-xs whitespace-nowrap">호텔</span>
+            </button>
+            <button
+              class="flex flex-col items-center gap-1 px-3 py-2 bg-white shadow-sm hover:shadow-md rounded-xl cursor-pointer"
+              data-type="pet">
+              <div class="w-10 h-10 flex items-center justify-center rounded-xl">
+                <i class="ri-heart-line text-xl text-gray-500"></i>
+              </div>
+              <span class="text-xs whitespace-nowrap">반려동물</span>
+            </button>
+            <button
+              class="flex flex-col items-center gap-1 px-3 py-2 bg-white shadow-sm hover:shadow-md rounded-xl cursor-pointer"
+              data-type="sharing">
+              <div class="w-10 h-10 flex items-center justify-center rounded-xl">
+                <i class="ri-home-4-line text-xl text-gray-500"></i>
+              </div>
+              <span class="text-xs whitespace-nowrap">공유숙박</span>
+            </button>
+            <button
+              class="flex flex-col items-center gap-1 px-3 py-2 bg-white shadow-sm hover:shadow-md rounded-xl cursor-pointer"
+              data-type="hotspring">
+              <div class="w-10 h-10 flex items-center justify-center rounded-xl">
+                <i class="ri-water-flash-line text-xl text-gray-500"></i>
+              </div>
+              <span class="text-xs whitespace-nowrap">온천</span>
+            </button>
+            <button
+              class="flex flex-col items-center gap-1 px-3 py-2 bg-white shadow-sm hover:shadow-md rounded-xl cursor-pointer"
+              data-type="resort">
+              <div class="w-10 h-10 flex items-center justify-center rounded-xl">
+                <i class="ri-hotel-line text-xl text-gray-500"></i>
+              </div>
+              <span class="text-xs whitespace-nowrap">리조트</span>
+            </button>
+          </div>
+        </div>
+        <!-- 인원 선택 UI (search.html과 동일) -->
+        <div class="bg-white rounded-xl p-4 shadow-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <img
+              src="https://readdy.ai/api/search-image?query=3D%20icon%20of%20a%20person%2C%20modern%20design%2C%20soft%20gradients%2C%20centered%20composition%2C%20isolated%20on%20transparent%20background%2C%20smooth%20shading&width=32&height=32&seq=4&orientation=squarish"
+              class="w-6 h-6" alt="user">
+            <span class="font-medium">인원 선택</span>
+          </div>
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-sm">성인</span>
+              <div class="flex items-center gap-3">
+                <button type="button" id="adult-minus"
+                  class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50">
+                  <i class="ri-subtract-line text-sm"></i>
+                </button>
+                <span id="adult-count" class="w-8 text-center font-medium">0</span>
+                <button type="button" id="adult-plus"
+                  class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50">
+                  <i class="ri-add-line text-sm"></i>
+                </button>
+              </div>
             </div>
-            <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/1cf0d814-6ea9-40e4-9232-9102e310c481"
-              data-readdy="true"
-              class="px-4 py-2 bg-primary text-white rounded-lg !rounded-button shadow-sm cursor-pointer">자세히 보기</a>
+            <div class="flex items-center justify-between">
+              <span class="text-sm">소인</span>
+              <div class="flex items-center gap-3">
+                <button type="button" id="child-minus"
+                  class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50">
+                  <i class="ri-subtract-line text-sm"></i>
+                </button>
+                <span id="child-count" class="w-8 text-center font-medium">0</span>
+                <button type="button" id="child-plus"
+                  class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50">
+                  <i class="ri-add-line text-sm"></i>
+                </button>
+              </div>
+            </div>
           </div>
+        </div>
+      </div>
+
+      <!-- 지도 영역 -->
+      <div class="relative h-[500px] overflow-hidden rounded-xl shadow-sm">
+        <!-- 카카오 지도 컨테이너 -->
+        <div id="map" class="w-full h-full rounded-xl"></div>
+
+        <!-- 숙소 정보 팝업 (지도 컨테이너 안에 위치) -->
+        <div id="infoPopup"
+          class="hidden absolute w-[280px] h-[200px] bg-white rounded-xl shadow-2xl z-50 border border-gray-100">
+          <div class="relative h-[80px]">
+            <img id="popupImage" src="" class="w-full h-full object-cover rounded-t-xl" alt="숙소 이미지">
+            <button id="closePopup"
+              class="absolute top-2 right-2 w-6 h-6 flex items-center justify-center bg-black/50 hover:bg-black/70 rounded-full text-white cursor-pointer transition-colors">
+              <i class="ri-close-line text-sm"></i>
+            </button>
+          </div>
+          <div class="p-3 h-[120px] flex flex-col justify-between">
+            <div>
+              <h3 id="popupTitle" class="font-medium text-sm mb-1 truncate"></h3>
+              <div class="flex items-center gap-1 mb-2">
+                <i class="ri-star-fill text-yellow-400 text-xs"></i>
+                <span id="popupRating" class="text-xs"></span>
+                <span class="text-gray-400 text-xs">·</span>
+                <span id="popupReviews" class="text-gray-400 text-xs truncate"></span>
+              </div>
+            </div>
+            <div class="flex justify-between items-center">
+              <div>
+                <p id="popupPrice" class="font-medium text-primary text-sm"></p>
+                <p class="text-xs text-gray-500">1박 기준</p>
+              </div>
+              <button id="popupDetailBtn"
+                class="px-3 py-1.5 bg-primary hover:bg-primary/90 text-white rounded-lg text-xs cursor-pointer transition-colors">자세히
+                보기</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 지도 컨트롤 -->
+        <div class="absolute bottom-4 right-4 flex flex-col gap-2 z-10">
+          <button id="zoomIn"
+            class="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-md cursor-pointer hover:bg-gray-50">
+            <i class="ri-add-line text-xl"></i>
+          </button>
+          <button id="zoomOut"
+            class="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-md cursor-pointer hover:bg-gray-50">
+            <i class="ri-subtract-line text-xl"></i>
+          </button>
+          <button id="currentLocation"
+            class="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-md cursor-pointer hover:bg-gray-50">
+            <i class="ri-map-pin-user-line text-xl text-primary"></i>
+          </button>
         </div>
       </div>
     </div>
   </main>
-  <div class="fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur-md border-t border-gray-100">
-    <button
-      class="w-full h-14 bg-primary text-white font-medium rounded-xl !rounded-button shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all duration-300 cursor-pointer transform hover:scale-105 hover:bg-primary/90">
-      <i class="ri-search-2-fill mr-2"></i>검색
+
+  <div class="fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur-md border-t border-gray-100 z-10">
+    <button id="searchButton"
+      class="w-full h-14 bg-primary text-white font-medium rounded-xl shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-shadow duration-300">
+      검색
     </button>
   </div>
-  <script id="datePickerScript">
-    document.addEventListener('DOMContentLoaded', function () {
-      const datePickerBtn = document.getElementById('datePickerBtn');
-      const datePickerModal = document.getElementById('datePickerModal');
-      const closeDatePicker = document.querySelector('.closeDatePicker');
-      const prevMonthBtn = document.getElementById('prevMonth');
-      const nextMonthBtn = document.getElementById('nextMonth');
-      const currentMonthEl = document.getElementById('currentMonth');
-      const calendarDays = document.getElementById('calendarDays');
-      const dateDisplay = document.getElementById('dateDisplay');
 
-      dateDisplay.addEventListener('click', (e) => {
-        e.stopPropagation();
-        datePickerModal.classList.remove('hidden');
-        updateCalendar();
-      });
-      const confirmDateBtn = document.querySelector('#datePickerModal .w-full.mt-4');
-      let currentDate = new Date(2025, 6, 8);
-      let selectedStartDate = null;
-      let selectedEndDate = null;
-      function updateCalendar() {
-        const year = currentDate.getFullYear();
-        const month = currentDate.getMonth();
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // 날짜 선택 기능 (search.html 스타일)
+      const dateSelectorBtn = document.getElementById('dateSelector');
+      const calendarModal = document.getElementById('calendarModal');
+      const closeCalendarModalBtn = document.getElementById('closeCalendarModal');
+      const calendarDaysEl = document.getElementById('calendar-days');
+      const currentMonthText = document.getElementById('current-month');
+      const prevMonthButton = document.getElementById('prev-month');
+      const nextMonthButton = document.getElementById('next-month');
+      const checkInDateText = document.getElementById('check-in-date');
+      const checkOutDateText = document.getElementById('check-out-date');
+      const nightsCountText = document.getElementById('nights-count');
+      const confirmCalendarBtn = document.getElementById('confirmCalendarSelection');
+
+      let currentCalendarDate = new Date();
+      let selectedStartCalendarDate = null;
+      let selectedEndCalendarDate = null;
+
+      // 날짜 포맷팅 함수
+      function formatCalendarDate(date) {
+        if (!date) return '';
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+        return `${year}.${month < 10 ? '0' + month : month}.${day < 10 ? '0' + day : day}`;
+      }
+
+      function formatCalendarDateRange(checkin, checkout) {
+        if (!checkin || !checkout) return '체크인 - 체크아웃 날짜를 선택하세요';
+        const nights = Math.ceil((checkout - checkin) / (1000 * 60 * 60 * 24));
+        const options = { month: '2-digit', day: '2-digit', weekday: 'short' };
+        const checkinStr = checkin.toLocaleDateString('ko-KR', options);
+        const checkoutStr = checkout.toLocaleDateString('ko-KR', options);
+        return `${checkinStr} - ${checkoutStr}, ${nights}박${nights + 1}일`;
+      }
+
+      // 달력 생성 함수
+      function renderCalendarView() {
+        calendarDaysEl.innerHTML = '';
+        const year = currentCalendarDate.getFullYear();
+        const month = currentCalendarDate.getMonth();
+        currentMonthText.textContent = `${year}년 ${month + 1}월`;
+
         const firstDay = new Date(year, month, 1);
         const lastDay = new Date(year, month + 1, 0);
-        const startingDay = firstDay.getDay();
-        const monthLength = lastDay.getDate();
-        const confirmBtn = document.getElementById('confirmDateSelection');
-        currentMonthEl.textContent = `${year}년 ${month + 1}월`;
-        calendarDays.innerHTML = '';
-        if (selectedStartDate && selectedEndDate) {
-          confirmBtn.classList.remove('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
-          confirmBtn.classList.add('bg-primary', 'text-white', 'hover:bg-primary/90', 'cursor-pointer');
-          confirmBtn.disabled = false;
-        } else {
-          confirmBtn.classList.remove('bg-primary', 'text-white', 'hover:bg-primary/90', 'cursor-pointer');
-          confirmBtn.classList.add('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
-          confirmBtn.disabled = true;
+        const startingDayOfWeek = firstDay.getDay();
+        const daysInMonth = lastDay.getDate();
+
+        // 이전 달의 날짜 채우기
+        for (let i = 0; i < startingDayOfWeek; i++) {
+          const dayEl = document.createElement('div');
+          dayEl.classList.add('calendar-day', 'disabled');
+          calendarDaysEl.appendChild(dayEl);
         }
-        for (let i = 0; i < startingDay; i++) {
-          calendarDays.appendChild(document.createElement('div'));
-        }
-        for (let day = 1; day <= monthLength; day++) {
-          const dayEl = document.createElement('button');
-          dayEl.className = 'w-10 h-10 rounded-full flex items-center justify-center hover:bg-primary/10';
-          dayEl.textContent = day;
-          const currentDateObj = new Date(year, month, day);
-          if (selectedStartDate && currentDateObj.getTime() === selectedStartDate.getTime()) {
-            dayEl.classList.add('bg-primary', 'text-white');
-          } else if (selectedEndDate && currentDateObj.getTime() === selectedEndDate.getTime()) {
-            dayEl.classList.add('bg-primary', 'text-white');
-          } else if (selectedStartDate && selectedEndDate &&
-            currentDateObj > selectedStartDate && currentDateObj < selectedEndDate) {
-            dayEl.classList.add('bg-primary/20');
-          }
-          dayEl.addEventListener('click', () => {
-            if (!selectedStartDate || (selectedStartDate && selectedEndDate)) {
-              selectedStartDate = new Date(year, month, day);
-              selectedEndDate = null;
-            } else {
-              const clickedDate = new Date(year, month, day);
-              if (clickedDate > selectedStartDate) {
-                selectedEndDate = clickedDate;
-                updateDateDisplay();
-                datePickerModal.classList.add('hidden');
-              } else {
-                selectedStartDate = clickedDate;
-                selectedEndDate = null;
-              }
+
+        // 현재 달의 날짜 채우기
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        for (let i = 1; i <= daysInMonth; i++) {
+          const dayEl = document.createElement('div');
+          dayEl.classList.add('calendar-day');
+          dayEl.textContent = i;
+
+          const currentDateObj = new Date(year, month, i);
+
+          // 오늘 이전 날짜는 비활성화
+          if (currentDateObj < today) {
+            dayEl.classList.add('disabled');
+          } else {
+            // 선택된 시작 날짜
+            if (selectedStartCalendarDate && currentDateObj.getTime() === selectedStartCalendarDate.getTime()) {
+              dayEl.classList.add('selected');
             }
-            updateCalendar();
-          });
-          calendarDays.appendChild(dayEl);
-        }
-      }
-      function updateDateDisplay() {
-        if (selectedStartDate && selectedEndDate) {
-          const nights = Math.round((selectedEndDate - selectedStartDate) / (1000 * 60 * 60 * 24));
-          const formatDate = (date) => {
-            const days = ['일', '월', '화', '수', '목', '금', '토'];
-            return `${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getDate().toString().padStart(2, '0')} ${days[date.getDay()]}`;
-          };
-          dateDisplay.textContent = `${formatDate(selectedStartDate)} - ${formatDate(selectedEndDate)}, ${nights}박`;
-        }
-      }
-      datePickerBtn.addEventListener('click', () => {
-        datePickerModal.classList.remove('hidden');
-        updateCalendar();
-      });
-      closeDatePicker.addEventListener('click', () => {
-        datePickerModal.classList.add('hidden');
-      });
-      prevMonthBtn.addEventListener('click', () => {
-        currentDate.setMonth(currentDate.getMonth() - 1);
-        updateCalendar();
-      });
-      nextMonthBtn.addEventListener('click', () => {
-        currentDate.setMonth(currentDate.getMonth() + 1);
-        updateCalendar();
-      });
-      datePickerModal.addEventListener('click', (e) => {
-        if (e.target === datePickerModal) {
-          datePickerModal.classList.add('hidden');
-        }
-      });
-      const confirmDateBtn = document.getElementById('confirmDateSelection');
-      confirmDateBtn.addEventListener('click', () => {
-        if (selectedStartDate && selectedEndDate) {
-          updateDateDisplay();
-          datePickerModal.classList.add('hidden');
-          const datePickerBtn = document.getElementById('datePickerBtn');
-          datePickerBtn.classList.add('animate-scaleIn');
-          setTimeout(() => {
-            datePickerBtn.classList.remove('animate-scaleIn');
-          }, 300);
-        }
-      });
-    });
-  </script>
-  <script id="guestPickerScript">
-    document.addEventListener('DOMContentLoaded', function () {
-      const guestPickerBtn = document.getElementById('guestPickerBtn');
-      const guestPickerModal = document.getElementById('guestPickerModal');
-      const closeGuestPicker = document.querySelector('.closeGuestPicker');
-      const guestDisplay = document.getElementById('guestDisplay');
-      const guestCounts = {
-        adult: 0,
-        child: 0,
-        pet: 0
-      };
-      function updateGuestDisplay() {
-        const parts = [];
-        if (guestCounts.adult > 0) parts.push(`성인 ${guestCounts.adult}`);
-        if (guestCounts.child > 0) parts.push(`소인 ${guestCounts.child}`);
-        if (guestCounts.pet > 0) parts.push(`반려견 ${guestCounts.pet}`);
-        guestDisplay.textContent = parts.length > 0 ? parts.join(', ') : '인원 선택';
-      }
-      document.querySelectorAll('.guest-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const type = btn.dataset.type;
-          const isPlus = btn.classList.contains('plus');
-          const countEl = btn.parentElement.querySelector('.guest-count');
-          if (isPlus && guestCounts[type] < 10) {
-            guestCounts[type]++;
-          } else if (!isPlus && guestCounts[type] > 0) {
-            guestCounts[type]--;
+            // 선택된 종료 날짜
+            if (selectedEndCalendarDate && currentDateObj.getTime() === selectedEndCalendarDate.getTime()) {
+              dayEl.classList.add('selected');
+            }
+            // 선택 범위 내 날짜
+            if (selectedStartCalendarDate && selectedEndCalendarDate &&
+              currentDateObj > selectedStartCalendarDate &&
+              currentDateObj < selectedEndCalendarDate) {
+              dayEl.classList.add('in-range');
+            }
+
+            // 날짜 클릭 이벤트
+            dayEl.addEventListener('click', () => {
+              if (!selectedStartCalendarDate || (selectedStartCalendarDate && selectedEndCalendarDate)) {
+                // 새로운 선택 시작
+                selectedStartCalendarDate = currentDateObj;
+                selectedEndCalendarDate = null;
+                checkInDateText.textContent = formatCalendarDate(selectedStartCalendarDate);
+                checkOutDateText.textContent = '날짜 선택';
+                nightsCountText.textContent = '0박';
+              } else {
+                // 이미 시작 날짜가 선택된 경우
+                if (currentDateObj < selectedStartCalendarDate) {
+                  // 선택된 날짜가 시작 날짜보다 이전인 경우
+                  selectedEndCalendarDate = selectedStartCalendarDate;
+                  selectedStartCalendarDate = currentDateObj;
+                } else {
+                  // 종료 날짜 선택
+                  selectedEndCalendarDate = currentDateObj;
+                }
+                checkInDateText.textContent = formatCalendarDate(selectedStartCalendarDate);
+                checkOutDateText.textContent = formatCalendarDate(selectedEndCalendarDate);
+                // 숙박 일수 계산
+                const nights = Math.round((selectedEndCalendarDate - selectedStartCalendarDate) / (1000 * 60 * 60 * 24));
+                nightsCountText.textContent = `${nights}박`;
+              }
+              renderCalendarView();
+            });
           }
-          countEl.textContent = guestCounts[type];
-          updateGuestDisplay();
-        });
+
+          calendarDaysEl.appendChild(dayEl);
+        }
+      }
+
+      // 모달 열기/닫기
+      dateSelectorBtn.addEventListener('click', function () {
+        calendarModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        renderCalendarView();
       });
-      guestPickerBtn.addEventListener('click', () => {
-        guestPickerModal.classList.remove('hidden');
+
+      closeCalendarModalBtn.addEventListener('click', function () {
+        calendarModal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
       });
-      closeGuestPicker.addEventListener('click', () => {
-        guestPickerModal.classList.add('hidden');
-      });
-      guestPickerModal.addEventListener('click', (e) => {
-        if (e.target === guestPickerModal) {
-          guestPickerModal.classList.add('hidden');
+
+      // 모달 배경 클릭 시 닫기
+      calendarModal.addEventListener('click', function (e) {
+        if (e.target === calendarModal) {
+          calendarModal.classList.add('hidden');
+          document.body.style.overflow = 'auto';
         }
       });
-    });
-  </script>
-  <script id="markerInteraction">
-    document.addEventListener('DOMContentLoaded', function () {
-      function filterMarkers(type) {
-        const filterButtons = document.querySelectorAll('.filter-btn');
-        filterButtons.forEach(btn => {
-          btn.classList.remove('bg-primary', 'text-white');
-          btn.classList.add('bg-white', 'text-gray-600');
-          const icon = btn.querySelector('i');
+
+      // 이전/다음 달 버튼
+      prevMonthButton.addEventListener('click', () => {
+        currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+        renderCalendarView();
+      });
+
+      nextMonthButton.addEventListener('click', () => {
+        currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+        renderCalendarView();
+      });
+
+      // 날짜 선택 완료
+      confirmCalendarBtn.addEventListener('click', function () {
+        if (selectedStartCalendarDate && selectedEndCalendarDate) {
+          if (selectedEndCalendarDate <= selectedStartCalendarDate) {
+            alert('체크아웃 날짜는 체크인 날짜보다 늦어야 합니다.');
+            return;
+          }
+
+          const displayText = formatCalendarDateRange(selectedStartCalendarDate, selectedEndCalendarDate);
+          document.getElementById('selectedDateText').textContent = displayText;
+
+          calendarModal.classList.add('hidden');
+          document.body.style.overflow = 'auto';
+          console.log('선택된 날짜:', displayText);
+        } else {
+          alert('체크인과 체크아웃 날짜를 모두 선택해주세요.');
+        }
+      });
+
+      // 인원 선택 기능 (search.html 스타일)
+      const adultCount = document.getElementById('adult-count');
+      const adultMinus = document.getElementById('adult-minus');
+      const adultPlus = document.getElementById('adult-plus');
+      const childCount = document.getElementById('child-count');
+      const childMinus = document.getElementById('child-minus');
+      const childPlus = document.getElementById('child-plus');
+
+      let adultNumber = 0;
+      let childNumber = 0;
+
+      function updatePersonCount() {
+        adultCount.textContent = adultNumber;
+        childCount.textContent = childNumber;
+      }
+
+      adultMinus.addEventListener('click', function () {
+        if (adultNumber > 0) {
+          adultNumber--;
+          updatePersonCount();
+        }
+      });
+      adultPlus.addEventListener('click', function () {
+        adultNumber++;
+        updatePersonCount();
+      });
+      childMinus.addEventListener('click', function () {
+        if (childNumber > 0) {
+          childNumber--;
+          updatePersonCount();
+        }
+      });
+      childPlus.addEventListener('click', function () {
+        childNumber++;
+        updatePersonCount();
+      });
+
+      // 캠핑 타입 필터 버튼 이벤트 (search.html 스타일)
+      const campingTypeButtons = document.querySelectorAll('#campingTypeFilter button');
+
+      campingTypeButtons.forEach(button => {
+        button.addEventListener('click', function () {
+          // 모든 버튼 비활성화
+          campingTypeButtons.forEach((btn) => {
+            btn.classList.remove('bg-primary/10', 'shadow-md');
+            btn.classList.add('bg-white', 'shadow-sm', 'hover:shadow-md');
+
+            // 아이콘 색상 초기화
+            const icon = btn.querySelector('i');
+            const span = btn.querySelector('span');
+            if (icon) {
+              icon.classList.remove('text-primary');
+              icon.classList.add('text-gray-500');
+            }
+            if (span) {
+              span.classList.remove('text-primary', 'font-medium');
+            }
+
+            // 아이콘 컨테이너 초기화
+            const iconContainer = btn.querySelector('div');
+            if (iconContainer) {
+              iconContainer.classList.remove('bg-gradient-to-br', 'from-primary/10', 'to-primary/5', 'w-12', 'h-12');
+              iconContainer.classList.add('w-10', 'h-10');
+            }
+          });
+
+          // 클릭된 버튼 활성화
+          this.classList.remove('bg-white', 'shadow-sm', 'hover:shadow-md');
+          this.classList.add('bg-primary/10', 'shadow-md');
+
+          // 아이콘과 텍스트 색상 변경
+          const icon = this.querySelector('i');
+          const span = this.querySelector('span');
           if (icon) {
+            icon.classList.remove('text-gray-500');
             icon.classList.add('text-primary');
           }
-        });
-        const selectedButton = document.getElementById(`filter${type}`);
-        if (selectedButton) {
-          selectedButton.classList.remove('bg-white', 'text-gray-600');
-          selectedButton.classList.add('bg-primary', 'text-white');
-          const icon = selectedButton.querySelector('i');
-          if (icon) {
-            icon.classList.remove('text-primary');
+          if (span) {
+            span.classList.add('text-primary', 'font-medium');
           }
-        }
-        markers.forEach(marker => {
-          const markerElement = document.getElementById(marker.id);
-          if (type === 'All' || marker.type === type.toLowerCase()) {
-            markerElement.style.display = '';
-            markerElement.classList.add('animate-scaleIn');
-            setTimeout(() => {
-              markerElement.classList.remove('animate-scaleIn');
-            }, 300);
-          } else {
-            markerElement.style.display = 'none';
+
+          // 선택된 버튼의 아이콘 컨테이너 스타일
+          const iconContainer = this.querySelector('div');
+          if (iconContainer) {
+            iconContainer.classList.add('bg-gradient-to-br', 'from-primary/10', 'to-primary/5', 'w-12', 'h-12');
+            iconContainer.classList.remove('w-10', 'h-10');
           }
+
+          console.log('선택된 캠핑 타입:', this.dataset.type);
         });
-      }
-      document.getElementById('filterAll').addEventListener('click', () => filterMarkers('All'));
-      document.getElementById('filterGlamping').addEventListener('click', () => filterMarkers('Glamping'));
-      document.getElementById('filterAutoCamping').addEventListener('click', () => filterMarkers('AutoCamping'));
-      document.getElementById('filterCaravan').addEventListener('click', () => filterMarkers('Caravan'));
-      document.getElementById('filterPension').addEventListener('click', () => filterMarkers('Pension'));
-      const addBounceAnimation = () => {
-        const markers = document.querySelectorAll('[id^="marker"]');
-        markers.forEach((marker, index) => {
-          setTimeout(() => {
-            marker.classList.add('animate-bounce');
-          }, index * 200);
-        });
-      };
-      setTimeout(addBounceAnimation, 500);
-      const markers = [
+      });
+
+      // 카카오 지도 초기화 및 마커 생성
+      let map;
+      let mapMarkers = [];
+      let userLocation = null; // 사용자 현재 위치 저장
+
+      // 숙소 데이터 (기존 4개만 유지)
+      const accommodations = [
         {
-          id: 'marker1',
-          type: 'glamping',
-          image: 'https://readdy.ai/api/search-image?query=Luxury%20glamping%20tent%20in%20forest%20setting%2C%20cozy%20interior%20with%20comfortable%20bed%2C%20warm%20lighting%2C%20natural%20wood%20elements%2C%20high-quality%20professional%20photography%2C%20no%20people%2C%20serene%20atmosphere&width=600&height=400&seq=101&orientation=landscape',
+          id: 1,
           title: '숲속 글램핑 리조트',
+          type: 'glamping',
+          lat: 37.8315 + (Math.random() - 0.5) * 0.02, // 가평 중심 좌표에서 랜덤 오프셋
+          lng: 127.5109 + (Math.random() - 0.5) * 0.02,
+          price: '₩130,000',
           rating: '4.8',
           reviews: '리뷰 128개',
-          price: '₩130,000'
+          image: 'https://readdy.ai/api/search-image?query=Luxury%20glamping%20tent%20in%20forest%20setting%2C%20cozy%20interior%20with%20comfortable%20bed%2C%20warm%20lighting%2C%20natural%20wood%20elements%2C%20high-quality%20professional%20photography%2C%20no%20people%2C%20serene%20atmosphere&width=600&height=400&seq=101&orientation=landscape'
         },
         {
-          id: 'marker2',
-          type: 'caravan',
-          image: 'https://readdy.ai/api/search-image?query=Modern%20caravan%20camping%20site%20with%20outdoor%20deck%2C%20mountain%20view%2C%20sunset%20lighting%2C%20professional%20photography%2C%20no%20people%2C%20luxury%20camping%20experience&width=600&height=400&seq=102&orientation=landscape',
+          id: 2,
           title: '마운틴 뷰 카라반',
+          type: 'caravan',
+          lat: 37.8315 + (Math.random() - 0.5) * 0.02,
+          lng: 127.5109 + (Math.random() - 0.5) * 0.02,
+          price: '₩145,000',
           rating: '4.6',
           reviews: '리뷰 95개',
-          price: '₩145,000'
+          image: 'https://readdy.ai/api/search-image?query=Modern%20caravan%20camping%20site%20with%20outdoor%20deck%2C%20mountain%20view%2C%20sunset%20lighting%2C%20professional%20photography%2C%20no%20people%2C%20luxury%20camping%20experience&width=600&height=400&seq=102&orientation=landscape'
         },
         {
-          id: 'marker3',
-          type: 'pension',
-          image: 'https://readdy.ai/api/search-image?query=Traditional%20Korean%20pension%20house%20with%20wooden%20architecture%2C%20beautiful%20garden%2C%20peaceful%20surroundings%2C%20professional%20photography%2C%20no%20people%2C%20vacation%20rental&width=600&height=400&seq=103&orientation=landscape',
+          id: 3,
           title: '한옥 스타일 펜션',
+          type: 'pension',
+          lat: 37.8315 + (Math.random() - 0.5) * 0.02,
+          lng: 127.5109 + (Math.random() - 0.5) * 0.02,
+          price: '₩120,000',
           rating: '4.7',
           reviews: '리뷰 156개',
-          price: '₩120,000'
+          image: 'https://readdy.ai/api/search-image?query=Traditional%20Korean%20pension%20house%20with%20wooden%20architecture%2C%20beautiful%20garden%2C%20peaceful%20surroundings%2C%20professional%20photography%2C%20no%20people%2C%20vacation%20rental&width=600&height=400&seq=103&orientation=landscape'
         },
         {
-          id: 'marker4',
-          type: 'autoCamping',
-          image: 'https://readdy.ai/api/search-image?query=Luxury%20auto%20camping%20site%20by%20the%20lake%2C%20modern%20tent%20setup%2C%20campfire%2C%20evening%20atmosphere%2C%20professional%20photography%2C%20no%20people%2C%20outdoor%20adventure&width=600&height=400&seq=104&orientation=landscape',
+          id: 4,
           title: '레이크 오토캠핑장',
+          type: 'autoCamping',
+          lat: 37.8315 + (Math.random() - 0.5) * 0.02,
+          lng: 127.5109 + (Math.random() - 0.5) * 0.02,
+          price: '₩160,000',
           rating: '4.9',
           reviews: '리뷰 210개',
-          price: '₩160,000'
+          image: 'https://readdy.ai/api/search-image?query=Luxury%20auto%20camping%20site%20by%20the%20lake%2C%20modern%20tent%20setup%2C%20campfire%2C%20evening%20atmosphere%2C%20professional%20photography%2C%20no%20people%2C%20outdoor%20adventure&width=600&height=400&seq=104&orientation=landscape'
         }
       ];
-      const popup = document.getElementById('infoPopup');
-      const popupImage = document.getElementById('popupImage');
-      const popupTitle = document.getElementById('popupTitle');
-      const popupRating = document.getElementById('popupRating');
-      const popupReviews = document.getElementById('popupReviews');
-      const popupPrice = document.getElementById('popupPrice');
-      const closePopup = document.getElementById('closePopup');
-      markers.forEach(marker => {
-        const markerElement = document.getElementById(marker.id);
-        markerElement.addEventListener('click', function () {
-          popupImage.src = marker.image;
-          popupTitle.textContent = marker.title;
-          popupRating.textContent = marker.rating;
-          popupReviews.textContent = marker.reviews;
-          popupPrice.textContent = marker.price;
-          popup.classList.remove('hidden');
+
+      // 사용자 현재 위치 가져오기
+      function getUserLocation() {
+        return new Promise((resolve, reject) => {
+          if (!navigator.geolocation) {
+            reject(new Error('Geolocation을 지원하지 않는 브라우저입니다.'));
+            return;
+          }
+
+          const options = {
+            enableHighAccuracy: true, // 높은 정확도
+            timeout: 10000, // 10초 타임아웃
+            maximumAge: 300000 // 5분 동안 캐시된 위치 사용
+          };
+
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const location = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude,
+                accuracy: position.coords.accuracy
+              };
+              console.log('사용자 현재 위치:', location);
+              resolve(location);
+            },
+            (error) => {
+              console.error('위치 정보를 가져올 수 없습니다:', error);
+              let errorMessage = '';
+              switch (error.code) {
+                case error.PERMISSION_DENIED:
+                  errorMessage = '위치 정보 접근이 거부되었습니다.';
+                  break;
+                case error.POSITION_UNAVAILABLE:
+                  errorMessage = '위치 정보를 사용할 수 없습니다.';
+                  break;
+                case error.TIMEOUT:
+                  errorMessage = '위치 정보 요청이 시간 초과되었습니다.';
+                  break;
+                default:
+                  errorMessage = '알 수 없는 오류가 발생했습니다.';
+                  break;
+              }
+              reject(new Error(errorMessage));
+            },
+            options
+          );
         });
-      });
-      closePopup.addEventListener('click', function () {
-        popup.classList.add('hidden');
+      }
+
+      // URL 파라미터에서 위치 기반 접근인지 확인
+      function isLocationBasedAccess() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const fromNearby = urlParams.get('from') === 'nearby';
+        const referer = document.referrer;
+
+        console.log('위치 기반 접근 확인:');
+        console.log('- URL 파라미터 from:', urlParams.get('from'));
+        console.log('- fromNearby:', fromNearby);
+        console.log('- referer:', referer);
+
+        // URL 파라미터로 확인하거나, 다른 페이지에서 "내 주변" 버튼으로 접근한 경우
+        const isLocationBased = fromNearby || referer.includes('index.html') || referer.includes('search.html') || referer.includes('shop_list.html');
+
+        console.log('- 위치 기반 접근 여부:', isLocationBased);
+
+        return isLocationBased;
+      }
+
+      // 사용자 위치 주변에 숙소 마커 재배치
+      function relocateAccommodationsNearUser(userLat, userLng) {
+        console.log(`사용자 위치: (${userLat}, ${userLng})`);
+        console.log('재배치 전 숙소 위치들:', accommodations.map(acc => ({ title: acc.title, lat: acc.lat, lng: acc.lng })));
+
+        // 지도가 존재하는 경우에만 bounds 사용, 없으면 기본 반경 사용
+        let latRange, lngRange, bounds;
+
+        if (map && map.getBounds) {
+          try {
+            bounds = map.getBounds();
+            // 지도 중심에서 보이는 범위의 80% 내에서 마커 배치
+            latRange = (bounds.getNorthEast().getLat() - bounds.getSouthWest().getLat()) * 0.4;
+            lngRange = (bounds.getNorthEast().getLng() - bounds.getSouthWest().getLng()) * 0.4;
+
+            console.log('지도 bounds 기반 배치:', {
+              latRange: latRange.toFixed(6),
+              lngRange: lngRange.toFixed(6),
+              bounds: {
+                sw: `(${bounds.getSouthWest().getLat().toFixed(6)}, ${bounds.getSouthWest().getLng().toFixed(6)})`,
+                ne: `(${bounds.getNorthEast().getLat().toFixed(6)}, ${bounds.getNorthEast().getLng().toFixed(6)})`
+              }
+            });
+          } catch (error) {
+            console.warn('지도 bounds 가져오기 실패, 기본 반경 사용:', error);
+            latRange = 0.02; // 기본 반경
+            lngRange = 0.02;
+          }
+        } else {
+          console.log('지도 객체 없음, 기본 반경 사용');
+          latRange = 0.02; // 기본 반경
+          lngRange = 0.02;
+        }
+
+        const minDistance = Math.min(latRange, lngRange) * 0.2; // 마커 간 최소 거리
+        const usedPositions = []; // 이미 사용된 위치들
+
+        accommodations.forEach((accommodation, index) => {
+          let newLat, newLng, attempts = 0;
+          let validPosition = false;
+
+          // 보이는 범위 내에서 겹치지 않는 위치 찾기
+          while (!validPosition && attempts < 30) {
+            // 사용자 위치 중심으로 범위 내에서 랜덤 배치
+            const randomLatOffset = (Math.random() - 0.5) * latRange * 2;
+            const randomLngOffset = (Math.random() - 0.5) * lngRange * 2;
+
+            newLat = userLat + randomLatOffset;
+            newLng = userLng + randomLngOffset;
+
+            // 지도 범위 내에 있는지 확인 (bounds가 있는 경우)
+            let withinBounds = true;
+            if (bounds) {
+              withinBounds = newLat >= bounds.getSouthWest().getLat() &&
+                newLat <= bounds.getNorthEast().getLat() &&
+                newLng >= bounds.getSouthWest().getLng() &&
+                newLng <= bounds.getNorthEast().getLng();
+            }
+
+            // 다른 마커들과의 거리 확인
+            const tooClose = usedPositions.some(pos => {
+              const distance = Math.sqrt(
+                Math.pow(newLat - pos.lat, 2) + Math.pow(newLng - pos.lng, 2)
+              );
+              return distance < minDistance;
+            });
+
+            if (withinBounds && !tooClose) {
+              validPosition = true;
+            }
+
+            attempts++;
+          }
+
+          // 적절한 위치를 찾지 못한 경우 강제로 원형 배치
+          if (!validPosition) {
+            console.warn(`${accommodation.title}: 적절한 위치를 찾지 못해 원형 배치 사용`);
+            const angle = (index * Math.PI * 2) / accommodations.length;
+            const distance = Math.min(latRange, lngRange) * 0.6;
+            newLat = userLat + Math.cos(angle) * distance;
+            newLng = userLng + Math.sin(angle) * distance;
+          }
+
+          const oldLat = accommodation.lat;
+          const oldLng = accommodation.lng;
+
+          accommodation.lat = newLat;
+          accommodation.lng = newLng;
+
+          // 사용된 위치에 추가
+          usedPositions.push({ lat: newLat, lng: newLng });
+
+          console.log(`${accommodation.title}: (${oldLat.toFixed(6)}, ${oldLng.toFixed(6)}) → (${accommodation.lat.toFixed(6)}, ${accommodation.lng.toFixed(6)}) [시도: ${attempts}회]`);
+        });
+
+        console.log('재배치 후 숙소 위치들:', accommodations.map(acc => ({ title: acc.title, lat: acc.lat.toFixed(6), lng: acc.lng.toFixed(6) })));
+        console.log('사용자 위치 주변으로 숙소 재배치 완료');
+      }
+
+      // 기존 마커 모두 제거
+      function clearAllMarkers() {
+        console.log(`기존 마커 ${mapMarkers.length}개 제거 시작`);
+
+        mapMarkers.forEach((marker, index) => {
+          try {
+            if (marker && marker.setMap) {
+              marker.setMap(null);
+              console.log(`마커 ${index + 1} 제거됨`);
+            }
+          } catch (error) {
+            console.error(`마커 ${index + 1} 제거 중 오류:`, error);
+          }
+        });
+
+        mapMarkers.length = 0; // 배열 완전히 비우기
+        console.log('기존 마커 모두 제거 완료. mapMarkers 길이:', mapMarkers.length);
+      }
+
+      // 지도 초기화
+      async function initMap() {
+        const container = document.getElementById('map');
+        let centerLat = 37.8315; // 기본 가평 좌표
+        let centerLng = 127.5109;
+        let mapLevel = 5;
+
+        // 위치 기반 접근인지 확인
+        if (isLocationBasedAccess()) {
+          try {
+            console.log('위치 기반 접근 감지 - 사용자 현재 위치 가져오는 중...');
+
+            // 사용자 현재 위치 가져오기
+            userLocation = await getUserLocation();
+            centerLat = userLocation.lat;
+            centerLng = userLocation.lng;
+            mapLevel = 4; // 조금 더 확대
+
+            console.log(`지도 중심을 사용자 위치로 설정: (${centerLat}, ${centerLng})`);
+
+            // 사용자에게 위치 기반 서비스 시작을 알림
+            showLocationNotification('현재 위치 기반으로 주변 숙소를 찾고 있습니다.');
+
+          } catch (error) {
+            console.error('위치 정보 가져오기 실패:', error);
+
+            // 위치 정보를 가져올 수 없는 경우 사용자에게 알림
+            showLocationNotification('위치 정보를 가져올 수 없어 기본 지역(가평)으로 설정합니다.', 'warning');
+          }
+        }
+
+        const options = {
+          center: new kakao.maps.LatLng(centerLat, centerLng),
+          level: mapLevel
+        };
+
+        map = new kakao.maps.Map(container, options);
+
+        // 사용자 위치가 있는 경우 사용자 위치 마커 추가
+        if (userLocation) {
+          addUserLocationMarker(userLocation.lat, userLocation.lng);
+        }
+
+        // 지도 컨트롤 이벤트
+        setupMapControls();
+
+        // 지도 로딩 완료 후 마커 재배치 및 생성
+        setTimeout(() => {
+          // 위치 기반 접근인 경우 마커 재배치
+          if (userLocation) {
+            relocateAccommodationsNearUser(userLocation.lat, userLocation.lng);
+          }
+
+          // 마커 생성
+          createMarkers();
+        }, 800); // 지연 시간 증가
+
+        console.log('카카오 지도 초기화 완료');
+      }
+
+      // 마커 생성 함수
+      function createMarkers() {
+        console.log('=== 마커 생성 시작 ===');
+
+        accommodations.forEach((accommodation, index) => {
+          console.log(`마커 ${index + 1} 생성 중:`, accommodation.title, `위치: (${accommodation.lat.toFixed(6)}, ${accommodation.lng.toFixed(6)})`);
+
+          try {
+            // 커스텀 마커 HTML 생성
+            const markerContent = `
+              <div class="relative marker-${index}" data-accommodation-id="${accommodation.id}">
+                <div class="w-[90px] h-[36px] flex items-center justify-center bg-primary text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 cursor-pointer marker-clickable">
+                  <span class="text-sm font-medium">${accommodation.price}</span>
+                </div>
+              </div>
+            `;
+
+            // 커스텀 오버레이 생성
+            const customOverlay = new kakao.maps.CustomOverlay({
+              position: new kakao.maps.LatLng(accommodation.lat, accommodation.lng),
+              content: markerContent,
+              yAnchor: 0.5,
+              zIndex: 100 + index // z-index로 겹침 방지
+            });
+
+            // 지도에 마커 추가
+            customOverlay.setMap(map);
+
+            // 마커가 실제로 추가되었는지 확인
+            if (customOverlay.getMap()) {
+              console.log(`✅ 마커 ${index + 1} (${accommodation.title}) 성공적으로 추가됨`);
+            } else {
+              console.error(`❌ 마커 ${index + 1} (${accommodation.title}) 추가 실패`);
+            }
+
+            // 지연 후 마커 클릭 이벤트 바인딩 (DOM이 완전히 로드된 후)
+            setTimeout(() => {
+              const markerElement = document.querySelector(`.marker-${index}`);
+              console.log(`마커 ${index + 1} DOM 요소 찾기:`, markerElement ? '성공' : '실패');
+
+              if (markerElement) {
+                // 기존 이벤트 리스너 제거 (중복 방지)
+                markerElement.removeEventListener('click', markerElement.clickHandler);
+
+                // 새로운 클릭 핸들러 정의
+                markerElement.clickHandler = function (event) {
+                  console.log(`🎯 마커 ${index + 1} 클릭됨: ${accommodation.title}`);
+                  console.log(`클릭한 마커 위치: (${accommodation.lat.toFixed(6)}, ${accommodation.lng.toFixed(6)})`);
+
+                  // 이벤트 버블링 방지
+                  event.stopPropagation();
+                  event.preventDefault();
+
+                  // 다른 팝업이 열려있으면 먼저 닫기
+                  const existingPopup = document.getElementById('infoPopup');
+                  if (existingPopup && !existingPopup.classList.contains('hidden')) {
+                    existingPopup.classList.add('hidden');
+                  }
+
+                  console.log('showAccommodationPopup 호출 시작');
+
+                  // 실제 클릭한 화면 좌표 사용 (가장 정확한 방법)
+                  const mapContainer = document.getElementById('map');
+                  const mapRect = mapContainer.getBoundingClientRect();
+
+                  // 클릭한 화면 좌표를 지도 컨테이너 기준 상대 좌표로 변환
+                  const clickPosition = {
+                    x: event.clientX - mapRect.left,
+                    y: event.clientY - mapRect.top
+                  };
+
+                  console.log('실제 클릭 위치 계산:', {
+                    clientX: event.clientX,
+                    clientY: event.clientY,
+                    mapRect: {
+                      left: mapRect.left,
+                      top: mapRect.top,
+                      width: mapRect.width,
+                      height: mapRect.height
+                    },
+                    relative: clickPosition
+                  });
+
+                  // 클릭 위치가 지도 영역 내에 있는지 확인
+                  if (clickPosition.x >= 0 && clickPosition.x <= mapRect.width &&
+                    clickPosition.y >= 0 && clickPosition.y <= mapRect.height) {
+                    console.log('✅ 클릭 위치가 지도 영역 내에 있음');
+                  } else {
+                    console.log('⚠️ 클릭 위치가 지도 영역을 벗어남');
+                  }
+
+                  // 숙소 정보와 함께 클릭 위치도 전달
+                  showAccommodationPopup(accommodation, clickPosition);
+                };
+
+                // 이벤트 리스너 추가
+                markerElement.addEventListener('click', markerElement.clickHandler);
+
+                // 추가 확인을 위해 hover 이벤트도 추가
+                markerElement.addEventListener('mouseenter', function () {
+                  console.log(`마커 ${index + 1} 호버: ${accommodation.title}`);
+                });
+
+                console.log(`✅ 마커 ${index + 1} 클릭 이벤트 바인딩 완료`);
+              } else {
+                console.error(`❌ 마커 ${index + 1} DOM 요소를 찾을 수 없음`);
+              }
+            }, 100); // 100ms 지연
+
+            mapMarkers.push(customOverlay);
+
+          } catch (error) {
+            console.error(`마커 ${index + 1} 생성 중 오류:`, error);
+          }
+        });
+
+        console.log(`총 ${accommodations.length}개의 마커 생성 완료`);
+        console.log(`mapMarkers 배열 길이: ${mapMarkers.length}`);
+        console.log('현재 지도 중심:', map.getCenter().getLat().toFixed(6), map.getCenter().getLng().toFixed(6));
+        console.log('현재 지도 레벨:', map.getLevel());
+
+        // 지도 범위 확인
+        const bounds = map.getBounds();
+        console.log('지도 범위:', {
+          sw: `(${bounds.getSouthWest().getLat().toFixed(6)}, ${bounds.getSouthWest().getLng().toFixed(6)})`,
+          ne: `(${bounds.getNorthEast().getLat().toFixed(6)}, ${bounds.getNorthEast().getLng().toFixed(6)})`
+        });
+
+        console.log('=== 마커 생성 완료 ===');
+      }
+
+      // 사용자 위치 마커 추가
+      function addUserLocationMarker(lat, lng) {
+        const userMarkerContent = `
+          <div class="relative">
+            <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center shadow-lg animate-pulse">
+              <i class="ri-user-location-line text-white text-lg"></i>
+            </div>
+            <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-blue-600 rounded-full border-2 border-white"></div>
+          </div>
+        `;
+
+        const userMarker = new kakao.maps.CustomOverlay({
+          position: new kakao.maps.LatLng(lat, lng),
+          content: userMarkerContent,
+          yAnchor: 0.5,
+          zIndex: 10 // 다른 마커보다 위에 표시
+        });
+
+        userMarker.setMap(map);
+        console.log('사용자 위치 마커 추가됨');
+      }
+
+      // 위치 알림 표시
+      function showLocationNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        const bgColor = type === 'warning' ? 'bg-yellow-100 border-yellow-400 text-yellow-700' : 'bg-blue-100 border-blue-400 text-blue-700';
+
+        notification.className = `fixed top-20 left-4 right-4 ${bgColor} border px-4 py-3 rounded-lg shadow-lg z-50 animate-fadeIn`;
+        notification.innerHTML = `
+          <div class="flex items-center gap-2">
+            <i class="ri-information-line text-lg"></i>
+            <span class="text-sm">${message}</span>
+            <button onclick="this.parentElement.parentElement.remove()" class="ml-auto">
+              <i class="ri-close-line text-lg"></i>
+            </button>
+          </div>
+        `;
+
+        document.body.appendChild(notification);
+
+        // 5초 후 자동 제거
+        setTimeout(() => {
+          if (notification.parentElement) {
+            notification.remove();
+          }
+        }, 5000);
+      }
+
+      // 숙소 정보 팝업 표시
+      function showAccommodationPopup(accommodation, clickPosition) {
+        console.log('🔥 showAccommodationPopup 함수 호출됨:', accommodation.title);
+        console.log('전달받은 클릭 위치:', clickPosition);
+
+        const popup = document.getElementById('infoPopup');
+        const popupImage = document.getElementById('popupImage');
+        const popupTitle = document.getElementById('popupTitle');
+        const popupRating = document.getElementById('popupRating');
+        const popupReviews = document.getElementById('popupReviews');
+        const popupPrice = document.getElementById('popupPrice');
+        const popupDetailBtn = document.getElementById('popupDetailBtn');
+
+        console.log('팝업 DOM 요소들 확인:', {
+          popup: popup ? '✅' : '❌',
+          popupImage: popupImage ? '✅' : '❌',
+          popupTitle: popupTitle ? '✅' : '❌',
+          popupRating: popupRating ? '✅' : '❌',
+          popupReviews: popupReviews ? '✅' : '❌',
+          popupPrice: popupPrice ? '✅' : '❌',
+          popupDetailBtn: popupDetailBtn ? '✅' : '❌'
+        });
+
+        if (!popup) {
+          console.error('❌ 팝업 요소를 찾을 수 없습니다!');
+          return;
+        }
+
+        try {
+          // 팝업 내용 업데이트
+          console.log('팝업 내용 업데이트 시작...');
+
+          if (popupImage) {
+            popupImage.src = accommodation.image;
+            console.log('이미지 URL 설정:', accommodation.image);
+          }
+
+          if (popupTitle) {
+            popupTitle.textContent = accommodation.title;
+            console.log('제목 설정:', accommodation.title);
+          }
+
+          if (popupRating) {
+            popupRating.textContent = accommodation.rating;
+            console.log('평점 설정:', accommodation.rating);
+          }
+
+          if (popupReviews) {
+            popupReviews.textContent = accommodation.reviews;
+            console.log('리뷰 설정:', accommodation.reviews);
+          }
+
+          if (popupPrice) {
+            popupPrice.textContent = accommodation.price;
+            console.log('가격 설정:', accommodation.price);
+          }
+
+          // 상세보기 버튼 이벤트
+          if (popupDetailBtn) {
+            popupDetailBtn.onclick = function () {
+              console.log('상세보기 버튼 클릭됨');
+              // shop_detail.html로 이동 (숙소 정보 전달)
+              const params = new URLSearchParams();
+              params.append('title', accommodation.title);
+              params.append('price', accommodation.price.replace(/[₩,]/g, ''));
+              params.append('rating', accommodation.rating);
+              params.append('image', accommodation.image);
+              params.append('type', accommodation.type);
+
+              window.location.href = `shop_detail.html?${params.toString()}`;
+            };
+          }
+
+          // 팝업 위치 계산 - 클릭 위치를 최우선으로 사용
+          const mapContainer = document.getElementById('map');
+
+          console.log('지도 컨테이너 정보:', {
+            width: mapContainer.offsetWidth,
+            height: mapContainer.offsetHeight
+          });
+
+          // 팝업 크기 (고정)
+          const popupWidth = 280;
+          const popupHeight = 200;
+
+          let popupX, popupY;
+
+          // 클릭 위치가 전달된 경우 이를 직접 사용 (지도 컨테이너 기준)
+          if (clickPosition) {
+            console.log('✅ 실제 클릭 위치 사용:', clickPosition);
+
+            // 클릭 위치 기준으로 팝업 배치
+            popupX = clickPosition.x + 15; // 클릭 위치에서 15px 오른쪽
+            popupY = clickPosition.y - (popupHeight / 2); // 클릭 위치를 팝업 중앙에 맞춤
+
+            console.log('초기 팝업 위치:', `(${popupX}, ${popupY})`);
+
+            // 지도 컨테이너 경계 체크 및 조정
+            const mapWidth = mapContainer.offsetWidth;
+            const mapHeight = mapContainer.offsetHeight;
+
+            // 오른쪽 경계 체크
+            if (popupX + popupWidth > mapWidth) {
+              popupX = clickPosition.x - popupWidth - 15; // 클릭 위치 왼쪽에 배치
+              console.log('팝업을 클릭 위치 왼쪽에 배치');
+            }
+
+            // 위쪽 경계 체크
+            if (popupY < 0) {
+              popupY = 10;
+              console.log('팝업을 위쪽 경계에 맞춤');
+            }
+
+            // 아래쪽 경계 체크
+            if (popupY + popupHeight > mapHeight) {
+              popupY = mapHeight - popupHeight - 10;
+              console.log('팝업을 아래쪽 경계에 맞춤');
+            }
+
+            // 왼쪽 경계 체크 (팝업이 왼쪽으로 이동했을 때)
+            if (popupX < 0) {
+              popupX = 10;
+              popupY = clickPosition.y + 15; // 클릭 위치 아래쪽에 배치
+
+              // 아래쪽으로 이동 후 다시 경계 체크
+              if (popupY + popupHeight > mapHeight) {
+                popupY = clickPosition.y - popupHeight - 15; // 클릭 위치 위쪽에 배치
+              }
+              console.log('팝업을 클릭 위치 아래쪽/위쪽에 배치');
+            }
+
+          } else {
+            console.log('❌ 클릭 위치가 없어서 중앙 배치');
+            // 클릭 위치가 없는 경우 지도 중앙에 배치
+            popupX = (mapContainer.offsetWidth - popupWidth) / 2;
+            popupY = (mapContainer.offsetHeight - popupHeight) / 2;
+          }
+
+          console.log(`🎯 최종 팝업 위치: (${popupX}, ${popupY})`);
+          console.log(`🎯 클릭 위치: (${clickPosition ? clickPosition.x : 'N/A'}, ${clickPosition ? clickPosition.y : 'N/A'})`);
+
+          if (clickPosition) {
+            const distanceX = Math.abs(popupX - clickPosition.x);
+            const distanceY = Math.abs(popupY + popupHeight / 2 - clickPosition.y);
+            console.log(`🎯 팝업과 클릭 위치의 거리: X=${distanceX}px, Y=${distanceY}px`);
+          }
+
+          // 팝업 위치 설정 (지도 컨테이너 기준 절대 위치)
+          console.log('팝업 스타일 설정 중...');
+          popup.style.left = `${popupX}px`;
+          popup.style.top = `${popupY}px`;
+          popup.style.position = 'absolute';
+
+          // 팝업 표시
+          console.log('팝업 표시 중...');
+          popup.classList.remove('hidden');
+
+          // 표시 확인
+          setTimeout(() => {
+            const isVisible = !popup.classList.contains('hidden');
+            console.log('팝업 표시 상태 확인:', isVisible ? '✅ 표시됨' : '❌ 숨겨짐');
+
+            if (isVisible) {
+              const computedStyle = window.getComputedStyle(popup);
+              console.log('팝업 computed 스타일:', {
+                display: computedStyle.display,
+                visibility: computedStyle.visibility,
+                opacity: computedStyle.opacity,
+                left: computedStyle.left,
+                top: computedStyle.top,
+                zIndex: computedStyle.zIndex
+              });
+            }
+          }, 50);
+
+          console.log('✅ 숙소 팝업 표시 완료:', accommodation.title, `위치: (${popupX}, ${popupY})`);
+
+        } catch (error) {
+          console.error('❌ 팝업 표시 중 오류 발생:', error);
+        }
+      }
+
+      // 지도 컨트롤 설정
+      function setupMapControls() {
+        const zoomInBtn = document.getElementById('zoomIn');
+        const zoomOutBtn = document.getElementById('zoomOut');
+        const currentLocationBtn = document.getElementById('currentLocation');
+        const closePopup = document.getElementById('closePopup');
+
+        // 확대
+        zoomInBtn.addEventListener('click', function () {
+          if (map) {
+            const level = map.getLevel();
+            if (level > 1) {
+              map.setLevel(level - 1);
+              showLocationNotification('지도가 확대되었습니다.');
+            } else {
+              showLocationNotification('최대 확대 수준입니다.', 'warning');
+            }
+          }
+        });
+
+        // 축소
+        zoomOutBtn.addEventListener('click', function () {
+          if (map) {
+            const level = map.getLevel();
+            if (level < 14) {
+              map.setLevel(level + 1);
+              showLocationNotification('지도가 축소되었습니다.');
+            } else {
+              showLocationNotification('최대 축소 수준입니다.', 'warning');
+            }
+          }
+        });
+
+        // 현재 위치 이동
+        currentLocationBtn.addEventListener('click', async function () {
+          try {
+            // 사용자 현재 위치가 이미 있으면 그 위치로 이동
+            if (userLocation) {
+              const moveLatLng = new kakao.maps.LatLng(userLocation.lat, userLocation.lng);
+              map.setCenter(moveLatLng); // 지도 중심을 사용자 위치로 설정
+              map.setLevel(4); // 적절한 줌 레벨로 설정
+              showLocationNotification('현재 위치로 이동했습니다.');
+            } else {
+              // 사용자 위치가 없으면 새로 가져오기
+              showLocationNotification('현재 위치를 가져오는 중입니다...', 'info');
+
+              userLocation = await getUserLocation();
+              const moveLatLng = new kakao.maps.LatLng(userLocation.lat, userLocation.lng);
+              map.setCenter(moveLatLng); // 지도 중심을 사용자 위치로 설정
+              map.setLevel(4); // 적절한 줌 레벨로 설정
+
+              // 사용자 위치 마커 추가 (아직 없는 경우)
+              addUserLocationMarker(userLocation.lat, userLocation.lng);
+
+              // 숙소 위치 재배치
+              relocateAccommodationsNearUser(userLocation.lat, userLocation.lng);
+
+              // 기존 마커 제거 후 재생성
+              clearAllMarkers(); // 기존 마커 모두 제거
+              createMarkers(); // 새로운 마커 생성
+
+              showLocationNotification('현재 위치로 이동하고 주변 숙소를 업데이트했습니다.');
+            }
+          } catch (error) {
+            console.error('현재 위치 이동 실패:', error);
+            // 위치를 가져올 수 없는 경우 기본 가평 위치로 이동
+            const moveLatLng = new kakao.maps.LatLng(37.8315, 127.5109);
+            map.setCenter(moveLatLng); // 지도 중심을 기본 위치로 설정
+            map.setLevel(5);
+            showLocationNotification('위치 정보를 가져올 수 없어 기본 위치로 이동했습니다.', 'warning');
+          }
+        });
+
+        // 팝업 닫기
+        closePopup.addEventListener('click', function () {
+          const popup = document.getElementById('infoPopup');
+          popup.classList.add('hidden');
+          console.log('팝업 닫힘');
+        });
+
+        // 팝업 외부 클릭 시 닫기
+        document.getElementById('infoPopup').addEventListener('click', function (e) {
+          if (e.target === this) {
+            this.classList.add('hidden');
+            console.log('팝업 외부 클릭으로 닫힘');
+          }
+        });
+
+        // 지도 클릭 시 팝업 닫기
+        if (map) {
+          kakao.maps.event.addListener(map, 'click', function () {
+            const popup = document.getElementById('infoPopup');
+            if (!popup.classList.contains('hidden')) {
+              popup.classList.add('hidden');
+              console.log('지도 클릭으로 팝업 닫힘');
+            }
+          });
+        }
+      }
+
+      // 카카오 지도 API 로드 확인 후 지도 초기화
+      if (typeof kakao !== 'undefined' && kakao.maps) {
+        kakao.maps.load(function () {
+          initMap();
+        });
+      } else {
+        console.error('카카오 지도 API가 로드되지 않았습니다. API 키를 확인해주세요.');
+        // API 키가 없는 경우 대체 지도 표시
+        document.getElementById('map').innerHTML = `
+          <div class="w-full h-full flex items-center justify-center bg-gray-100 text-gray-500 rounded-xl">
+            <div class="text-center">
+              <i class="ri-map-2-line text-4xl mb-2"></i>
+              <p>카카오 지도 API 키가 필요합니다</p>
+              <p class="text-sm">실제 구현 시 유효한 API 키를 입력해주세요</p>
+            </div>
+          </div>
+        `;
+
+        // 대체 마커 표시 (기존 방식)
+        createFallbackMarkers();
+      }
+
+      // 대체 마커 생성 (API 키가 없을 때)
+      function createFallbackMarkers() {
+        console.log('🔄 대체 마커 생성 시작');
+
+        const mapContainer = document.getElementById('map');
+        mapContainer.style.position = 'relative';
+        mapContainer.style.backgroundImage = 'url(https://public.readdy.ai/gen_page/map_placeholder_1280x720.png)';
+        mapContainer.style.backgroundSize = 'cover';
+        mapContainer.style.backgroundPosition = 'center';
+
+        // 대체 지도용 변수들
+        let fallbackZoomLevel = 1;
+        let fallbackCenterX = 50;
+        let fallbackCenterY = 50;
+
+        // 대체 지도 컨트롤 기능
+        const zoomInBtn = document.getElementById('zoomIn');
+        const zoomOutBtn = document.getElementById('zoomOut');
+        const currentLocationBtn = document.getElementById('currentLocation');
+
+        // 기존 이벤트 리스너 제거 (중복 방지)
+        zoomInBtn.removeEventListener('click', zoomInBtn.fallbackZoomInHandler);
+        zoomOutBtn.removeEventListener('click', zoomOutBtn.fallbackZoomOutHandler);
+        currentLocationBtn.removeEventListener('click', currentLocationBtn.fallbackLocationHandler);
+
+        // 확대 기능
+        zoomInBtn.fallbackZoomInHandler = function () {
+          if (fallbackZoomLevel < 3) {
+            fallbackZoomLevel += 0.5;
+            updateFallbackMap();
+            showLocationNotification('지도가 확대되었습니다.');
+          }
+        };
+        zoomInBtn.addEventListener('click', zoomInBtn.fallbackZoomInHandler);
+
+        // 축소 기능
+        zoomOutBtn.fallbackZoomOutHandler = function () {
+          if (fallbackZoomLevel > 0.5) {
+            fallbackZoomLevel -= 0.5;
+            updateFallbackMap();
+            showLocationNotification('지도가 축소되었습니다.');
+          }
+        };
+        zoomOutBtn.addEventListener('click', zoomOutBtn.fallbackZoomOutHandler);
+
+        // 현재 위치 이동 기능
+        currentLocationBtn.fallbackLocationHandler = async function () {
+          try {
+            console.log('현재 위치 버튼 클릭됨');
+            showLocationNotification('현재 위치를 가져오는 중입니다...', 'info');
+
+            // 간단한 geolocation API 사용
+            const position = await new Promise((resolve, reject) => {
+              if (!navigator.geolocation) {
+                reject(new Error('이 브라우저는 위치 정보를 지원하지 않습니다.'));
+                return;
+              }
+
+              navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                  resolve({
+                    lat: pos.coords.latitude,
+                    lng: pos.coords.longitude,
+                    accuracy: pos.coords.accuracy
+                  });
+                },
+                (error) => {
+                  let errorMessage = '';
+                  switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                      errorMessage = '위치 정보 접근이 거부되었습니다. 브라우저 설정을 확인해주세요.';
+                      break;
+                    case error.POSITION_UNAVAILABLE:
+                      errorMessage = '위치 정보를 사용할 수 없습니다.';
+                      break;
+                    case error.TIMEOUT:
+                      errorMessage = '위치 정보 요청이 시간 초과되었습니다.';
+                      break;
+                    default:
+                      errorMessage = '위치 정보를 가져올 수 없습니다.';
+                      break;
+                  }
+                  reject(new Error(errorMessage));
+                },
+                {
+                  enableHighAccuracy: true,
+                  timeout: 10000,
+                  maximumAge: 300000
+                }
+              );
+            });
+
+            console.log('사용자 위치 가져오기 성공:', position);
+            userLocation = position;
+
+            // 사용자 위치를 지도 중앙으로 설정
+            fallbackCenterX = 50;
+            fallbackCenterY = 50;
+            fallbackZoomLevel = 1.5;
+
+            updateFallbackMap();
+
+            // 사용자 위치 마커 추가
+            addFallbackUserLocationMarker();
+
+            showLocationNotification('현재 위치로 이동했습니다.');
+          } catch (error) {
+            console.error('현재 위치 이동 실패:', error);
+            showLocationNotification(error.message, 'warning');
+          }
+        };
+        currentLocationBtn.addEventListener('click', currentLocationBtn.fallbackLocationHandler);
+
+        // 대체 지도 업데이트 함수
+        function updateFallbackMap() {
+          console.log('대체 지도 업데이트:', { fallbackZoomLevel, fallbackCenterX, fallbackCenterY });
+          mapContainer.style.transform = `scale(${fallbackZoomLevel})`;
+          mapContainer.style.transformOrigin = `${fallbackCenterX}% ${fallbackCenterY}%`;
+        }
+
+        // 대체 사용자 위치 마커 추가
+        function addFallbackUserLocationMarker() {
+          console.log('대체 사용자 위치 마커 추가');
+
+          // 기존 사용자 마커 제거
+          const existingUserMarker = document.querySelector('.fallback-user-marker');
+          if (existingUserMarker) {
+            existingUserMarker.remove();
+          }
+
+          // 새로운 사용자 마커 생성
+          const userMarkerDiv = document.createElement('div');
+          userMarkerDiv.className = 'absolute fallback-user-marker';
+          userMarkerDiv.style.top = '50%';
+          userMarkerDiv.style.left = '50%';
+          userMarkerDiv.style.transform = 'translate(-50%, -50%)';
+          userMarkerDiv.style.zIndex = '1000';
+
+          userMarkerDiv.innerHTML = `
+            <div class="relative">
+              <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center shadow-lg animate-pulse">
+                <i class="ri-user-location-line text-white text-lg"></i>
+              </div>
+              <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-blue-600 rounded-full border-2 border-white"></div>
+            </div>
+          `;
+
+          mapContainer.appendChild(userMarkerDiv);
+          console.log('대체 사용자 위치 마커 추가 완료');
+        }
+
+        accommodations.forEach((accommodation, index) => {
+          console.log(`대체 마커 ${index + 1} 생성 중: ${accommodation.title}`);
+
+          const markerDiv = document.createElement('div');
+          markerDiv.className = `absolute cursor-pointer marker-fallback-${index}`;
+          markerDiv.setAttribute('data-accommodation-id', accommodation.id);
+
+          // 위치 기반 접근인 경우 더 중앙에 배치
+          let topPercent, leftPercent;
+          if (userLocation) {
+            // 사용자 위치가 있는 경우 중앙 근처에 배치
+            topPercent = 40 + index * 8;
+            leftPercent = 35 + (index % 3) * 10;
+          } else {
+            // 기본 배치
+            topPercent = 20 + index * 15;
+            leftPercent = 20 + (index % 3) * 20;
+          }
+
+          markerDiv.style.top = `${topPercent}%`;
+          markerDiv.style.left = `${leftPercent}%`;
+
+          console.log(`대체 마커 ${index + 1} (${accommodation.title}): ${topPercent}%, ${leftPercent}%`);
+
+          markerDiv.innerHTML = `
+            <div class="w-[90px] h-[36px] flex items-center justify-center bg-primary text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 marker-clickable">
+              <span class="text-sm font-medium">${accommodation.price}</span>
+            </div>
+          `;
+
+          // 클릭 이벤트 추가
+          markerDiv.addEventListener('click', function (event) {
+            console.log(`🎯 대체 마커 ${index + 1} 클릭됨: ${accommodation.title}`);
+
+            // 이벤트 버블링 방지
+            event.stopPropagation();
+            event.preventDefault();
+
+            // 다른 팝업이 열려있으면 먼저 닫기
+            const existingPopup = document.getElementById('infoPopup');
+            if (existingPopup && !existingPopup.classList.contains('hidden')) {
+              existingPopup.classList.add('hidden');
+            }
+
+            // 실제 클릭한 화면 좌표 사용
+            const mapContainer = document.getElementById('map');
+            const mapRect = mapContainer.getBoundingClientRect();
+
+            // 클릭한 화면 좌표를 지도 컨테이너 기준 상대 좌표로 변환
+            const clickPosition = {
+              x: event.clientX - mapRect.left,
+              y: event.clientY - mapRect.top
+            };
+
+            console.log('대체 마커 실제 클릭 위치 계산:', {
+              clientX: event.clientX,
+              clientY: event.clientY,
+              mapRect: {
+                left: mapRect.left,
+                top: mapRect.top,
+                width: mapRect.width,
+                height: mapRect.height
+              },
+              relative: clickPosition
+            });
+
+            // 클릭 위치가 지도 영역 내에 있는지 확인
+            if (clickPosition.x >= 0 && clickPosition.x <= mapRect.width &&
+              clickPosition.y >= 0 && clickPosition.y <= mapRect.height) {
+              console.log('✅ 대체 마커 클릭 위치가 지도 영역 내에 있음');
+            } else {
+              console.log('⚠️ 대체 마커 클릭 위치가 지도 영역을 벗어남');
+            }
+
+            showAccommodationPopup(accommodation, clickPosition);
+          });
+
+          // 호버 이벤트 추가
+          markerDiv.addEventListener('mouseenter', function () {
+            console.log(`대체 마커 ${index + 1} 호버: ${accommodation.title}`);
+          });
+
+          mapContainer.appendChild(markerDiv);
+          console.log(`✅ 대체 마커 ${index + 1} 생성 및 이벤트 바인딩 완료`);
+        });
+
+        console.log('✅ 대체 마커가 생성되었습니다.');
+      }
+
+      // 검색 버튼 클릭 이벤트 추가
+      const searchButton = document.getElementById('searchButton');
+
+      searchButton.addEventListener('click', function () {
+        console.log('검색 버튼 클릭됨');
+
+        // 선택된 캠핑 타입 가져오기
+        const selectedCampingType = document.querySelector('#campingTypeFilter button.bg-primary\\/10');
+        const campingType = selectedCampingType ? selectedCampingType.dataset.type : 'glamping';
+
+        // 캠핑 타입을 한국어로 변환
+        const campingTypeMap = {
+          'normal': '일반캠핑',
+          'glamping': '글램핑',
+          'caravan': '카라반',
+          'pension': '펜션',
+          'hotel': '호텔',
+          'pet': '반려동물',
+          'sharing': '공유숙박',
+          'hotspring': '온천',
+          'resort': '리조트'
+        };
+
+        const selectedType = campingTypeMap[campingType] || '글램핑';
+
+        // 인원수 정보 가져오기
+        const adults = parseInt(adultCount.textContent) || 0;
+        const children = parseInt(childCount.textContent) || 0;
+        const totalPeople = adults + children;
+
+        // 날짜 정보 가져오기 (체크인/체크아웃 날짜)
+        let checkin = '';
+        let checkout = '';
+        let nights = 0;
+
+        if (selectedStartCalendarDate && selectedEndCalendarDate) {
+          checkin = formatCalendarDate(selectedStartCalendarDate);
+          checkout = formatCalendarDate(selectedEndCalendarDate);
+          nights = Math.round((selectedEndCalendarDate - selectedStartCalendarDate) / (1000 * 60 * 60 * 24));
+        }
+
+        // search_result.html이 기대하는 형식으로 검색 데이터 구성
+        const searchData = {
+          query: `가평 ${selectedType}`, // 검색어 (지역 + 캠핑타입)
+          location: '가평', // 지역
+          type: selectedType, // 캠핑 타입
+          checkin: checkin, // 체크인 날짜
+          checkout: checkout, // 체크아웃 날짜
+          nights: nights, // 숙박 일수
+          maxPrice: 300000, // 기본 최대 가격 (30만원)
+          adults: adults, // 성인 수
+          children: children // 소인 수
+        };
+
+        // URL 파라미터 생성
+        const params = new URLSearchParams();
+        Object.keys(searchData).forEach(key => {
+          if (searchData[key] !== '' && searchData[key] !== 0) {
+            params.append(key, searchData[key]);
+          }
+        });
+
+        console.log('검색 데이터:', searchData);
+        console.log('생성된 URL 파라미터:', params.toString());
+
+        // 기본 유효성 검사
+        if (totalPeople === 0) {
+          alert('인원을 선택해주세요.');
+          return;
+        }
+
+        if (!selectedStartCalendarDate || !selectedEndCalendarDate) {
+          alert('체크인과 체크아웃 날짜를 선택해주세요.');
+          return;
+        }
+
+        // search_result.html로 이동
+        window.location.href = `search_result.html?${params.toString()}`;
       });
     });
-  </script>
-  <script id="mapControls">
-    document.addEventListener('DOMContentLoaded', function () {
-      const map = document.querySelector('.relative.h-full.w-full');
-      const mapImage = map.querySelector('img');
-      const markers = document.querySelectorAll('[id^="marker"]');
-      let currentZoom = 1;
-      const maxZoom = 2;
-      const minZoom = 1;
-      const zoomStep = 0.2;
-      const markerPositions = Array.from(markers).map(marker => {
-        const rect = marker.getBoundingClientRect();
-        return {
-          id: marker.id,
-          top: marker.style.top,
-          left: marker.style.left
-        };
-      });
-      function updateZoomControls() {
-        const zoomInBtn = document.querySelector('.ri-add-line').parentElement;
-        const zoomOutBtn = document.querySelector('.ri-subtract-line').parentElement;
-        if (currentZoom >= maxZoom) {
-          zoomInBtn.classList.add('opacity-50', 'cursor-not-allowed');
-          zoomInBtn.disabled = true;
-        } else {
-          zoomInBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-          zoomInBtn.disabled = false;
-        }
-        if (currentZoom <= minZoom) {
-          zoomOutBtn.classList.add('opacity-50', 'cursor-not-allowed');
-          zoomOutBtn.disabled = true;
-        } else {
-          zoomOutBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-          zoomOutBtn.disabled = false;
-        }
+
+    // 위시리스트 토글 기능
+    document.addEventListener('click', function (e) {
+      if (e.target.closest('.wishlist-btn')) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const button = e.target.closest('.wishlist-btn');
+        const icon = button.querySelector('i');
+
+        // 토글 애니메이션
+        button.style.transform = 'scale(0.8)';
+
+        setTimeout(() => {
+          if (icon.classList.contains('ri-heart-line')) {
+            // 빈 하트 → 채워진 하트
+            icon.classList.remove('ri-heart-line');
+            icon.classList.add('ri-heart-fill');
+            button.classList.add('active');
+            icon.style.color = '#ef4444';
+          } else {
+            // 채워진 하트 → 빈 하트
+            icon.classList.remove('ri-heart-fill');
+            icon.classList.add('ri-heart-line');
+            button.classList.remove('active');
+            icon.style.color = '';
+          }
+
+          button.style.transform = 'scale(1)';
+        }, 100);
       }
-      function zoomMap(isZoomIn) {
-        const newZoom = isZoomIn ? currentZoom + zoomStep : currentZoom - zoomStep;
-        if (newZoom >= minZoom && newZoom <= maxZoom) {
-          currentZoom = newZoom;
-          mapImage.style.transition = 'transform 0.3s ease-out';
-          mapImage.style.transform = `translate(-50%, -50%) scale(${currentZoom})`;
-          markers.forEach((marker, index) => {
-            const basePosition = markerPositions[index];
-            const topValue = parseFloat(basePosition.top) * currentZoom;
-            const leftValue = parseFloat(basePosition.left) * currentZoom;
-            marker.style.transition = 'all 0.3s ease-out';
-            marker.style.transform = `translate(-50%, -50%) scale(${1 / currentZoom})`;
-          });
-          updateZoomControls();
-        }
-      }
-      document.querySelector('.ri-add-line').parentElement.addEventListener('click', function () {
-        if (currentZoom < maxZoom) {
-          zoomMap(true);
-          this.classList.add('bg-gray-50');
-          setTimeout(() => this.classList.remove('bg-gray-50'), 200);
-        }
-      });
-      document.querySelector('.ri-subtract-line').parentElement.addEventListener('click', function () {
-        if (currentZoom > minZoom) {
-          zoomMap(false);
-          this.classList.add('bg-gray-50');
-          setTimeout(() => this.classList.remove('bg-gray-50'), 200);
-        }
-      });
-      document.querySelector('.ri-map-pin-user-line').parentElement.addEventListener('click', function () {
-        this.classList.add('bg-gray-50');
-        setTimeout(() => this.classList.remove('bg-gray-50'), 200);
-      });
-      updateZoomControls();
     });
   </script>
 </body>

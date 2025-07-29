@@ -39,11 +39,33 @@
       content: "\f3c2";
     }
 
+    /* 위시리스트 버튼 애니메이션 */
+    .wishlist-btn {
+      transition: all 0.3s ease;
+    }
+
+    .wishlist-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .wishlist-btn.active {
+      color: #ef4444 !important;
+      transform: scale(1.2);
+    }
+
+    .wishlist-btn i {
+      transition: all 0.2s ease;
+    }
+
+    .search-input::-webkit-search-cancel-button {
+      display: none;
+    }
+
     /* 스크롤바 숨김 */
     ::-webkit-scrollbar {
       display: none;
     }
-    
+
     * {
       -ms-overflow-style: none;
       scrollbar-width: none;
@@ -60,7 +82,9 @@
       </div>
       <div class="flex items-center gap-2">
         <a href="./login.html" data-readdy="true">
-          <button class="px-4 py-1.5 text-sm text-primary border border-primary !rounded-button">로그인</button>
+          <button class="w-8 h-8 flex items-center justify-center">
+            <i class="ri-user-line text-xl text-black"></i>
+          </button>
         </a>
         <button id="menuButton" class="w-8 h-8 flex items-center justify-center">
           <i class="ri-menu-line text-xl"></i>
@@ -69,11 +93,13 @@
     </div>
     <div class="px-4 pb-3">
       <div class="relative">
-        <input type="search" class="w-full h-12 pl-12 pr-4 text-sm bg-gray-50 border-none !rounded-button search-input"
-          placeholder="찜한 숙소 검색" readonly>
-        <div class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center">
-          <i class="ri-search-line text-gray-400"></i>
-        </div>
+        <input type="search" id="searchInput"
+          class="w-full h-12 pl-4 pr-12 text-sm bg-gray-50 border-none !rounded-button search-input"
+          placeholder="찜한 숙소에서 검색">
+        <button id="searchButton"
+          class="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center cursor-pointer">
+          <i class="ri-search-line text-gray-400 hover:text-primary transition-colors"></i>
+        </button>
       </div>
     </div>
   </header>
@@ -82,7 +108,7 @@
       <h1 class="text-2xl font-bold mb-2">찜한 숙소</h1>
       <p class="text-gray-600">총 2개의 숙소를 찜하셨습니다</p>
     </div>
-    
+
     <div class="px-4 space-y-4">
       <!-- 찜한 숙소 1 -->
       <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100">
@@ -90,7 +116,8 @@
           <img
             src="https://readdy.ai/api/search-image?query=Luxury%20glamping%20tent%20interior%20with%20king%20size%20bed%2C%20warm%20lighting%2C%20premium%20camping%20experience%2C%20cozy%20atmosphere&width=560&height=300&seq=17&orientation=landscape"
             class="w-full h-48 object-cover" alt="프리미엄 글램핑">
-          <button class="absolute top-3 right-3 w-8 h-8 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center text-red-500 delete-heart-btn">
+          <button
+            class="absolute top-3 right-3 w-8 h-8 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center text-red-500 delete-heart-btn wishlist-btn">
             <i class="ri-heart-fill text-lg"></i>
           </button>
           <div class="absolute bottom-3 left-3 bg-black/60 text-white px-2 py-1 rounded-full text-xs">
@@ -119,8 +146,8 @@
             <span class="px-2 py-1 bg-purple-50 text-purple-600 rounded text-xs">바베큐</span>
           </div>
           <div class="flex gap-2">
-            <a href="shop_detail.html?title=프리미엄 글램핑 A&region=강원도 홍천군&price=280000&id=premium-a&image=premium-a-img" 
-               class="flex-1 bg-primary text-white py-2 rounded-lg text-center font-medium">
+            <a href="shop_detail.html?title=프리미엄 글램핑 A&region=강원도 홍천군&price=280000&id=premium-a&image=premium-a-img"
+              class="flex-1 bg-primary text-white py-2 rounded-lg text-center font-medium">
               상세보기
             </a>
           </div>
@@ -133,7 +160,8 @@
           <img
             src="https://readdy.ai/api/search-image?query=Luxury%20pet-friendly%20villa%20with%20private%20pool%2C%20modern%20design%2C%20spacious%20outdoor%20area%2C%20perfect%20for%20dogs&width=560&height=300&seq=19&orientation=landscape"
             class="w-full h-48 object-cover" alt="프리미엄 펫 풀빌라">
-          <button class="absolute top-3 right-3 w-8 h-8 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center text-red-500 delete-heart-btn">
+          <button
+            class="absolute top-3 right-3 w-8 h-8 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center text-red-500 delete-heart-btn wishlist-btn">
             <i class="ri-heart-fill text-lg"></i>
           </button>
           <div class="absolute bottom-3 left-3 bg-black/60 text-white px-2 py-1 rounded-full text-xs">
@@ -162,8 +190,8 @@
             <span class="px-2 py-1 bg-purple-50 text-purple-600 rounded text-xs">넓은 정원</span>
           </div>
           <div class="flex gap-2">
-            <a href="shop_detail.html?title=프리미엄 펫 풀빌라&region=강원도 홍천군&price=320000&id=pet-villa&image=pet-villa-img" 
-               class="flex-1 bg-primary text-white py-2 rounded-lg text-center font-medium">
+            <a href="shop_detail.html?title=프리미엄 펫 풀빌라&region=강원도 홍천군&price=320000&id=pet-villa&image=pet-villa-img"
+              class="flex-1 bg-primary text-white py-2 rounded-lg text-center font-medium">
               상세보기
             </a>
           </div>
@@ -188,11 +216,10 @@
 
   <nav class="fixed bottom-0 left-0 right-0 bg-white border-t">
     <div class="grid grid-cols-6 py-1">
-      <a href="search_map.html"
-        data-readdy="true" class="flex flex-col items-center gap-1 group">
+      <a href="search_map.html?from=nearby" data-readdy="true" class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-map-pin-2-fill text-lg group-hover:text-primary"></i>
+          <i class="ri-map-pin-2-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
         </div>
         <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">내주변</span>
       </a>
@@ -200,23 +227,23 @@
       <a href="./index.html" class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-home-5-fill text-lg group-hover:text-primary"></i>
+          <i class="ri-home-5-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
         </div>
         <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">홈</span>
       </a>
 
-      <button class="flex flex-col items-center gap-1 group">
+      <a href="wishlist.html" data-readdy="true" class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-heart-3-fill text-lg text-primary"></i>
+          <i class="ri-heart-3-fill text-lg text-primary transition-colors duration-300"></i>
         </div>
-        <span class="text-[10px] text-primary">찜</span>
-      </button>
+        <span class="text-[10px] text-primary transition-colors duration-300">찜</span>
+      </a>
 
       <a href="mypage.html" data-readdy="true" class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-user-3-fill text-lg group-hover:text-primary"></i>
+          <i class="ri-user-3-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
         </div>
         <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">마이</span>
       </a>
@@ -224,14 +251,15 @@
       <button class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-wallet-3-fill text-lg group-hover:text-primary"></i>
+          <i class="ri-wallet-3-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
         </div>
         <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">페이</span>
       </button>
-      <button class="flex flex-col items-center gap-1 group">
+
+      <button id="bottomMenuButton" class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-menu-fill text-lg group-hover:text-primary"></i>
+          <i class="ri-menu-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
         </div>
         <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">전체</span>
       </button>
@@ -278,11 +306,11 @@
           <i class="ri-building-line text-xl text-gray-600"></i>
           <span>호텔</span>
         </a>
-        <a href="#" class="flex items-center gap-3">
+        <a href="event.html" class="flex items-center gap-3">
           <i class="ri-gift-line text-xl text-gray-600"></i>
           <span>이벤트</span>
         </a>
-        <a href="#" class="flex items-center gap-3">
+        <a href="customer_service.html" class="flex items-center gap-3">
           <i class="ri-customer-service-line text-xl text-gray-600"></i>
           <span>고객센터</span>
         </a>
@@ -323,26 +351,160 @@
     });
   </script>
 
+  <script id="wishlist-toggle">
+    // 통일된 위시리스트 토글 기능
+    document.addEventListener('click', function (e) {
+      if (e.target.closest('.wishlist-btn')) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const button = e.target.closest('.wishlist-btn');
+        const icon = button.querySelector('i');
+
+        // 토글 애니메이션
+        button.style.transform = 'scale(0.8)';
+
+        setTimeout(() => {
+          if (icon.classList.contains('ri-heart-line')) {
+            // 빈 하트 → 채워진 하트
+            icon.classList.remove('ri-heart-line');
+            icon.classList.add('ri-heart-fill');
+            button.classList.add('active');
+            icon.style.color = '#ef4444';
+          } else {
+            // 채워진 하트 → 빈 하트
+            icon.classList.remove('ri-heart-fill');
+            icon.classList.add('ri-heart-line');
+            button.classList.remove('active');
+            icon.style.color = '';
+          }
+
+          button.style.transform = 'scale(1)';
+        }, 100);
+      }
+    });
+  </script>
+
+  <script id="searchScript">
+    document.addEventListener('DOMContentLoaded', function () {
+      const searchInput = document.getElementById('searchInput');
+      const searchButton = document.getElementById('searchButton');
+      const wishlistItems = document.querySelectorAll('.bg-white.rounded-xl');
+      const emptyState = document.getElementById('emptyState');
+
+      // 위시리스트 검색 함수
+      function performWishlistSearch() {
+        const searchQuery = searchInput.value.trim().toLowerCase();
+        let visibleCount = 0;
+
+        wishlistItems.forEach(item => {
+          const title = item.querySelector('h3').textContent.toLowerCase();
+          const region = item.querySelector('p.text-gray-600').textContent.toLowerCase();
+          const tags = Array.from(item.querySelectorAll('.px-2.py-1')).map(tag => tag.textContent.toLowerCase());
+
+          const searchText = `${title} ${region} ${tags.join(' ')}`;
+
+          if (searchQuery === '' || searchText.includes(searchQuery)) {
+            item.style.display = 'block';
+            visibleCount++;
+          } else {
+            item.style.display = 'none';
+          }
+        });
+
+        // 검색 결과가 없을 때 빈 상태 표시
+        if (visibleCount === 0 && searchQuery !== '') {
+          emptyState.classList.remove('hidden');
+          emptyState.innerHTML = `
+            <div class="text-center py-12">
+              <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="ri-search-line text-3xl text-gray-400"></i>
+              </div>
+              <h3 class="text-lg font-medium text-gray-700 mb-2">검색 결과가 없습니다</h3>
+              <p class="text-gray-500 mb-6">"${searchQuery}"에 해당하는 찜한 숙소가 없습니다</p>
+              <button onclick="clearSearch()" class="inline-block bg-primary text-white px-6 py-3 rounded-lg font-medium">
+                전체 보기
+              </button>
+            </div>
+          `;
+        } else {
+          emptyState.classList.add('hidden');
+        }
+
+        // 찜한 숙소 개수 업데이트
+        const wishlistCount = document.querySelector('p.text-gray-600');
+        if (wishlistCount) {
+          if (searchQuery === '') {
+            wishlistCount.textContent = `총 ${wishlistItems.length}개의 숙소를 찜하셨습니다`;
+          } else {
+            wishlistCount.textContent = `검색 결과: ${visibleCount}개의 숙소`;
+          }
+        }
+      }
+
+      // 검색 초기화 함수
+      window.clearSearch = function () {
+        searchInput.value = '';
+        performWishlistSearch();
+      };
+
+      // 검색 버튼 클릭 이벤트
+      searchButton.addEventListener('click', function (e) {
+        e.preventDefault();
+        performWishlistSearch();
+      });
+
+      // Enter 키 입력 이벤트
+      searchInput.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          performWishlistSearch();
+        }
+      });
+
+      // 실시간 검색 (입력할 때마다 검색)
+      searchInput.addEventListener('input', function () {
+        performWishlistSearch();
+      });
+
+      // 입력 필드 포커스 시 placeholder 변경
+      searchInput.addEventListener('focus', function () {
+        this.placeholder = '숙소명, 지역, 태그로 검색';
+      });
+
+      searchInput.addEventListener('blur', function () {
+        if (this.value === '') {
+          this.placeholder = '찜한 숙소에서 검색';
+        }
+      });
+    });
+  </script>
+
   <script id="sideMenuScript">
     document.addEventListener('DOMContentLoaded', function () {
-      const menuButton = document.querySelector('button:has(i.ri-menu-fill)');
+      const menuButton = document.getElementById('menuButton');
+      const bottomMenuButton = document.getElementById('bottomMenuButton');
       const closeMenu = document.getElementById('closeMenu');
       const sideMenu = document.getElementById('sideMenu');
-      
-      if (menuButton) {
-        menuButton.addEventListener('click', function () {
-          sideMenu.classList.remove('translate-x-full');
-        });
-      }
-      
-      if (closeMenu) {
-        closeMenu.addEventListener('click', function () {
-          sideMenu.classList.add('translate-x-full');
-        });
-      }
-      
+
+      // 헤더의 메뉴 버튼 클릭
+      menuButton.addEventListener('click', function () {
+        sideMenu.classList.remove('translate-x-full');
+      });
+
+      // 하단 네비게이션의 전체 버튼 클릭
+      bottomMenuButton.addEventListener('click', function () {
+        sideMenu.classList.remove('translate-x-full');
+      });
+
+      // 닫기 버튼 클릭
+      closeMenu.addEventListener('click', function () {
+        sideMenu.classList.add('translate-x-full');
+      });
+
+      // 외부 클릭 시 닫기
       document.addEventListener('click', function (event) {
-        if (sideMenu && !sideMenu.contains(event.target) && !menuButton?.contains(event.target)) {
+        if (!sideMenu.contains(event.target) && !menuButton.contains(event.target) && !bottomMenuButton.contains(event.target)) {
           sideMenu.classList.add('translate-x-full');
         }
       });
@@ -355,9 +517,9 @@
       const wishlistItems = document.querySelectorAll('.bg-white.rounded-xl');
       const emptyState = document.getElementById('emptyState');
       const wishlistCount = document.querySelector('p.text-gray-600');
-      
+
       let currentCount = 2;
-      
+
       deleteHeartButtons.forEach(button => {
         button.addEventListener('click', function () {
           const item = this.closest('.bg-white.rounded-xl');
@@ -365,22 +527,22 @@
             // 하트 버튼 애니메이션 효과
             this.style.transform = 'scale(0.8)';
             this.style.transition = 'transform 0.2s ease';
-            
+
             setTimeout(() => {
               this.style.transform = 'scale(1.2)';
               setTimeout(() => {
                 this.style.transform = 'scale(1)';
-                
+
                 // 아이템 페이드아웃 애니메이션
                 item.style.animation = 'fadeOut 0.3s ease-out';
                 setTimeout(() => {
                   item.remove();
                   currentCount--;
-                  
+
                   if (wishlistCount) {
                     wishlistCount.textContent = `총 ${currentCount}개의 숙소를 찜하셨습니다`;
                   }
-                  
+
                   if (currentCount === 0) {
                     emptyState.classList.remove('hidden');
                   }
@@ -399,6 +561,7 @@
         opacity: 1;
         transform: translateY(0);
       }
+
       to {
         opacity: 0;
         transform: translateY(-10px);
@@ -407,4 +570,4 @@
   </style>
 </body>
 
-</html> 
+</html>

@@ -51,11 +51,16 @@
     .accordion-content {
       max-height: 0;
       overflow: hidden;
-      transition: max-height 0.3s ease;
+      transition: max-height 0.3s ease-out,
+        opacity 0.3s ease-out,
+        padding-bottom 0.3s ease-out;
+      opacity: 0;
+      padding-bottom: 0;
     }
 
     .accordion-content.active {
-      max-height: 500px;
+      opacity: 1;
+      padding-bottom: 1.5rem;
     }
 
     @keyframes bounce {
@@ -87,10 +92,41 @@
     ::-webkit-scrollbar {
       display: none;
     }
-    
+
     * {
       -ms-overflow-style: none;
       scrollbar-width: none;
+    }
+
+    /* 위시리스트 버튼 애니메이션 */
+    .wishlist-btn {
+      transition: all 0.3s ease;
+    }
+
+    .wishlist-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .wishlist-btn.active {
+      color: #ef4444 !important;
+      transform: scale(1.2);
+    }
+
+    .wishlist-btn i {
+      transition: all 0.2s ease;
+    }
+
+    /* 하트 버튼 애니메이션 (기존) */
+    button i[class*="ri-heart"] {
+      transition: all 0.2s ease;
+    }
+
+    button:has(i[class*="ri-heart"]) {
+      transition: transform 0.15s ease;
+    }
+
+    button:has(i[class*="ri-heart"]):hover {
+      transform: scale(1.05);
     }
   </style>
 </head>
@@ -103,15 +139,12 @@
           class="w-8 h-8 flex items-center justify-center cursor-pointer">
           <i class="ri-arrow-left-s-line text-xl"></i>
         </a>
-        <h1 class="text-lg font-medium">캠핑의 모든 것</h1>
+        <h1 class="text-lg font-medium absolute left-1/2 transform -translate-x-1/2">캠핑의 모든 것</h1>
       </div>
       <div class="flex items-center gap-3">
         <a href="./search.html" class="w-8 h-8 flex items-center justify-center cursor-pointer">
           <i class="ri-search-line text-xl"></i>
         </a>
-        <button class="w-8 h-8 flex items-center justify-center cursor-pointer">
-          <i class="ri-heart-3-line text-xl"></i>
-        </button>
       </div>
     </div>
   </header>
@@ -128,25 +161,29 @@
           </div>
           <span class="text-xs font-medium whitespace-nowrap">일반캠핑</span>
         </button>
-        <button class="flex flex-col items-center gap-1 px-3 py-2 bg-gray-50 rounded-xl cursor-pointer" data-type="glamping">
+        <button class="flex flex-col items-center gap-1 px-3 py-2 bg-gray-50 rounded-xl cursor-pointer"
+          data-type="glamping">
           <div class="w-10 h-10 flex items-center justify-center">
             <i class="ri-hotel-line text-xl text-gray-500"></i>
           </div>
           <span class="text-xs whitespace-nowrap">글램핑</span>
         </button>
-        <button class="flex flex-col items-center gap-1 px-3 py-2 bg-gray-50 rounded-xl cursor-pointer" data-type="caravan">
+        <button class="flex flex-col items-center gap-1 px-3 py-2 bg-gray-50 rounded-xl cursor-pointer"
+          data-type="caravan">
           <div class="w-10 h-10 flex items-center justify-center">
             <i class="ri-truck-line text-xl text-gray-500"></i>
           </div>
           <span class="text-xs whitespace-nowrap">카라반</span>
         </button>
-        <button class="flex flex-col items-center gap-1 px-3 py-2 bg-gray-50 rounded-xl cursor-pointer" data-type="pension">
+        <button class="flex flex-col items-center gap-1 px-3 py-2 bg-gray-50 rounded-xl cursor-pointer"
+          data-type="pension">
           <div class="w-10 h-10 flex items-center justify-center">
             <i class="ri-building-line text-xl text-gray-500"></i>
           </div>
           <span class="text-xs whitespace-nowrap">팬션</span>
         </button>
-        <button class="flex flex-col items-center gap-1 px-3 py-2 bg-gray-50 rounded-xl cursor-pointer" data-type="hotel">
+        <button class="flex flex-col items-center gap-1 px-3 py-2 bg-gray-50 rounded-xl cursor-pointer"
+          data-type="hotel">
           <div class="w-10 h-10 flex items-center justify-center">
             <i class="ri-hotel-line text-xl text-gray-500"></i>
           </div>
@@ -158,19 +195,22 @@
           </div>
           <span class="text-xs whitespace-nowrap">반려동물</span>
         </button>
-        <button class="flex flex-col items-center gap-1 px-3 py-2 bg-gray-50 rounded-xl cursor-pointer" data-type="sharing">
+        <button class="flex flex-col items-center gap-1 px-3 py-2 bg-gray-50 rounded-xl cursor-pointer"
+          data-type="sharing">
           <div class="w-10 h-10 flex items-center justify-center">
             <i class="ri-home-4-line text-xl text-gray-500"></i>
           </div>
           <span class="text-xs whitespace-nowrap">공유숙박</span>
         </button>
-        <button class="flex flex-col items-center gap-1 px-3 py-2 bg-gray-50 rounded-xl cursor-pointer" data-type="hotspring">
+        <button class="flex flex-col items-center gap-1 px-3 py-2 bg-gray-50 rounded-xl cursor-pointer"
+          data-type="hotspring">
           <div class="w-10 h-10 flex items-center justify-center">
             <i class="ri-water-flash-line text-xl text-gray-500"></i>
           </div>
           <span class="text-xs whitespace-nowrap">온천</span>
         </button>
-        <button class="flex flex-col items-center gap-1 px-3 py-2 bg-gray-50 rounded-xl cursor-pointer" data-type="resort">
+        <button class="flex flex-col items-center gap-1 px-3 py-2 bg-gray-50 rounded-xl cursor-pointer"
+          data-type="resort">
           <div class="w-10 h-10 flex items-center justify-center">
             <i class="ri-hotel-line text-xl text-gray-500"></i>
           </div>
@@ -185,7 +225,12 @@
         <a href="./recommend_result_list.html" data-readdy="true" class="text-sm text-primary cursor-pointer">더보기</a>
       </div>
       <div class="flex gap-3 overflow-x-auto pb-2">
-        <div class="min-w-[280px] bg-white rounded-xl overflow-hidden shadow-sm">
+        <a href="./shop_detail.html"
+          class="min-w-[280px] bg-white rounded-xl overflow-hidden shadow-sm cursor-pointer seasonal-card"
+          data-id="spring-camping-01" data-title="벚꽃 캠핑 명소" data-region="경기도 양평, 강원도 춘천"
+          data-image="https://readdy.ai/api/search-image?query=Spring%20camping%20in%20Korea%20with%20cherry%20blossoms%2C%20peaceful%20atmosphere%2C%20tent%20setup%20near%20flowering%20trees%2C%20beautiful%20nature%20scenery%2C%20professional%20photography&width=560&height=300&seq=101&orientation=landscape"
+          data-price="95000" data-rating="4.6" data-description="봄바람과 함께하는 캠핑, 벚꽃이 만발한 자연 속에서 힐링" data-distance="35km"
+          data-facilities="데크사이트,화장실,샤워실,취사장,주차장" data-badge="계절 특화">
           <div class="relative">
             <img
               src="https://readdy.ai/api/search-image?query=Spring%20camping%20in%20Korea%20with%20cherry%20blossoms%2C%20peaceful%20atmosphere%2C%20tent%20setup%20near%20flowering%20trees%2C%20beautiful%20nature%20scenery%2C%20professional%20photography&width=560&height=300&seq=101&orientation=landscape"
@@ -200,8 +245,13 @@
               <span>경기도 양평, 강원도 춘천</span>
             </div>
           </div>
-        </div>
-        <div class="min-w-[280px] bg-white rounded-xl overflow-hidden shadow-sm">
+        </a>
+        <a href="./shop_detail.html"
+          class="min-w-[280px] bg-white rounded-xl overflow-hidden shadow-sm cursor-pointer seasonal-card"
+          data-id="summer-camping-02" data-title="계곡 캠핑 베스트" data-region="가평 계곡, 홍천 수동계곡"
+          data-image="https://readdy.ai/api/search-image?query=Summer%20camping%20in%20Korea%20near%20river%20or%20lake%2C%20refreshing%20water%20activities%2C%20tents%20under%20shade%2C%20clear%20blue%20sky%2C%20professional%20photography&width=560&height=300&seq=102&orientation=landscape"
+          data-price="110000" data-rating="4.8" data-description="시원한 물놀이와 함께하는 여름 계곡 캠핑" data-distance="42km"
+          data-facilities="계곡,물놀이,데크사이트,화장실,샤워실" data-badge="물놀이 가능">
           <div class="relative">
             <img
               src="https://readdy.ai/api/search-image?query=Summer%20camping%20in%20Korea%20near%20river%20or%20lake%2C%20refreshing%20water%20activities%2C%20tents%20under%20shade%2C%20clear%20blue%20sky%2C%20professional%20photography&width=560&height=300&seq=102&orientation=landscape"
@@ -216,8 +266,13 @@
               <span>가평 계곡, 홍천 수동계곡</span>
             </div>
           </div>
-        </div>
-        <div class="min-w-[280px] bg-white rounded-xl overflow-hidden shadow-sm">
+        </a>
+        <a href="./shop_detail.html"
+          class="min-w-[280px] bg-white rounded-xl overflow-hidden shadow-sm cursor-pointer seasonal-card"
+          data-id="autumn-camping-03" data-title="단풍 캠핑 명소" data-region="내장산, 설악산 주변"
+          data-image="https://readdy.ai/api/search-image?query=Autumn%20camping%20in%20Korea%20with%20colorful%20fall%20foliage%2C%20tents%20surrounded%20by%20red%20and%20orange%20trees%2C%20beautiful%20mountain%20view%2C%20professional%20photography&width=560&height=300&seq=103&orientation=landscape"
+          data-price="125000" data-rating="4.9" data-description="가을 정취를 느끼는 캠핑, 아름다운 단풍과 함께" data-distance="58km"
+          data-facilities="등산로,단풍명소,데크사이트,화장실,카페" data-badge="단풍 명소">
           <div class="relative">
             <img
               src="https://readdy.ai/api/search-image?query=Autumn%20camping%20in%20Korea%20with%20colorful%20fall%20foliage%2C%20tents%20surrounded%20by%20red%20and%20orange%20trees%2C%20beautiful%20mountain%20view%2C%20professional%20photography&width=560&height=300&seq=103&orientation=landscape"
@@ -232,8 +287,13 @@
               <span>내장산, 설악산 주변</span>
             </div>
           </div>
-        </div>
-        <div class="min-w-[280px] bg-white rounded-xl overflow-hidden shadow-sm">
+        </a>
+        <a href="./shop_detail.html"
+          class="min-w-[280px] bg-white rounded-xl overflow-hidden shadow-sm cursor-pointer seasonal-card"
+          data-id="winter-camping-04" data-title="겨울 캠핑 추천" data-region="평창, 홍천 알파인리조트"
+          data-image="https://readdy.ai/api/search-image?query=Winter%20camping%20in%20Korea%20with%20snow%2C%20cozy%20tent%20setup%20with%20warm%20lighting%2C%20snowy%20landscape%2C%20professional%20photography&width=560&height=300&seq=104&orientation=landscape"
+          data-price="140000" data-rating="4.4" data-description="눈 내리는 캠핑의 낭만, 겨울 특화 시설 완비" data-distance="65km"
+          data-facilities="난방시설,스키장,온천,카페,레스토랑" data-badge="겨울 특화">
           <div class="relative">
             <img
               src="https://readdy.ai/api/search-image?query=Winter%20camping%20in%20Korea%20with%20snow%2C%20cozy%20tent%20setup%20with%20warm%20lighting%2C%20snowy%20landscape%2C%20professional%20photography&width=560&height=300&seq=104&orientation=landscape"
@@ -248,7 +308,7 @@
               <span>평창, 홍천 알파인리조트</span>
             </div>
           </div>
-        </div>
+        </a>
       </div>
     </div>
     <!-- 인기 캠핑장 -->
@@ -256,50 +316,14 @@
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-lg font-medium">인기 캠핑장</h2>
         <div class="flex items-center gap-2 bg-gray-100 rounded-full p-1">
-          <button class="px-3 py-1 text-xs bg-white rounded-full shadow-sm cursor-pointer">거리순</button>
-          <button class="px-3 py-1 text-xs text-gray-500 cursor-pointer">평점순</button>
+          <button id="distanceSort" class="px-3 py-1 text-xs bg-white rounded-full shadow-sm cursor-pointer"
+            data-sort="distance">거리순</button>
+          <button id="ratingSort" class="px-3 py-1 text-xs text-gray-500 rounded-full cursor-pointer"
+            data-sort="rating">평점순</button>
         </div>
       </div>
-      <div class="space-y-4">
-        <div class="bg-white rounded-xl overflow-hidden shadow-sm">
-          <img
-            src="https://readdy.ai/api/search-image?query=Luxury%20glamping%20site%20in%20Korea%20with%20modern%20dome%20tents%2C%20outdoor%20furniture%2C%20beautiful%20forest%20surroundings%2C%20professional%20photography&width=800&height=400&seq=105&orientation=landscape"
-            class="w-full h-48 object-cover" alt="글램핑">
-          <div class="p-4">
-            <div class="flex justify-between items-start mb-2">
-              <div>
-                <h3 class="font-medium">가평 더 글램 글램핑</h3>
-                <div class="flex items-center gap-1 mt-1">
-                  <div class="flex text-yellow-400">
-                    <i class="ri-star-fill text-sm"></i>
-                    <i class="ri-star-fill text-sm"></i>
-                    <i class="ri-star-fill text-sm"></i>
-                    <i class="ri-star-fill text-sm"></i>
-                    <i class="ri-star-half-fill text-sm"></i>
-                  </div>
-                  <span class="text-xs text-gray-500">(128)</span>
-                </div>
-              </div>
-              <button class="w-8 h-8 flex items-center justify-center text-gray-400 cursor-pointer">
-                <i class="ri-heart-line text-xl"></i>
-              </button>
-            </div>
-            <p class="text-sm text-gray-600 mb-3">프라이빗 온수풀, 바베큐장 완비</p>
-            <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
-              <i class="ri-map-pin-line"></i>
-              <span>경기도 가평군 청평면</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-primary font-medium">₩150,000~</span>
-              <a href="./shop_detail.html"
-                class="detail-link px-4 py-2 bg-primary text-white !rounded-button text-sm cursor-pointer"
-                data-id="b17e06a2-c8bb-4255-901e-710cba572e47" data-title="가평 더 글램 글램핑" data-region="경기도 가평군 청평면">
-                예약하기
-              </a>
-            </div>
-          </div>
-        </div>
-        <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+      <div class="space-y-4" id="campingList">
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm" data-distance="25" data-rating="4.7">
           <img
             src="https://readdy.ai/api/search-image?query=Korean%20forest%20camping%20site%20with%20wooden%20deck%20platforms%20for%20tents%2C%20natural%20surroundings%2C%20professional%20photography&width=800&height=400&seq=106&orientation=landscape"
             class="w-full h-48 object-cover" alt="캠핑장">
@@ -313,31 +337,75 @@
                     <i class="ri-star-fill text-sm"></i>
                     <i class="ri-star-fill text-sm"></i>
                     <i class="ri-star-fill text-sm"></i>
-                    <i class="ri-star-line text-sm"></i>
+                    <i class="ri-star-fill text-sm"></i>
                   </div>
                   <span class="text-xs text-gray-500">(96)</span>
                 </div>
               </div>
-              <button class="w-8 h-8 flex items-center justify-center text-gray-400 cursor-pointer">
-                <i class="ri-heart-line text-xl"></i>
+              <button
+                class="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm wishlist-btn">
+                <i class="ri-heart-line text-xl text-gray-500"></i>
               </button>
             </div>
             <p class="text-sm text-gray-600 mb-3">남한강 뷰, 데크 사이트, 반려동물 동반 가능</p>
             <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
               <i class="ri-map-pin-line"></i>
-              <span>경기도 양평군 강하면</span>
+              <span>경기도 양평군 강하면 (25km)</span>
             </div>
             <div class="flex justify-between items-center">
               <span class="text-primary font-medium">₩80,000~</span>
               <a href="./shop_detail.html"
                 class="detail-link px-4 py-2 bg-primary text-white !rounded-button text-sm cursor-pointer"
-                data-id="b17e06a2-c8bb-4255-901e-710cba572e47" data-title="양평 숲속의 아침" data-region="경기도 양평군 강하면">
+                data-id="b17e06a2-c8bb-4255-901e-710cba572e47" data-title="양평 숲속의 아침" data-region="경기도 양평군 강하면"
+                data-image="https://readdy.ai/api/search-image?query=Korean%20forest%20camping%20site%20with%20wooden%20deck%20platforms%20for%20tents%2C%20natural%20surroundings%2C%20professional%20photography&width=800&height=400&seq=106&orientation=landscape"
+                data-price="80000">
                 예약하기
               </a>
             </div>
           </div>
         </div>
-        <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm" data-distance="5" data-rating="3.1">
+          <img
+            src="https://readdy.ai/api/search-image?query=Luxury%20glamping%20site%20in%20Korea%20with%20modern%20dome%20tents%2C%20outdoor%20furniture%2C%20beautiful%20forest%20surroundings%2C%20professional%20photography&width=800&height=400&seq=105&orientation=landscape"
+            class="w-full h-48 object-cover" alt="글램핑">
+          <div class="p-4">
+            <div class="flex justify-between items-start mb-2">
+              <div>
+                <h3 class="font-medium">가평 더 글램 글램핑</h3>
+                <div class="flex items-center gap-1 mt-1">
+                  <div class="flex text-yellow-400">
+                    <i class="ri-star-fill text-sm"></i>
+                    <i class="ri-star-fill text-sm"></i>
+                    <i class="ri-star-fill text-sm"></i>
+                    <i class="ri-star-line text-sm"></i>
+                    <i class="ri-star-line text-sm"></i>
+                  </div>
+                  <span class="text-xs text-gray-500">(128)</span>
+                </div>
+              </div>
+              <button
+                class="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm wishlist-btn">
+                <i class="ri-heart-line text-xl text-gray-500"></i>
+              </button>
+            </div>
+            <p class="text-sm text-gray-600 mb-3">프라이빗 온수풀, 바베큐장 완비</p>
+            <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
+              <i class="ri-map-pin-line"></i>
+              <span>경기도 가평군 청평면 (5km)</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-primary font-medium">₩150,000~</span>
+              <a href="./shop_detail.html"
+                class="detail-link px-4 py-2 bg-primary text-white !rounded-button text-sm cursor-pointer"
+                data-id="b17e06a2-c8bb-4255-901e-710cba572e47" data-title="가평 더 글램 글램핑" data-region="경기도 가평군 청평면"
+                data-image="https://readdy.ai/api/search-image?query=Luxury%20glamping%20site%20in%20Korea%20with%20modern%20dome%20tents%2C%20outdoor%20furniture%2C%20beautiful%20forest%20surroundings%2C%20professional%20photography&width=800&height=400&seq=105&orientation=landscape"
+                data-price="150000">
+                예약하기
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm" data-distance="75" data-rating="4.9">
           <img
             src="https://readdy.ai/api/search-image?query=Riverside%20camping%20in%20Korea%20with%20modern%20caravan%20facilities%2C%20beautiful%20water%20view%2C%20professional%20photography&width=800&height=400&seq=107&orientation=landscape"
             class="w-full h-48 object-cover" alt="카라반">
@@ -356,20 +424,23 @@
                   <span class="text-xs text-gray-500">(215)</span>
                 </div>
               </div>
-              <button class="w-8 h-8 flex items-center justify-center text-gray-400 cursor-pointer">
-                <i class="ri-heart-line text-xl"></i>
+              <button
+                class="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm wishlist-btn">
+                <i class="ri-heart-line text-xl text-gray-500"></i>
               </button>
             </div>
             <p class="text-sm text-gray-600 mb-3">의암호 전망, 프리미엄 카라반, 수상레저 가능</p>
             <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
               <i class="ri-map-pin-line"></i>
-              <span>강원도 춘천시 서면</span>
+              <span>강원도 춘천시 서면 (75km)</span>
             </div>
             <div class="flex justify-between items-center">
               <span class="text-primary font-medium">₩180,000~</span>
               <a href="./shop_detail.html"
                 class="detail-link px-4 py-2 bg-primary text-white !rounded-button text-sm cursor-pointer"
-                data-id="b17e06a2-c8bb-4255-901e-710cba572e47" data-title="가평 프리미엄 글램핑" data-region="경기도 가평군">
+                data-id="b17e06a2-c8bb-4255-901e-710cba572e47" data-title="가평 프리미엄 글램핑" data-region="경기도 가평군"
+                data-image="https://readdy.ai/api/search-image?query=Riverside%20camping%20in%20Korea%20with%20modern%20caravan%20facilities%2C%20beautiful%20water%20view%2C%20professional%20photography&width=800&height=400&seq=107&orientation=landscape"
+                data-price="180000">
                 예약하기
               </a>
             </div>
@@ -444,7 +515,7 @@
     <!-- 캠핑 팁과 가이드 -->
     <div class="px-4 py-4">
       <h2 class="text-lg font-medium mb-4">캠핑 가이드</h2>
-      <div class="space-y-3">
+      <div class="space-y-0.5">
         <div class="bg-white rounded-xl overflow-hidden shadow-sm">
           <button class="w-full flex justify-between items-center p-4 cursor-pointer accordion-toggle">
             <div class="flex items-center gap-3">
@@ -456,7 +527,7 @@
             <i class="ri-arrow-down-s-line text-gray-400"></i>
           </button>
           <div class="accordion-content px-4 pb-4">
-            <div class="pl-11 text-sm text-gray-600 space-y-2">
+            <div class="pl-3 text-sm text-gray-600 space-y-2 mb-4">
               <p>1. 첫 캠핑은 시설이 잘 갖춰진 오토캠핑장을 선택하세요.</p>
               <p>2. 텐트 설치 연습은 집에서 미리 해보는 것이 좋습니다.</p>
               <p>3. 날씨 예보를 꼭 확인하고 우천 대비책을 마련하세요.</p>
@@ -476,7 +547,7 @@
             <i class="ri-arrow-down-s-line text-gray-400"></i>
           </button>
           <div class="accordion-content px-4 pb-4">
-            <div class="pl-11 text-sm text-gray-600 space-y-2">
+            <div class="pl-3 text-sm text-gray-600 space-y-2 mb-4">
               <p>1. 화재 위험이 있는 장비는 항상 주의해서 사용하세요.</p>
               <p>2. 일산화탄소 중독 예방을 위해 텐트 내 취사를 금지하세요.</p>
               <p>3. 야생동물이 출몰할 수 있는 지역에서는 음식물 보관에 주의하세요.</p>
@@ -496,7 +567,7 @@
             <i class="ri-arrow-down-s-line text-gray-400"></i>
           </button>
           <div class="accordion-content px-4 pb-4">
-            <div class="pl-11 text-sm text-gray-600 space-y-2">
+            <div class="pl-3 text-sm text-gray-600 space-y-2 mb-4">
               <p>1. 집에서 미리 손질하고 양념해온 재료를 사용하면 편리합니다.</p>
               <p>2. 알루미늄 호일을 활용한 요리는 설거지가 간편합니다.</p>
               <p>3. 다용도 조리도구를 준비해 짐을 줄이세요.</p>
@@ -516,7 +587,7 @@
             <i class="ri-arrow-down-s-line text-gray-400"></i>
           </button>
           <div class="accordion-content px-4 pb-4">
-            <div class="pl-11 text-sm text-gray-600 space-y-2">
+            <div class="pl-3 text-sm text-gray-600 space-y-2 mb-4">
               <p>1. 일회용품 사용을 최소화하고 다회용 식기를 사용하세요.</p>
               <p>2. 생분해성 세제를 사용하여 자연을 보호하세요.</p>
               <p>3. 쓰레기는 분리수거하고 캠핑장을 떠날 때 깨끗이 정리하세요.</p>
@@ -530,11 +601,10 @@
   </main>
   <nav class="fixed bottom-0 left-0 right-0 bg-white border-t">
     <div class="grid grid-cols-6 py-1">
-      <a href="search_map.html"
-        data-readdy="true" class="flex flex-col items-center gap-1 group">
+      <a href="search_map.html" data-readdy="true" class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-map-pin-2-fill text-lg group-hover:text-primary"></i>
+          <i class="ri-map-pin-2-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
         </div>
         <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">내주변</span>
       </a>
@@ -542,7 +612,7 @@
       <a href="./index.html" class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-home-5-fill text-lg group-hover:text-primary"></i>
+          <i class="ri-home-5-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
         </div>
         <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">홈</span>
       </a>
@@ -550,7 +620,7 @@
       <a href="wishlist.html" data-readdy="true" class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-heart-3-fill text-lg group-hover:text-primary"></i>
+          <i class="ri-heart-3-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
         </div>
         <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">찜</span>
       </a>
@@ -558,7 +628,7 @@
       <a href="mypage.html" data-readdy="true" class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-user-3-fill text-lg group-hover:text-primary"></i>
+          <i class="ri-user-3-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
         </div>
         <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">마이</span>
       </a>
@@ -566,14 +636,14 @@
       <button class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-wallet-3-fill text-lg group-hover:text-primary"></i>
+          <i class="ri-wallet-3-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
         </div>
         <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">페이</span>
       </button>
       <button class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-menu-fill text-lg group-hover:text-primary"></i>
+          <i class="ri-menu-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
         </div>
         <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">전체</span>
       </button>
@@ -619,11 +689,11 @@
           <i class="ri-building-line text-xl text-gray-600"></i>
           <span>호텔</span>
         </a>
-        <a href="#" class="flex items-center gap-3">
+        <a href="event.html" class="flex items-center gap-3">
           <i class="ri-gift-line text-xl text-gray-600"></i>
           <span>이벤트</span>
         </a>
-        <a href="#" class="flex items-center gap-3">
+        <a href="customer_service.html" class="flex items-center gap-3">
           <i class="ri-customer-service-line text-xl text-gray-600"></i>
           <span>고객센터</span>
         </a>
@@ -635,19 +705,19 @@
       const menuButton = document.querySelector('button:has(i.ri-menu-fill)');
       const closeMenu = document.getElementById('closeMenu');
       const sideMenu = document.getElementById('sideMenu');
-      
+
       if (menuButton) {
         menuButton.addEventListener('click', function () {
           sideMenu.classList.remove('translate-x-full');
         });
       }
-      
+
       if (closeMenu) {
         closeMenu.addEventListener('click', function () {
           sideMenu.classList.add('translate-x-full');
         });
       }
-      
+
       document.addEventListener('click', function (event) {
         if (sideMenu && !sideMenu.contains(event.target) && !menuButton?.contains(event.target)) {
           sideMenu.classList.add('translate-x-full');
@@ -657,17 +727,46 @@
   </script>
   <script id="accordionScript">
     document.addEventListener('DOMContentLoaded', function () {
+      // 모든 아코디언 내용을 초기에 숨김
+      const accordionContents = document.querySelectorAll('.accordion-content');
+      accordionContents.forEach(content => {
+        content.classList.remove('active');
+        content.style.maxHeight = '0';
+        content.style.opacity = '0';
+        content.style.paddingBottom = '0';
+      });
+
       const accordionToggles = document.querySelectorAll('.accordion-toggle');
       accordionToggles.forEach(toggle => {
         toggle.addEventListener('click', function () {
           const content = this.nextElementSibling;
-          const icon = this.querySelector('i.ri-arrow-down-s-line');
+          const icon = this.querySelector('i.ri-arrow-down-s-line, i.ri-arrow-up-s-line');
+
           if (content.classList.contains('active')) {
+            // 닫기
             content.classList.remove('active');
+            content.style.maxHeight = '0';
+            content.style.opacity = '0';
+            content.style.paddingBottom = '0';
             icon.classList.remove('ri-arrow-up-s-line');
             icon.classList.add('ri-arrow-down-s-line');
           } else {
+            // 열기 - 먼저 높이를 설정하고 CSS transition이 처리하도록 함
             content.classList.add('active');
+
+            // 실제 높이 계산을 위해 임시로 높이를 auto로 설정
+            const currentMaxHeight = content.style.maxHeight;
+            content.style.maxHeight = 'none';
+            const targetHeight = content.scrollHeight;
+            content.style.maxHeight = currentMaxHeight;
+
+            // 한 프레임 후에 애니메이션 시작
+            requestAnimationFrame(() => {
+              content.style.maxHeight = targetHeight + 'px';
+              content.style.opacity = '1';
+              content.style.paddingBottom = '1.5rem';
+            });
+
             icon.classList.remove('ri-arrow-down-s-line');
             icon.classList.add('ri-arrow-up-s-line');
           }
@@ -683,11 +782,11 @@
       let isDragging = false;
       let startX;
       let scrollLeft;
-      
+
       // URL 파라미터에서 타입 확인
       const urlParams = new URLSearchParams(window.location.search);
       const typeParam = urlParams.get('type');
-      
+
       filterContainer.addEventListener('mousedown', (e) => {
         isDragging = true;
         startX = e.pageX - filterContainer.offsetLeft;
@@ -706,7 +805,7 @@
         const walk = (x - startX) * 2;
         filterContainer.scrollLeft = scrollLeft - walk;
       });
-      
+
       function updateContent(campingType) {
         contentSections.forEach(section => {
           if (campingType === 'valley') {
@@ -720,7 +819,7 @@
           }
         });
       }
-      
+
       function selectButton(button, shouldScroll = false) {
         filterButtons.forEach(btn => {
           btn.classList.remove('bg-primary/10');
@@ -738,13 +837,13 @@
         const icon = button.querySelector('i');
         icon.classList.remove('text-gray-500');
         icon.classList.add('text-primary');
-        
+
         // 라우팅으로 인한 선택일 때만 스크롤 조정
         if (shouldScroll) {
           setTimeout(() => {
             const buttonLeft = button.offsetLeft;
             const scrollContainer = filterContainer.parentElement; // overflow-x-auto가 적용된 상위 컨테이너
-            
+
             // 선택된 버튼을 왼쪽으로 스크롤
             scrollContainer.scrollTo({
               left: buttonLeft - 16, // 16px 여백 추가
@@ -753,7 +852,7 @@
           }, 100);
         }
       }
-      
+
       filterButtons.forEach(button => {
         button.addEventListener('click', function () {
           const campingType = this.dataset.type;
@@ -761,7 +860,7 @@
           updateContent(campingType);
         });
       });
-      
+
       // URL 파라미터에 따라 초기 선택 설정
       const typeMapping = {
         'normal': '일반캠핑',
@@ -774,10 +873,10 @@
         'hotspring': '온천',
         'resort': '리조트'
       };
-      
+
       if (typeParam && typeMapping[typeParam]) {
         // 해당 타입의 버튼 찾기 (텍스트로 찾기)
-        const targetButton = Array.from(filterButtons).find(btn => 
+        const targetButton = Array.from(filterButtons).find(btn =>
           btn.querySelector('span').textContent === typeMapping[typeParam]
         );
         if (targetButton) {
@@ -799,22 +898,306 @@
     });
   </script>
   <script>
-    // 상세페이지 정보 넘기기
+    // 상세페이지 정보 넘기기 (기존 코드 수정)
     document.addEventListener('DOMContentLoaded', function () {
+      // 인기 캠핑장 예약하기 버튼
       document.querySelectorAll('.detail-link').forEach(link => {
         link.addEventListener('click', function (e) {
           e.preventDefault();
-          const { id, title, region } = this.dataset;
-          // 이 링크가 속한 카드의 <img> src 가져오기
-          const card = this.closest('.bg-white.overflow-hidden');
-          const imgEl = card.querySelector('img');
-          const imgSrc = imgEl ? imgEl.src : '';
 
-          // URL 파라미터에 imgSrc 추가
-          const params = new URLSearchParams({ id, title, region, img: imgSrc });
+          // 기존 데이터 추출
+          const { id, title, region } = this.dataset;
+          const image = this.getAttribute('data-image');
+          const price = this.getAttribute('data-price');
+
+          // URL 파라미터 생성 (recommend_result_list.html과 동일한 방식)
+          const params = new URLSearchParams();
+          params.append('id', id);
+          params.append('title', title);
+          params.append('region', region);
+          if (image) {
+            params.append('image', image);
+          }
+          if (price) { // 가격 파라미터 추가
+            params.append('price', price);
+          }
+
+          // shop_detail.html로 이동
           window.location.href = `shop_detail.html?${params.toString()}`;
         });
       });
+
+      // 계절별 추천 캠핑 카드
+      document.querySelectorAll('.seasonal-card').forEach(card => {
+        card.addEventListener('click', function (e) {
+          e.preventDefault();
+
+          // 데이터 추출
+          const { id, title, region } = this.dataset;
+          const image = this.getAttribute('data-image');
+          const price = this.getAttribute('data-price');
+          const rating = this.getAttribute('data-rating');
+          const description = this.getAttribute('data-description');
+          const distance = this.getAttribute('data-distance');
+          const facilities = this.getAttribute('data-facilities');
+          const badge = this.getAttribute('data-badge');
+
+          // URL 파라미터 생성
+          const params = new URLSearchParams();
+          params.append('id', id);
+          params.append('title', title);
+          params.append('region', region);
+
+          if (image) params.append('image', image);
+          if (price) params.append('price', price);
+          if (rating) params.append('rating', rating);
+          if (description) params.append('description', description);
+          if (distance) params.append('distance', distance);
+          if (facilities) params.append('facilities', facilities);
+          if (badge) params.append('badge', badge);
+
+          console.log('계절별 캠핑 데이터 전달:', {
+            id, title, region, image, price, rating, description, distance, facilities, badge
+          });
+
+          // shop_detail.html로 이동
+          window.location.href = `shop_detail.html?${params.toString()}`;
+        });
+      });
+    });
+  </script>
+  <script id="sortScript">
+    document.addEventListener('DOMContentLoaded', function () {
+      const distanceBtn = document.getElementById('distanceSort');
+      const ratingBtn = document.getElementById('ratingSort');
+      const campingList = document.getElementById('campingList');
+
+      // 버튼 활성화 상태 변경 함수
+      function setActiveButton(activeBtn, inactiveBtn) {
+        activeBtn.classList.add('bg-white', 'shadow-sm', 'text-gray-900');
+        activeBtn.classList.remove('text-gray-500');
+        inactiveBtn.classList.remove('bg-white', 'shadow-sm', 'text-gray-900');
+        inactiveBtn.classList.add('text-gray-500');
+      }
+
+      // 정렬 함수
+      function sortCampingList(sortType) {
+        console.log(`\n=== ${sortType === 'distance' ? '거리순' : '평점순'} 정렬 시작 ===`);
+
+        // 모든 캠핑장 카드 가져오기
+        const allCards = Array.from(campingList.children);
+
+        console.log('정렬 전:');
+        allCards.forEach((card, index) => {
+          const title = card.querySelector('h3').textContent;
+          const distance = card.dataset.distance;
+          const rating = card.dataset.rating;
+          console.log(`${index + 1}. ${title} - 거리: ${distance}km, 평점: ${rating}점`);
+        });
+
+        // 정렬 실행
+        allCards.sort((a, b) => {
+          if (sortType === 'distance') {
+            // 거리순: 가까운 순 (오름차순)
+            return parseFloat(a.dataset.distance) - parseFloat(b.dataset.distance);
+          } else {
+            // 평점순: 높은 순 (내림차순)
+            return parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating);
+          }
+        });
+
+        console.log('정렬 후:');
+        allCards.forEach((card, index) => {
+          const title = card.querySelector('h3').textContent;
+          const distance = card.dataset.distance;
+          const rating = card.dataset.rating;
+          const currentValue = sortType === 'distance' ? distance + 'km' : rating + '점';
+          console.log(`${index + 1}. ${title} - ${currentValue}`);
+        });
+
+        // 애니메이션과 함께 재배치
+        campingList.style.opacity = '0.5';
+        campingList.style.transition = 'opacity 0.2s ease';
+
+        setTimeout(() => {
+          // 기존 내용 완전히 제거
+          while (campingList.firstChild) {
+            campingList.removeChild(campingList.firstChild);
+          }
+
+          // 정렬된 순서로 다시 추가
+          allCards.forEach(card => {
+            campingList.appendChild(card);
+          });
+
+          // 애니메이션 복원
+          campingList.style.opacity = '1';
+          console.log('✅ 정렬 완료!\n');
+        }, 100);
+      }
+
+      // 거리순 버튼 클릭
+      distanceBtn.addEventListener('click', function () {
+        console.log('🔄 거리순 버튼 클릭됨');
+        setActiveButton(distanceBtn, ratingBtn);
+        sortCampingList('distance');
+      });
+
+      // 평점순 버튼 클릭
+      ratingBtn.addEventListener('click', function () {
+        console.log('🔄 평점순 버튼 클릭됨');
+        setActiveButton(ratingBtn, distanceBtn);
+        sortCampingList('rating');
+      });
+    });
+  </script>
+
+  <script id="heart-button-script">
+    // 통일된 위시리스트 토글 기능
+    document.addEventListener('click', function (e) {
+      if (e.target.closest('.wishlist-btn')) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const button = e.target.closest('.wishlist-btn');
+        const icon = button.querySelector('i');
+
+        // 토글 애니메이션
+        button.style.transform = 'scale(0.8)';
+
+        setTimeout(() => {
+          if (icon.classList.contains('ri-heart-line')) {
+            // 빈 하트 → 채워진 하트
+            icon.classList.remove('ri-heart-line');
+            icon.classList.add('ri-heart-fill');
+            button.classList.add('active');
+            icon.style.color = '#ef4444';
+          } else {
+            // 채워진 하트 → 빈 하트
+            icon.classList.remove('ri-heart-fill');
+            icon.classList.add('ri-heart-line');
+            button.classList.remove('active');
+            icon.style.color = '';
+          }
+
+          button.style.transform = 'scale(1)';
+        }, 100);
+      }
+    });
+
+    // 기존 하트 버튼 토글 기능 (하위 호환성을 위해 유지)
+    document.addEventListener('DOMContentLoaded', function () {
+      function setupHeartButtons() {
+        // 모든 종류의 하트 버튼 선택 (ri-heart-line, ri-heart-3-line 등)
+        const heartButtons = document.querySelectorAll('button i[class*="ri-heart"]');
+
+        heartButtons.forEach(button => {
+          button.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            // 현재 상태 확인 (빈 하트인지 채워진 하트인지)
+            const isEmptyHeart = button.classList.contains('ri-heart-line') ||
+              button.classList.contains('ri-heart-3-line');
+
+            // 애니메이션을 위한 스케일 효과
+            button.style.transform = 'scale(0.8)';
+
+            setTimeout(() => {
+              if (isEmptyHeart) {
+                // 빈 하트를 채워진 하트로 변경
+                button.classList.remove('ri-heart-line', 'ri-heart-3-line');
+                button.classList.add('ri-heart-fill');
+
+                // 색상을 빨간색으로 변경
+                button.style.color = '#ef4444';
+
+                // 부모 버튼에 활성 상태 표시
+                const parentButton = button.closest('button');
+                if (parentButton) {
+                  parentButton.classList.add('active');
+                }
+              } else {
+                // 채워진 하트를 빈 하트로 변경
+                button.classList.remove('ri-heart-fill');
+                if (button.classList.contains('ri-heart-3-fill')) {
+                  button.classList.remove('ri-heart-3-fill');
+                  button.classList.add('ri-heart-3-line');
+                } else {
+                  button.classList.add('ri-heart-line');
+                }
+
+                // 색상을 원래대로 복원
+                button.style.color = '';
+
+                // 부모 버튼에서 활성 상태 제거
+                const parentButton = button.closest('button');
+                if (parentButton) {
+                  parentButton.classList.remove('active');
+                }
+              }
+
+              // 스케일 효과 복원
+              button.style.transform = 'scale(1)';
+            }, 100);
+          });
+        });
+
+        // 동적으로 추가된 버튼들을 위한 이벤트 위임
+        document.addEventListener('click', function (e) {
+          if (e.target.classList.contains('ri-heart-line') ||
+            e.target.classList.contains('ri-heart-3-line') ||
+            e.target.classList.contains('ri-heart-fill') ||
+            e.target.classList.contains('ri-heart-3-fill')) {
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            const button = e.target;
+
+            // 현재 상태 확인
+            const isEmptyHeart = button.classList.contains('ri-heart-line') ||
+              button.classList.contains('ri-heart-3-line');
+
+            // 애니메이션
+            button.style.transform = 'scale(0.8)';
+
+            setTimeout(() => {
+              if (isEmptyHeart) {
+                // 빈 하트를 채워진 하트로 변경
+                button.classList.remove('ri-heart-line', 'ri-heart-3-line');
+                button.classList.add('ri-heart-fill');
+                button.style.color = '#ef4444';
+
+                const parentButton = button.closest('button');
+                if (parentButton) {
+                  parentButton.classList.add('active');
+                }
+              } else {
+                // 채워진 하트를 빈 하트로 변경
+                button.classList.remove('ri-heart-fill');
+                if (button.classList.contains('ri-heart-3-fill')) {
+                  button.classList.remove('ri-heart-3-fill');
+                  button.classList.add('ri-heart-3-line');
+                } else {
+                  button.classList.add('ri-heart-line');
+                }
+                button.style.color = '';
+
+                const parentButton = button.closest('button');
+                if (parentButton) {
+                  parentButton.classList.remove('active');
+                }
+              }
+
+              button.style.transform = 'scale(1)';
+            }, 100);
+          }
+        });
+      }
+
+      // 초기 설정
+      setupHeartButtons();
     });
   </script>
 </body>

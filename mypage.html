@@ -43,7 +43,7 @@
     ::-webkit-scrollbar {
       display: none;
     }
-    
+
     * {
       -ms-overflow-style: none;
       scrollbar-width: none;
@@ -54,10 +54,11 @@
 <body class="  min-h-[762px] mx-auto bg-white">
   <header class="fixed top-0 left-0 right-0 z-50 bg-white border-b">
     <div class="flex items-center justify-between px-4 py-3">
-      <h1 class="text-lg font-medium">마이페이지</h1>
-      <button class="w-8 h-8 flex items-center justify-center">
+      <div class="w-8 h-8"></div>
+      <h1 class="text-lg font-medium absolute left-1/2 transform -translate-x-1/2">마이페이지</h1>
+      <a href="settings.html" data-readdy="true" class="w-8 h-8 flex items-center justify-center">
         <i class="ri-settings-3-line text-xl"></i>
-      </button>
+      </a>
     </div>
   </header>
   <main class="pt-[52px] pb-20">
@@ -113,7 +114,7 @@
             <i class="ri-heart-3-fill text-xl text-primary"></i>
           </div>
           <div>
-            <h3 class="font-medium mb-1 text-star1">찜한 숙소</h3>
+            <h3 class="font-medium mb-1 text-start">찜한 숙소</h3>
             <p class="text-sm text-gray-500">2개의 숙소</p>
           </div>
         </div>
@@ -162,7 +163,8 @@
           </div>
           <i class="ri-arrow-right-s-line text-xl text-gray-400"></i>
         </button>
-        <button class="w-full flex items-center justify-between p-5 bg-white rounded-[24px] shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+        <button
+          class="w-full flex items-center justify-between p-5 bg-white rounded-[24px] shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
           <div class="flex items-center gap-4">
             <div class="w-12 h-12 rounded-[16px] bg-gray-100 flex items-center justify-center">
               <i class="ri-user-settings-line text-xl text-gray-500"></i>
@@ -171,7 +173,8 @@
           </div>
           <i class="ri-arrow-right-s-line text-xl text-gray-400"></i>
         </button>
-        <button class="w-full flex items-center justify-between p-5 bg-white rounded-[24px] shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+        <a href="customer_service.html" data-readdy="true"
+          class="w-full flex items-center justify-between p-5 bg-white rounded-[24px] shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
           <div class="flex items-center gap-4">
             <div class="w-12 h-12 rounded-[16px] bg-gray-100 flex items-center justify-center">
               <i class="ri-customer-service-2-line text-xl text-gray-500"></i>
@@ -179,7 +182,7 @@
             <span class="font-medium text-start">고객센터</span>
           </div>
           <i class="ri-arrow-right-s-line text-xl text-gray-400"></i>
-        </button>
+        </a>
       </div>
     </div>
     <div class="mt-8 px-4">
@@ -255,11 +258,10 @@
   </script>
   <nav class="fixed bottom-0 left-0 right-0 bg-white border-t">
     <div class="grid grid-cols-6 py-1">
-      <a href="search_map.html"
-        data-readdy="true" class="flex flex-col items-center gap-1 group">
+      <a href="search_map.html" data-readdy="true" class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-map-pin-2-fill text-lg group-hover:text-primary"></i>
+          <i class="ri-map-pin-2-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
         </div>
         <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">내주변</span>
       </a>
@@ -267,7 +269,7 @@
       <a href="./index.html" class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-home-5-fill text-lg group-hover:text-primary"></i>
+          <i class="ri-home-5-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
         </div>
         <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">홈</span>
       </a>
@@ -275,7 +277,7 @@
       <a href="wishlist.html" data-readdy="true" class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-heart-3-fill text-lg group-hover:text-primary"></i>
+          <i class="ri-heart-3-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
         </div>
         <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">찜</span>
       </a>
@@ -283,22 +285,22 @@
       <a href="mypage.html" data-readdy="true" class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-user-3-fill text-lg text-primary"></i>
+          <i class="ri-user-3-fill text-lg text-primary transition-colors duration-300"></i>
         </div>
-        <span class="text-[10px] text-primary">마이</span>
+        <span class="text-[10px] text-primary transition-colors duration-300">마이</span>
       </a>
 
       <button class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-wallet-3-fill text-lg group-hover:text-primary"></i>
+          <i class="ri-wallet-3-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
         </div>
         <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">페이</span>
       </button>
       <button class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-menu-fill text-lg group-hover:text-primary"></i>
+          <i class="ri-menu-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
         </div>
         <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">전체</span>
       </button>
@@ -344,11 +346,11 @@
           <i class="ri-building-line text-xl text-gray-600"></i>
           <span>호텔</span>
         </a>
-        <a href="#" class="flex items-center gap-3">
+        <a href="event.html" class="flex items-center gap-3">
           <i class="ri-gift-line text-xl text-gray-600"></i>
           <span>이벤트</span>
         </a>
-        <a href="#" class="flex items-center gap-3">
+        <a href="customer_service.html" class="flex items-center gap-3">
           <i class="ri-customer-service-line text-xl text-gray-600"></i>
           <span>고객센터</span>
         </a>
@@ -360,19 +362,19 @@
       const menuButton = document.querySelector('button:has(i.ri-menu-fill)');
       const closeMenu = document.getElementById('closeMenu');
       const sideMenu = document.getElementById('sideMenu');
-      
+
       if (menuButton) {
         menuButton.addEventListener('click', function () {
           sideMenu.classList.remove('translate-x-full');
         });
       }
-      
+
       if (closeMenu) {
         closeMenu.addEventListener('click', function () {
           sideMenu.classList.add('translate-x-full');
         });
       }
-      
+
       document.addEventListener('click', function (event) {
         if (sideMenu && !sideMenu.contains(event.target) && !menuButton?.contains(event.target)) {
           sideMenu.classList.add('translate-x-full');

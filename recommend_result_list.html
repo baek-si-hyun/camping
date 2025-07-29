@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7c64a249ef8e3b9b648f20a50c07b249"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -82,23 +83,98 @@
     }
 
     .sort-dropdown {
+      display: none;
       max-height: 0;
       overflow: hidden;
       transition: max-height 0.3s ease;
     }
 
     .sort-dropdown.show {
+      display: block;
       max-height: 200px;
+    }
+
+    /* 위시리스트 버튼 애니메이션 */
+    .wishlist-btn {
+      transition: all 0.3s ease;
+    }
+
+    .wishlist-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .wishlist-btn.active {
+      color: #ef4444 !important;
+      transform: scale(1.2);
+    }
+
+    .wishlist-btn i {
+      transition: all 0.2s ease;
     }
 
     /* 스크롤바 숨김 */
     ::-webkit-scrollbar {
       display: none;
     }
-    
+
     * {
       -ms-overflow-style: none;
       scrollbar-width: none;
+    }
+
+    /* 지도 뷰 토글 스타일 */
+    #listView,
+    #mapView {
+      position: absolute;
+      top: 200px;
+      /* 헤더 + 필터 영역 + AI 분석 결과 영역 + 간격 */
+      left: 0;
+      right: 0;
+      height: calc(100vh - 253px);
+      /* 화면 사이즈에서 253px를 뺀 크기 */
+      transition: opacity 0.3s ease;
+    }
+
+    /* 처음엔 리스트만 보이도록 */
+    #listView {
+      opacity: 1;
+      z-index: 20;
+      pointer-events: auto;
+      overflow-y: auto;
+      /* 리스트 뷰는 스크롤 허용 */
+    }
+
+    #mapView {
+      opacity: 0;
+      z-index: 10;
+      pointer-events: none;
+      overflow: hidden;
+      /* 지도 뷰는 스크롤 방지 */
+    }
+
+    #mapView.show {
+      opacity: 1;
+      z-index: 20;
+      pointer-events: auto;
+      overflow: hidden;
+      /* 지도 뷰는 스크롤 방지 */
+    }
+
+    /* 지도 알림 애니메이션 */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-fadeIn {
+      animation: fadeIn 0.5s ease-out forwards;
     }
   </style>
 </head>
@@ -110,13 +186,11 @@
         class="w-8 h-8 flex items-center justify-center cursor-pointer">
         <i class="ri-arrow-left-line text-xl"></i>
       </a>
-      <h1 class="text-lg font-medium">추천 숙소</h1>
-      <button class="w-8 h-8 flex items-center justify-center cursor-pointer" id="wishlistBtn">
-        <i class="ri-heart-line text-xl"></i>
-      </button>
+      <h1 class="text-lg font-medium absolute left-1/2 transform -translate-x-1/2">추천 숙소</h1>
+      <div class="w-8 h-8"></div>
     </div>
   </header>
-  <main class="pt-16 pb-20 min-h-screen">
+  <main class="pt-16 pb-14 relative min-h-screen">
     <div class="px-4 py-4 bg-white border-b">
       <div class="flex items-center justify-between mb-3">
         <div class="flex items-center gap-2">
@@ -129,7 +203,7 @@
               <span class="text-sm font-medium" id="sortText">추천순</span>
               <i class="ri-arrow-down-s-line text-sm"></i>
             </button>
-            <div class="absolute top-full left-0 mt-1 bg-white rounded-lg shadow-lg border sort-dropdown z-10"
+            <div class="absolute top-full left-0 mt-1 bg-white rounded-lg shadow-lg border sort-dropdown z-[60]"
               id="sortDropdown">
               <button class="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 cursor-pointer"
                 data-sort="recommended">추천순</button>
@@ -170,8 +244,7 @@
             src="https://readdy.ai/api/search-image?query=Luxury%20glamping%20tent%20with%20panoramic%20windows%20surrounded%20by%20forest%2C%20premium%20camping%20experience%2C%20cozy%20interior%20lighting%2C%20evening%20atmosphere%2C%20professional%20photography%2C%20high-quality%20resort%20accommodation&width=375&height=200&seq=101&orientation=landscape"
             class="w-full h-48 object-cover object-top" alt="가평 프리미엄 글램핑">
           <button
-            class="absolute top-3 right-3 w-8 h-8 bg-white/80 rounded-full flex items-center justify-center cursor-pointer wishlist-btn"
-            data-id="1">
+            class="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm wishlist-btn">
             <i class="ri-heart-line text-lg text-gray-600"></i>
           </button>
           <div class="absolute bottom-3 left-3 bg-primary text-white px-2 py-1 rounded text-xs font-medium">
@@ -207,16 +280,12 @@
               <span class="text-lg font-bold text-primary">180,000원</span>
               <span class="text-sm text-gray-500">/ 박</span>
             </div>
-            <a href="#" class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium cursor-pointer !rounded-button reservation-btn"
-               data-title="가평 프리미엄 글램핑"
-               data-region="경기도 가평군"
-               data-price="180000"
-               data-rating="4.8"
-               data-description="자연 속 럭셔리 글램핑 체험 • 반려동물 동반 가능"
-               data-distance="차량 1시간"
-               data-facilities="수영장,바베큐장,와이파이"
-               data-image="https://readdy.ai/api/search-image?query=Luxury%20glamping%20tent%20with%20panoramic%20windows%20surrounded%20by%20forest%2C%20premium%20camping%20experience%2C%20cozy%20interior%20lighting%2C%20evening%20atmosphere%2C%20professional%20photography%2C%20high-quality%20resort%20accommodation&width=375&height=200&seq=101&orientation=landscape"
-               data-badge="AI 추천">
+            <a href="#"
+              class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium cursor-pointer !rounded-button reservation-btn"
+              data-title="가평 프리미엄 글램핑" data-region="경기도 가평군" data-price="180000" data-rating="4.8"
+              data-description="자연 속 럭셔리 글램핑 체험 • 반려동물 동반 가능" data-distance="차량 1시간" data-facilities="수영장,바베큐장,와이파이"
+              data-image="https://readdy.ai/api/search-image?query=Luxury%20glamping%20tent%20with%20panoramic%20windows%20surrounded%20by%20forest%2C%20premium%20camping%20experience%2C%20cozy%20interior%20lighting%2C%20evening%20atmosphere%2C%20professional%20photography%2C%20high-quality%20resort%20accommodation&width=375&height=200&seq=101&orientation=landscape"
+              data-badge="AI 추천">
               예약하기
             </a>
           </div>
@@ -228,8 +297,7 @@
             src="https://readdy.ai/api/search-image?query=Modern%20glamping%20dome%20with%20mountain%20view%2C%20luxury%20outdoor%20accommodation%2C%20comfortable%20interior%20setup%2C%20sunset%20lighting%2C%20high-quality%20photography%2C%20romantic%20couple-friendly%20atmosphere&width=375&height=200&seq=102&orientation=landscape"
             class="w-full h-48 object-cover object-top" alt="양평 힐링 글램핑">
           <button
-            class="absolute top-3 right-3 w-8 h-8 bg-white/80 rounded-full flex items-center justify-center cursor-pointer wishlist-btn"
-            data-id="2">
+            class="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm wishlist-btn">
             <i class="ri-heart-line text-lg text-gray-600"></i>
           </button>
           <div class="absolute bottom-3 left-3 bg-secondary text-white px-2 py-1 rounded text-xs font-medium">
@@ -265,16 +333,12 @@
               <span class="text-lg font-bold text-primary">150,000원</span>
               <span class="text-sm text-gray-500">/ 박</span>
             </div>
-            <a href="#" class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium cursor-pointer !rounded-button reservation-btn"
-               data-title="양평 힐링 글램핑"
-               data-region="경기도 양평군"
-               data-price="150000"
-               data-rating="4.6"
-               data-description="계곡 옆 힐링 글램핑 • 커플 추천"
-               data-distance="차량 50분"
-               data-facilities="바베큐장,와이파이,주차장"
-               data-image="https://readdy.ai/api/search-image?query=Modern%20glamping%20dome%20with%20mountain%20view%2C%20luxury%20outdoor%20accommodation%2C%20comfortable%20interior%20setup%2C%20sunset%20lighting%2C%20high-quality%20photography%2C%20romantic%20couple-friendly%20atmosphere&width=375&height=200&seq=102&orientation=landscape"
-               data-badge="인기">
+            <a href="#"
+              class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium cursor-pointer !rounded-button reservation-btn"
+              data-title="양평 힐링 글램핑" data-region="경기도 양평군" data-price="150000" data-rating="4.6"
+              data-description="계곡 옆 힐링 글램핑 • 커플 추천" data-distance="차량 50분" data-facilities="바베큐장,와이파이,주차장"
+              data-image="https://readdy.ai/api/search-image?query=Modern%20glamping%20dome%20with%20mountain%20view%2C%20luxury%20outdoor%20accommodation%2C%20comfortable%20interior%20setup%2C%20sunset%20lighting%2C%20high-quality%20photography%2C%20romantic%20couple-friendly%20atmosphere&width=375&height=200&seq=102&orientation=landscape"
+              data-badge="인기">
               예약하기
             </a>
           </div>
@@ -286,8 +350,7 @@
             src="https://readdy.ai/api/search-image?query=Cozy%20glamping%20tent%20with%20private%20deck%2C%20forest%20setting%2C%20romantic%20atmosphere%2C%20warm%20interior%20lighting%2C%20couple-friendly%20accommodation%2C%20premium%20outdoor%20experience&width=375&height=200&seq=103&orientation=landscape"
             class="w-full h-48 object-cover object-top" alt="포천 숲속 글램핑">
           <button
-            class="absolute top-3 right-3 w-8 h-8 bg-white/80 rounded-full flex items-center justify-center cursor-pointer wishlist-btn"
-            data-id="3">
+            class="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm wishlist-btn">
             <i class="ri-heart-line text-lg text-gray-600"></i>
           </button>
         </div>
@@ -319,16 +382,12 @@
               <span class="text-lg font-bold text-primary">160,000원</span>
               <span class="text-sm text-gray-500">/ 박</span>
             </div>
-            <a href="#" class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium cursor-pointer !rounded-button reservation-btn"
-               data-title="포천 숲속 글램핑"
-               data-region="경기도 포천시"
-               data-price="160000"
-               data-rating="4.7"
-               data-description="숲속 프라이빗 글램핑 • 조용한 휴식"
-               data-distance="차량 1시간 10분"
-               data-facilities="바베큐장,와이파이"
-               data-image="https://readdy.ai/api/search-image?query=Cozy%20glamping%20tent%20with%20private%20deck%2C%20forest%20setting%2C%20romantic%20atmosphere%2C%20warm%20interior%20lighting%2C%20couple-friendly%20accommodation%2C%20premium%20outdoor%20experience&width=375&height=200&seq=103&orientation=landscape"
-               data-badge="">
+            <a href="#"
+              class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium cursor-pointer !rounded-button reservation-btn"
+              data-title="포천 숲속 글램핑" data-region="경기도 포천시" data-price="160000" data-rating="4.7"
+              data-description="숲속 프라이빗 글램핑 • 조용한 휴식" data-distance="차량 1시간 10분" data-facilities="바베큐장,와이파이"
+              data-image="https://readdy.ai/api/search-image?query=Cozy%20glamping%20tent%20with%20private%20deck%2C%20forest%20setting%2C%20romantic%20atmosphere%2C%20warm%20interior%20lighting%2C%20couple-friendly%20accommodation%2C%20premium%20outdoor%20experience&width=375&height=200&seq=103&orientation=landscape"
+              data-badge="">
               예약하기
             </a>
           </div>
@@ -340,8 +399,7 @@
             src="https://readdy.ai/api/search-image?query=Luxury%20glamping%20village%20with%20multiple%20tents%2C%20family-friendly%20outdoor%20resort%2C%20beautiful%20landscape%20setting%2C%20professional%20hospitality%20photography%2C%20premium%20camping%20facilities&width=375&height=200&seq=104&orientation=landscape"
             class="w-full h-48 object-cover object-top" alt="용인 패밀리 글램핑">
           <button
-            class="absolute top-3 right-3 w-8 h-8 bg-white/80 rounded-full flex items-center justify-center cursor-pointer wishlist-btn"
-            data-id="4">
+            class="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm wishlist-btn">
             <i class="ri-heart-line text-lg text-gray-600"></i>
           </button>
         </div>
@@ -374,16 +432,12 @@
               <span class="text-lg font-bold text-primary">140,000원</span>
               <span class="text-sm text-gray-500">/ 박</span>
             </div>
-            <a href="#" class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium cursor-pointer !rounded-button reservation-btn"
-               data-title="용인 패밀리 글램핑"
-               data-region="경기도 용인시"
-               data-price="140000"
-               data-rating="4.5"
-               data-description="가족 단위 추천 글램핑 • 다양한 액티비티"
-               data-distance="차량 40분"
-               data-facilities="수영장,바베큐장,주차장"
-               data-image="https://readdy.ai/api/search-image?query=Luxury%20glamping%20village%20with%20multiple%20tents%2C%20family-friendly%20outdoor%20resort%2C%20beautiful%20landscape%20setting%2C%20professional%20hospitality%20photography%2C%20premium%20camping%20facilities&width=375&height=200&seq=104&orientation=landscape"
-               data-badge="">
+            <a href="#"
+              class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium cursor-pointer !rounded-button reservation-btn"
+              data-title="용인 패밀리 글램핑" data-region="경기도 용인시" data-price="140000" data-rating="4.5"
+              data-description="가족 단위 추천 글램핑 • 다양한 액티비티" data-distance="차량 40분" data-facilities="수영장,바베큐장,주차장"
+              data-image="https://readdy.ai/api/search-image?query=Luxury%20glamping%20village%20with%20multiple%20tents%2C%20family-friendly%20outdoor%20resort%2C%20beautiful%20landscape%20setting%2C%20professional%20hospitality%20photography%2C%20premium%20camping%20facilities&width=375&height=200&seq=104&orientation=landscape"
+              data-badge="">
               예약하기
             </a>
           </div>
@@ -395,8 +449,7 @@
             src="https://readdy.ai/api/search-image?query=Riverside%20glamping%20tents%20with%20water%20view%2C%20peaceful%20natural%20setting%2C%20luxury%20camping%20experience%2C%20serene%20atmosphere%2C%20high-quality%20outdoor%20accommodation%20photography&width=375&height=200&seq=105&orientation=landscape"
             class="w-full h-48 object-cover object-top" alt="남양주 리버사이드 글램핑">
           <button
-            class="absolute top-3 right-3 w-8 h-8 bg-white/80 rounded-full flex items-center justify-center cursor-pointer wishlist-btn"
-            data-id="5">
+            class="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm wishlist-btn">
             <i class="ri-heart-line text-lg text-gray-600"></i>
           </button>
         </div>
@@ -428,16 +481,12 @@
               <span class="text-lg font-bold text-primary">135,000원</span>
               <span class="text-sm text-gray-500">/ 박</span>
             </div>
-            <a href="#" class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium cursor-pointer !rounded-button reservation-btn"
-               data-title="남양주 리버사이드 글램핑"
-               data-region="경기도 남양주시"
-               data-price="135000"
-               data-rating="4.4"
-               data-description="강변 뷰 글램핑 • 수상 액티비티 가능"
-               data-distance="차량 45분"
-               data-facilities="바베큐장,와이파이"
-               data-image="https://readdy.ai/api/search-image?query=Riverside%20glamping%20tents%20with%20water%20view%2C%20peaceful%20natural%20setting%2C%20luxury%20camping%20experience%2C%20serene%20atmosphere%2C%20high-quality%20outdoor%20accommodation%20photography&width=375&height=200&seq=105&orientation=landscape"
-               data-badge="">
+            <a href="#"
+              class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium cursor-pointer !rounded-button reservation-btn"
+              data-title="남양주 리버사이드 글램핑" data-region="경기도 남양주시" data-price="135000" data-rating="4.4"
+              data-description="강변 뷰 글램핑 • 수상 액티비티 가능" data-distance="차량 45분" data-facilities="바베큐장,와이파이"
+              data-image="https://readdy.ai/api/search-image?query=Riverside%20glamping%20tents%20with%20water%20view%2C%20peaceful%20natural%20setting%2C%20luxury%20camping%20experience%2C%20serene%20atmosphere%2C%20high-quality%20outdoor%20accommodation%20photography&width=375&height=200&seq=105&orientation=landscape"
+              data-badge="">
               예약하기
             </a>
           </div>
@@ -449,8 +498,7 @@
             src="https://readdy.ai/api/search-image?query=Mountain%20view%20glamping%20resort%20with%20panoramic%20scenery%2C%20premium%20outdoor%20accommodation%2C%20luxury%20camping%20facilities%2C%20beautiful%20natural%20landscape%2C%20professional%20resort%20photography&width=375&height=200&seq=106&orientation=landscape"
             class="w-full h-48 object-cover object-top" alt="이천 마운틴뷰 글램핑">
           <button
-            class="absolute top-3 right-3 w-8 h-8 bg-white/80 rounded-full flex items-center justify-center cursor-pointer wishlist-btn"
-            data-id="6">
+            class="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm wishlist-btn">
             <i class="ri-heart-line text-lg text-gray-600"></i>
           </button>
         </div>
@@ -482,16 +530,12 @@
               <span class="text-lg font-bold text-primary">170,000원</span>
               <span class="text-sm text-gray-500">/ 박</span>
             </div>
-            <a href="#" class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium cursor-pointer !rounded-button reservation-btn"
-               data-title="이천 마운틴뷰 글램핑"
-               data-region="경기도 이천시"
-               data-price="170000"
-               data-rating="4.6"
-               data-description="산 전망 글램핑 • 일출 명소"
-               data-distance="차량 1시간 20분"
-               data-facilities="바베큐장,주차장"
-               data-image="https://readdy.ai/api/search-image?query=Mountain%20view%20glamping%20resort%20with%20panoramic%20scenery%2C%20premium%20outdoor%20accommodation%2C%20luxury%20camping%20facilities%2C%20beautiful%20natural%20landscape%2C%20professional%20resort%20photography&width=375&height=200&seq=106&orientation=landscape"
-               data-badge="">
+            <a href="#"
+              class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium cursor-pointer !rounded-button reservation-btn"
+              data-title="이천 마운틴뷰 글램핑" data-region="경기도 이천시" data-price="170000" data-rating="4.6"
+              data-description="산 전망 글램핑 • 일출 명소" data-distance="차량 1시간 20분" data-facilities="바베큐장,주차장"
+              data-image="https://readdy.ai/api/search-image?query=Mountain%20view%20glamping%20resort%20with%20panoramic%20scenery%2C%20premium%20outdoor%20accommodation%2C%20luxury%20camping%20facilities%2C%20beautiful%20natural%20landscape%2C%20professional%20resort%20photography&width=375&height=200&seq=106&orientation=landscape"
+              data-badge="">
               예약하기
             </a>
           </div>
@@ -503,72 +547,57 @@
         </button>
       </div>
     </div>
-    <div id="mapView" class="hidden">
-      <div class="relative h-[calc(100vh-140px)]">
-        <div class="w-full h-full bg-cover bg-center"
-          style="background-image: url('https://public.readdy.ai/gen_page/map_placeholder_1280x720.png')">
-          <div class="absolute inset-0 bg-black/10"></div>
-          <div class="absolute top-4 left-4 right-4">
-            <div class="bg-white rounded-lg p-3 shadow-sm">
-              <div class="flex items-center gap-2 text-sm text-gray-600">
-                <i class="ri-map-pin-2-line text-primary"></i>
-                <span>경기도 일대 24개 숙소</span>
+    <div id="mapView">
+      <div class="relative h-full">
+        <!-- 카카오 지도 컨테이너 -->
+        <div id="map" class="w-full h-full bg-gray-100"></div>
+
+        <!-- 숙소 정보 팝업 -->
+        <div id="infoPopup"
+          class="hidden absolute w-[280px] h-[200px] bg-white rounded-xl shadow-2xl z-50 border border-gray-100">
+          <div class="relative h-[80px]">
+            <img id="popupImage" src="" class="w-full h-full object-cover rounded-t-xl" alt="숙소 이미지">
+            <button id="closePopup"
+              class="absolute top-2 right-2 w-6 h-6 flex items-center justify-center bg-black/50 hover:bg-black/70 rounded-full text-white cursor-pointer transition-colors">
+              <i class="ri-close-line text-sm"></i>
+            </button>
+          </div>
+          <div class="p-3 h-[120px] flex flex-col justify-between">
+            <div>
+              <h3 id="popupTitle" class="font-medium text-sm mb-1 truncate"></h3>
+              <div class="flex items-center gap-1 mb-2">
+                <i class="ri-star-fill text-yellow-400 text-xs"></i>
+                <span id="popupRating" class="text-xs"></span>
+                <span class="text-gray-400 text-xs">·</span>
+                <span id="popupReviews" class="text-gray-400 text-xs truncate"></span>
               </div>
             </div>
-          </div>
-          <div class="absolute top-20 left-4">
-            <div
-              class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white text-sm font-medium cursor-pointer">
-              1
-            </div>
-          </div>
-          <div class="absolute top-32 right-8">
-            <div
-              class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white text-sm font-medium cursor-pointer">
-              2
-            </div>
-          </div>
-          <div class="absolute top-40 left-12">
-            <div
-              class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white text-sm font-medium cursor-pointer">
-              3
-            </div>
-          </div>
-          <div class="absolute bottom-32 right-12">
-            <div
-              class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white text-sm font-medium cursor-pointer">
-              4
-            </div>
-          </div>
-          <div class="absolute bottom-40 left-8">
-            <div
-              class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white text-sm font-medium cursor-pointer">
-              5
+            <div class="flex justify-between items-center">
+              <div>
+                <p id="popupPrice" class="font-medium text-primary text-sm"></p>
+                <p class="text-xs text-gray-500">1박 기준</p>
+              </div>
+              <button id="popupDetailBtn"
+                class="px-3 py-1.5 bg-primary hover:bg-primary/90 text-white rounded-lg text-xs cursor-pointer transition-colors">자세히
+                보기</button>
             </div>
           </div>
         </div>
-        <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-xl p-4 shadow-lg">
-          <div class="w-12 h-1 bg-gray-300 rounded-full mx-auto mb-4"></div>
-          <div class="flex items-center gap-3">
-            <img
-              src="https://readdy.ai/api/search-image?query=Luxury%20glamping%20tent%20with%20panoramic%20windows%20surrounded%20by%20forest%2C%20premium%20camping%20experience%2C%20cozy%20interior%20lighting%2C%20evening%20atmosphere%2C%20professional%20photography&width=80&height=80&seq=107&orientation=squarish"
-              class="w-16 h-16 rounded-lg object-cover" alt="선택된 숙소">
-            <div class="flex-1">
-              <h3 class="font-medium">가평 프리미엄 글램핑</h3>
-              <p class="text-sm text-gray-600">경기도 가평군</p>
-              <div class="flex items-center gap-2 mt-1">
-                <div class="flex items-center gap-1">
-                  <i class="ri-star-fill text-yellow-400 text-xs"></i>
-                  <span class="text-xs">4.8</span>
-                </div>
-                <span class="text-sm font-medium text-primary">180,000원</span>
-              </div>
-            </div>
-            <button
-              class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium cursor-pointer !rounded-button">
-              상세보기
-            </button>
-          </div>
+
+        <!-- 지도 컨트롤 -->
+        <div class="absolute bottom-4 right-4 flex flex-col gap-2 z-10">
+          <button id="zoomIn"
+            class="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-md cursor-pointer hover:bg-gray-50">
+            <i class="ri-add-line text-xl"></i>
+          </button>
+          <button id="zoomOut"
+            class="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-md cursor-pointer hover:bg-gray-50">
+            <i class="ri-subtract-line text-xl"></i>
+          </button>
+          <button id="currentLocation"
+            class="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-md cursor-pointer hover:bg-gray-50">
+            <i class="ri-map-pin-user-line text-xl text-primary"></i>
+          </button>
         </div>
       </div>
     </div>
@@ -613,11 +642,11 @@
           <i class="ri-building-line text-xl text-gray-600"></i>
           <span>호텔</span>
         </a>
-        <a href="#" class="flex items-center gap-3">
+        <a href="event.html" class="flex items-center gap-3">
           <i class="ri-gift-line text-xl text-gray-600"></i>
           <span>이벤트</span>
         </a>
-        <a href="#" class="flex items-center gap-3">
+        <a href="customer_service.html" class="flex items-center gap-3">
           <i class="ri-customer-service-line text-xl text-gray-600"></i>
           <span>고객센터</span>
         </a>
@@ -718,11 +747,10 @@
   </div>
   <nav class="fixed bottom-0 left-0 right-0 bg-white border-t">
     <div class="grid grid-cols-6 py-1">
-      <a href="search_map.html"
-        data-readdy="true" class="flex flex-col items-center gap-1 group">
+      <a href="search_map.html?from=nearby" data-readdy="true" class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-map-pin-2-fill text-lg group-hover:text-primary"></i>
+          <i class="ri-map-pin-2-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
         </div>
         <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">내주변</span>
       </a>
@@ -730,7 +758,7 @@
       <a href="./index.html" class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-home-5-fill text-lg group-hover:text-primary"></i>
+          <i class="ri-home-5-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
         </div>
         <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">홈</span>
       </a>
@@ -738,7 +766,7 @@
       <a href="wishlist.html" data-readdy="true" class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-heart-3-fill text-lg group-hover:text-primary"></i>
+          <i class="ri-heart-3-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
         </div>
         <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">찜</span>
       </a>
@@ -746,7 +774,7 @@
       <a href="mypage.html" data-readdy="true" class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-user-3-fill text-lg group-hover:text-primary"></i>
+          <i class="ri-user-3-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
         </div>
         <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">마이</span>
       </a>
@@ -754,116 +782,95 @@
       <button class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-wallet-3-fill text-lg group-hover:text-primary"></i>
+          <i class="ri-wallet-3-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
         </div>
         <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">페이</span>
       </button>
-      <button class="flex flex-col items-center gap-1 group">
+
+      <button id="bottomMenuButton" class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-menu-fill text-lg group-hover:text-primary"></i>
+          <i class="ri-menu-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
         </div>
         <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">전체</span>
       </button>
     </div>
   </nav>
-  <div id="sideMenu"
-    class="fixed top-0 right-0 w-[280px] h-full bg-white transform translate-x-full transition-transform duration-300 z-50 shadow-lg flex flex-col">
-    <div class="flex items-center justify-between p-4 border-b">
-      <h2 class="text-lg font-medium">메뉴</h2>
-      <button id="closeMenu" class="w-8 h-8 flex items-center justify-center">
-        <i class="ri-close-line text-xl"></i>
-      </button>
-    </div>
-    <div class="flex-1 overflow-y-auto">
-      <div class="p-4 border-b">
-        <a href="./login.html" data-readdy="true" class="flex items-center gap-3 py-3 px-4 bg-gray-50 rounded-xl">
-          <i class="ri-user-add-line text-xl text-primary"></i>
-          <span>로그인/회원가입</span>
-        </a>
-      </div>
-      <div class="p-4 space-y-4">
-        <a href="./mypage.html" class="flex items-center gap-3">
-          <i class="ri-calendar-check-line text-xl text-gray-600"></i>
-          <span>예약 내역</span>
-        </a>
-        <a href="search.html" class="flex items-center gap-3">
-          <i class="ri-search-line text-xl text-gray-600"></i>
-          <span>캠핑장 검색</span>
-        </a>
-        <a href="shop_list.html?type=glamping" class="flex items-center gap-3">
-          <i class="ri-home-smile-line text-xl text-gray-600"></i>
-          <span>글램핑</span>
-        </a>
-        <a href="shop_list.html?type=caravan" class="flex items-center gap-3">
-          <i class="ri-caravan-line text-xl text-gray-600"></i>
-          <span>카라반</span>
-        </a>
-        <a href="shop_list.html?type=pension" class="flex items-center gap-3">
-          <i class="ri-hotel-line text-xl text-gray-600"></i>
-          <span>펜션</span>
-        </a>
-        <a href="shop_list.html?type=hotel" class="flex items-center gap-3">
-          <i class="ri-building-line text-xl text-gray-600"></i>
-          <span>호텔</span>
-        </a>
-        <a href="#" class="flex items-center gap-3">
-          <i class="ri-gift-line text-xl text-gray-600"></i>
-          <span>이벤트</span>
-        </a>
-        <a href="#" class="flex items-center gap-3">
-          <i class="ri-customer-service-line text-xl text-gray-600"></i>
-          <span>고객센터</span>
-        </a>
-      </div>
-    </div>
-  </div>
   <script id="sideMenuScript">
     document.addEventListener('DOMContentLoaded', function () {
-      const menuButton = document.querySelector('button:has(i.ri-menu-fill)');
+      const menuButton = document.getElementById('menuButton');
       const closeMenu = document.getElementById('closeMenu');
       const sideMenu = document.getElementById('sideMenu');
-      
+
       if (menuButton) {
         menuButton.addEventListener('click', function () {
           sideMenu.classList.remove('translate-x-full');
         });
       }
-      
+
       if (closeMenu) {
         closeMenu.addEventListener('click', function () {
           sideMenu.classList.add('translate-x-full');
         });
       }
-      
+
       document.addEventListener('click', function (event) {
-        if (sideMenu && !sideMenu.contains(event.target) && !menuButton?.contains(event.target)) {
+        if (sideMenu && menuButton && !sideMenu.contains(event.target) && !menuButton.contains(event.target)) {
           sideMenu.classList.add('translate-x-full');
         }
       });
     });
   </script>
   <script id="viewToggleScript">
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', () => {
       const listViewBtn = document.getElementById('listViewBtn');
       const mapViewBtn = document.getElementById('mapViewBtn');
       const listView = document.getElementById('listView');
       const mapView = document.getElementById('mapView');
-      listViewBtn.addEventListener('click', function () {
-        listView.classList.remove('hidden');
-        mapView.classList.add('hidden');
+
+      listViewBtn.addEventListener('click', () => {
+        // 리스트 뷰 활성화
+        listView.style.opacity = '1';
+        listView.style.zIndex = '20';
+        listView.style.pointerEvents = 'auto';
+        mapView.style.opacity = '0';
+        mapView.style.zIndex = '10';
+        mapView.style.pointerEvents = 'none';
+        mapView.classList.remove('show');
+
+        // 버튼 스타일 토글
         listViewBtn.classList.add('bg-primary', 'text-white');
-        listViewBtn.classList.remove('bg-gray-100');
         mapViewBtn.classList.remove('bg-primary', 'text-white');
-        mapViewBtn.classList.add('bg-gray-100');
       });
-      mapViewBtn.addEventListener('click', function () {
-        mapView.classList.remove('hidden');
-        listView.classList.add('hidden');
+
+      mapViewBtn.addEventListener('click', () => {
+        // 맵 뷰 활성화
+        mapView.style.opacity = '1';
+        mapView.style.zIndex = '20';
+        mapView.style.pointerEvents = 'auto';
+        mapView.classList.add('show');
+        listView.style.opacity = '0';
+        listView.style.zIndex = '10';
+        listView.style.pointerEvents = 'none';
+
+        // 버튼 스타일 토글
         mapViewBtn.classList.add('bg-primary', 'text-white');
-        mapViewBtn.classList.remove('bg-gray-100');
         listViewBtn.classList.remove('bg-primary', 'text-white');
-        listViewBtn.classList.add('bg-gray-100');
+
+        console.log('지도 뷰 활성화됨');
+
+        // 보인다 싶을 때 리사이즈 & 센터 재설정
+        if (typeof kakao !== 'undefined' && kakao.maps && window.map) {
+          console.log('지도 리사이즈 실행');
+          setTimeout(() => {
+            kakao.maps.event.trigger(window.map, 'resize');
+            if (window.mapCenter) {
+              window.map.setCenter(window.mapCenter);
+            }
+          }, 100);
+        } else {
+          console.warn('지도 객체가 없습니다:', { kakao: typeof kakao, map: window.map });
+        }
       });
     });
   </script>
@@ -896,26 +903,59 @@
     });
   </script>
   <script id="wishlistScript">
-    document.addEventListener('DOMContentLoaded', function () {
-      let wishlist = [];
-      document.querySelectorAll('.wishlist-btn').forEach(button => {
-        button.addEventListener('click', function (e) {
-          e.stopPropagation();
-          const id = this.dataset.id;
-          const heartIcon = this.querySelector('i');
-          if (wishlist.includes(id)) {
-            wishlist = wishlist.filter(item => item !== id);
-            heartIcon.classList.remove('ri-heart-fill', 'text-red-500');
-            heartIcon.classList.add('ri-heart-line', 'text-gray-600');
+    // 통일된 위시리스트 토글 기능
+    document.addEventListener('click', function (e) {
+      if (e.target.closest('.wishlist-btn')) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const button = e.target.closest('.wishlist-btn');
+        const icon = button.querySelector('i');
+
+        // 토글 애니메이션
+        button.style.transform = 'scale(0.8)';
+
+        setTimeout(() => {
+          if (icon.classList.contains('ri-heart-line')) {
+            // 빈 하트 → 채워진 하트
+            icon.classList.remove('ri-heart-line');
+            icon.classList.add('ri-heart-fill');
+            button.classList.add('active');
+            icon.style.color = '#ef4444';
           } else {
-            wishlist.push(id);
+            // 채워진 하트 → 빈 하트
+            icon.classList.remove('ri-heart-fill');
+            icon.classList.add('ri-heart-line');
+            button.classList.remove('active');
+            icon.style.color = '';
+          }
+
+          button.style.transform = 'scale(1)';
+        }, 100);
+      }
+    });
+
+    // 기존 위시리스트 기능 (하위 호환성)
+    document.addEventListener('DOMContentLoaded', function () {
+      const wishlistBtns = document.querySelectorAll('.wishlist-btn');
+
+      wishlistBtns.forEach(btn => {
+        btn.addEventListener('click', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          const heartIcon = this.querySelector('i');
+          const isWishlisted = heartIcon.classList.contains('ri-heart-fill');
+
+          if (!isWishlisted) {
             heartIcon.classList.remove('ri-heart-line', 'text-gray-600');
             heartIcon.classList.add('ri-heart-fill', 'text-red-500');
-            heartIcon.classList.add('heart-animation');
-            setTimeout(() => {
-              heartIcon.classList.remove('heart-animation');
-            }, 300);
+          } else {
+            heartIcon.classList.add('ri-heart-line', 'text-gray-600');
+            heartIcon.classList.remove('ri-heart-fill', 'text-red-500');
           }
+
+          console.log('위시리스트 상태 변경:', !isWishlisted);
         });
       });
     });
@@ -984,30 +1024,30 @@
       const pet = urlParams.get('pet') || 'false';
       const facilities = urlParams.get('facilities') || '';
       const mbti = urlParams.get('mbti') || '';
-      
+
       // AI 분석 결과 텍스트 업데이트
       const aiResultText = document.querySelector('.px-4.py-2.bg-primary\\/5 p');
       if (aiResultText) {
         // 숙소 개수는 랜덤하게 생성 (실제로는 API에서 받아올 데이터)
         const accommodationCount = Math.floor(Math.random() * 30) + 15; // 15-44개
-        
+
         // 지역 정보 처리 (첫 번째 지역만 표시)
         const firstRegion = regions.split(',')[0];
-        
+
         // 반려동물 정보 추가
         const petInfo = pet === 'true' ? ', 반려동물 동반' : '';
-        
+
         aiResultText.innerHTML = `
           <span class="font-medium text-primary">AI 분석 결과:</span> ${people}, ${style}, ${budget}만원 예산${petInfo}으로 <span class="font-medium">${accommodationCount}개</span> 숙소를 찾았어요
         `;
       }
-      
+
       // 예약하기 버튼 클릭 이벤트 추가
       document.querySelectorAll('.reservation-btn').forEach((btn) => {
-        btn.addEventListener('click', function(e) {
+        btn.addEventListener('click', function (e) {
           e.preventDefault();
           e.stopPropagation(); // 부모 요소의 클릭 이벤트 방지
-          
+
           // 예약하기 버튼에서 직접 숙소 정보 읽기
           const title = this.dataset.title || '';
           const region = this.dataset.region || '';
@@ -1018,10 +1058,10 @@
           const facilities = this.dataset.facilities || '';
           const image = this.dataset.image || '';
           const badge = this.dataset.badge || '';
-          
+
           // 상세보기 페이지로 이동하면서 숙소 정보와 설문 데이터 전달
           const params = new URLSearchParams();
-          
+
           // 숙소 정보
           params.append('title', title);
           params.append('region', region);
@@ -1032,7 +1072,7 @@
           params.append('facilities', facilities);
           params.append('image', image);
           params.append('badge', badge);
-          
+
           // 설문 데이터도 함께 전달
           params.append('survey_people', people);
           params.append('survey_style', style);
@@ -1041,12 +1081,12 @@
           params.append('survey_pet', pet);
           params.append('survey_facilities', facilities);
           params.append('survey_mbti', mbti);
-          
+
           // shop_detail.html로 이동
           window.location.href = `shop_detail.html?${params.toString()}`;
         });
       });
-      
+
       // 추가 정보를 콘솔에 출력 (디버깅용)
       console.log('설문 데이터:', {
         people,
@@ -1059,22 +1099,783 @@
       });
     });
   </script>
-  <script id="sideMenuScript">
+  <script id="mapIntegrationScript">
     document.addEventListener('DOMContentLoaded', function () {
-      const menuButton = document.getElementById('menuButton');
-      const closeMenu = document.getElementById('closeMenu');
-      const sideMenu = document.getElementById('sideMenu');
-      menuButton.addEventListener('click', function () {
-        sideMenu.classList.remove('translate-x-full');
-      });
-      closeMenu.addEventListener('click', function () {
-        sideMenu.classList.add('translate-x-full');
-      });
-      document.addEventListener('click', function (event) {
-        if (!sideMenu.contains(event.target) && !menuButton.contains(event.target)) {
-          sideMenu.classList.add('translate-x-full');
+      const defaultCoords = { lat: 37.8315, lng: 127.5109 }; // 위치 권한 거부 시 fallback
+      let map = null;
+      let userLocation = null;
+      let mapMarkers = [];
+
+      // 숙소 데이터 (실제로는 API에서 받아올 데이터)
+      const accommodations = [
+        {
+          id: 1,
+          title: '가평 프리미엄 글램핑',
+          type: 'glamping',
+          region: '경기도 가평군',
+          price: '180,000원',
+          rating: '4.8',
+          reviews: '리뷰 128개',
+          description: '자연 속 럭셔리 글램핑 체험 • 반려동물 동반 가능',
+          distance: '차량 1시간',
+          facilities: '수영장,바베큐장,와이파이',
+          image: 'https://readdy.ai/api/search-image?query=Luxury%20glamping%20tent%20with%20panoramic%20windows%20surrounded%20by%20forest%2C%20premium%20camping%20experience%2C%20cozy%20interior%20lighting%2C%20evening%20atmosphere%2C%20professional%20photography%2C%20high-quality%20resort%20accommodation&width=375&height=200&seq=101&orientation=landscape',
+          badge: 'AI 추천',
+          lat: 37.8315 + (Math.random() - 0.5) * 0.02,
+          lng: 127.5109 + (Math.random() - 0.5) * 0.02
+        },
+        {
+          id: 2,
+          title: '양평 힐링 글램핑',
+          type: 'glamping',
+          region: '경기도 양평군',
+          price: '150,000원',
+          rating: '4.6',
+          reviews: '리뷰 95개',
+          description: '계곡 옆 힐링 글램핑 • 커플 추천',
+          distance: '차량 50분',
+          facilities: '바베큐장,와이파이,주차장',
+          image: 'https://readdy.ai/api/search-image?query=Modern%20glamping%20dome%20with%20mountain%20view%2C%20luxury%20outdoor%20accommodation%2C%20comfortable%20interior%20setup%2C%20sunset%20lighting%2C%20high-quality%20photography%2C%20romantic%20couple-friendly%20atmosphere&width=375&height=200&seq=102&orientation=landscape',
+          badge: '인기',
+          lat: 37.8315 + (Math.random() - 0.5) * 0.02,
+          lng: 127.5109 + (Math.random() - 0.5) * 0.02
+        },
+        {
+          id: 3,
+          title: '포천 숲속 글램핑',
+          type: 'glamping',
+          region: '경기도 포천시',
+          price: '160,000원',
+          rating: '4.7',
+          reviews: '리뷰 156개',
+          description: '숲속 프라이빗 글램핑 • 조용한 휴식',
+          distance: '차량 1시간 10분',
+          facilities: '바베큐장,와이파이',
+          image: 'https://readdy.ai/api/search-image?query=Cozy%20glamping%20tent%20with%20private%20deck%2C%20forest%20setting%2C%20romantic%20atmosphere%2C%20warm%20interior%20lighting%2C%20couple-friendly%20accommodation%2C%20premium%20outdoor%20experience&width=375&height=200&seq=103&orientation=landscape',
+          badge: '',
+          lat: 37.8315 + (Math.random() - 0.5) * 0.02,
+          lng: 127.5109 + (Math.random() - 0.5) * 0.02
+        },
+        {
+          id: 4,
+          title: '용인 패밀리 글램핑',
+          type: 'glamping',
+          region: '경기도 용인시',
+          price: '140,000원',
+          rating: '4.5',
+          reviews: '리뷰 89개',
+          description: '가족 단위 추천 글램핑 • 다양한 액티비티',
+          distance: '차량 40분',
+          facilities: '수영장,바베큐장,주차장',
+          image: 'https://readdy.ai/api/search-image?query=Luxury%20glamping%20village%20with%20multiple%20tents%2C%20family-friendly%20outdoor%20resort%2C%20beautiful%20landscape%20setting%2C%20professional%20hospitality%20photography%2C%20premium%20camping%20facilities&width=375&height=200&seq=104&orientation=landscape',
+          badge: '',
+          lat: 37.8315 + (Math.random() - 0.5) * 0.02,
+          lng: 127.5109 + (Math.random() - 0.5) * 0.02
+        },
+        {
+          id: 5,
+          title: '남양주 리버사이드 글램핑',
+          type: 'glamping',
+          region: '경기도 남양주시',
+          price: '135,000원',
+          rating: '4.4',
+          reviews: '리뷰 112개',
+          description: '강변 뷰 글램핑 • 수상 액티비티 가능',
+          distance: '차량 45분',
+          facilities: '바베큐장,와이파이',
+          image: 'https://readdy.ai/api/search-image?query=Riverside%20glamping%20tents%20with%20water%20view%2C%20peaceful%20natural%20setting%2C%20luxury%20camping%20experience%2C%20serene%20atmosphere%2C%20high-quality%20outdoor%20accommodation%20photography&width=375&height=200&seq=105&orientation=landscape',
+          badge: '',
+          lat: 37.8315 + (Math.random() - 0.5) * 0.02,
+          lng: 127.5109 + (Math.random() - 0.5) * 0.02
+        },
+        {
+          id: 6,
+          title: '이천 마운틴뷰 글램핑',
+          type: 'glamping',
+          region: '경기도 이천시',
+          price: '170,000원',
+          rating: '4.6',
+          reviews: '리뷰 78개',
+          description: '산 전망 글램핑 • 일출 명소',
+          distance: '차량 1시간 20분',
+          facilities: '바베큐장,주차장',
+          image: 'https://readdy.ai/api/search-image?query=Mountain%20view%20glamping%20resort%20with%20panoramic%20scenery%2C%20premium%20outdoor%20accommodation%2C%20luxury%20camping%20facilities%2C%20beautiful%20natural%20landscape%2C%20professional%20resort%20photography&width=375&height=200&seq=106&orientation=landscape',
+          badge: '',
+          lat: 37.8315 + (Math.random() - 0.5) * 0.02,
+          lng: 127.5109 + (Math.random() - 0.5) * 0.02
+        }
+      ];
+
+      // 사용자 위치 가져오기 함수
+      async function getUserLocation() {
+        return new Promise((resolve, reject) => {
+          if (!navigator.geolocation) {
+            reject(new Error('이 브라우저는 위치 정보를 지원하지 않습니다.'));
+            return;
+          }
+
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              resolve({
+                lat: position.coords.latitude,
+                lng: position.coords.longitude,
+                accuracy: position.coords.accuracy
+              });
+            },
+            (error) => {
+              let errorMessage = '';
+              switch (error.code) {
+                case error.PERMISSION_DENIED:
+                  errorMessage = '위치 정보 접근이 거부되었습니다.';
+                  break;
+                case error.POSITION_UNAVAILABLE:
+                  errorMessage = '위치 정보를 사용할 수 없습니다.';
+                  break;
+                case error.TIMEOUT:
+                  errorMessage = '위치 정보 요청 시간이 초과되었습니다.';
+                  break;
+                default:
+                  errorMessage = '알 수 없는 오류가 발생했습니다.';
+                  break;
+              }
+              reject(new Error(errorMessage));
+            },
+            {
+              enableHighAccuracy: true,
+              timeout: 10000,
+              maximumAge: 60000
+            }
+          );
+        });
+      }
+
+      // 위치 기반 접근 확인
+      function isLocationBasedAccess() {
+        // URL 파라미터나 다른 조건으로 위치 기반 접근 여부 확인
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('from') === 'nearby';
+      }
+
+      // 위치 알림 표시 함수
+      function showLocationNotification(message, type = 'info') {
+        console.log(`[${type.toUpperCase()}] ${message}`);
+        // 실제 구현에서는 토스트 알림을 표시할 수 있습니다
+      }
+
+      // 사용자 위치 주변으로 숙소 재배치
+      function relocateAccommodationsNearUser(userLat, userLng) {
+        console.log('사용자 위치 주변으로 숙소 재배치 시작:', { userLat, userLng });
+
+        const latRange = 0.02; // 약 2km
+        const lngRange = 0.02;
+        const usedPositions = [];
+
+        accommodations.forEach((accommodation, index) => {
+          console.log(`${accommodation.title} 재배치 중...`);
+
+          let attempts = 0;
+          let validPosition = false;
+          let newLat, newLng;
+
+          // 적절한 위치 찾기 (최대 10회 시도)
+          while (attempts < 10 && !validPosition) {
+            attempts++;
+
+            // 사용자 위치 주변 랜덤 위치 생성
+            newLat = userLat + (Math.random() - 0.5) * latRange;
+            newLng = userLng + (Math.random() - 0.5) * lngRange;
+
+            // 기존 위치와 겹치지 않는지 확인
+            validPosition = !usedPositions.some(pos =>
+              Math.abs(pos.lat - newLat) < 0.005 && Math.abs(pos.lng - newLng) < 0.005
+            );
+          }
+
+          // 적절한 위치를 찾지 못한 경우 강제로 원형 배치
+          if (!validPosition) {
+            console.warn(`${accommodation.title}: 적절한 위치를 찾지 못해 원형 배치 사용`);
+            const angle = (index * Math.PI * 2) / accommodations.length;
+            const distance = Math.min(latRange, lngRange) * 0.6;
+            newLat = userLat + Math.cos(angle) * distance;
+            newLng = userLng + Math.sin(angle) * distance;
+          }
+
+          const oldLat = accommodation.lat;
+          const oldLng = accommodation.lng;
+
+          accommodation.lat = newLat;
+          accommodation.lng = newLng;
+
+          // 사용된 위치에 추가
+          usedPositions.push({ lat: newLat, lng: newLng });
+
+          console.log(`${accommodation.title}: (${oldLat.toFixed(6)}, ${oldLng.toFixed(6)}) → (${accommodation.lat.toFixed(6)}, ${accommodation.lng.toFixed(6)}) [시도: ${attempts}회]`);
+        });
+
+        console.log('재배치 후 숙소 위치들:', accommodations.map(acc => ({ title: acc.title, lat: acc.lat.toFixed(6), lng: acc.lng.toFixed(6) })));
+        console.log('사용자 위치 주변으로 숙소 재배치 완료');
+      }
+
+      // 기존 마커 모두 제거
+      function clearAllMarkers() {
+        console.log(`기존 마커 ${mapMarkers.length}개 제거 시작`);
+
+        mapMarkers.forEach((marker, index) => {
+          try {
+            if (marker && marker.setMap) {
+              marker.setMap(null);
+              console.log(`마커 ${index + 1} 제거됨`);
+            }
+          } catch (error) {
+            console.error(`마커 ${index + 1} 제거 중 오류:`, error);
+          }
+        });
+
+        mapMarkers.length = 0; // 배열 완전히 비우기
+        console.log('기존 마커 모두 제거 완료. mapMarkers 길이:', mapMarkers.length);
+      }
+
+      // 지도 초기화
+      async function initMap() {
+        const container = document.getElementById('map');
+        let centerLat = 37.8315; // 기본 가평 좌표
+        let centerLng = 127.5109;
+        let mapLevel = 5;
+
+        // 위치 기반 접근인지 확인
+        if (isLocationBasedAccess()) {
+          try {
+            console.log('위치 기반 접근 감지 - 사용자 현재 위치 가져오는 중...');
+
+            // 사용자 현재 위치 가져오기
+            userLocation = await getUserLocation();
+            centerLat = userLocation.lat;
+            centerLng = userLocation.lng;
+            mapLevel = 4; // 조금 더 확대
+
+            console.log(`지도 중심을 사용자 위치로 설정: (${centerLat}, ${centerLng})`);
+
+            // 사용자에게 위치 기반 서비스 시작을 알림
+            showLocationNotification('현재 위치 기반으로 주변 숙소를 찾고 있습니다.');
+
+          } catch (error) {
+            console.error('위치 정보 가져오기 실패:', error);
+
+            // 위치 정보를 가져올 수 없는 경우 사용자에게 알림
+            showLocationNotification('위치 정보를 가져올 수 없어 기본 지역(가평)으로 설정합니다.', 'warning');
+          }
+        }
+
+        const options = {
+          center: new kakao.maps.LatLng(centerLat, centerLng),
+          level: mapLevel
+        };
+
+        map = new kakao.maps.Map(container, options);
+        window.map = map;
+        window.mapCenter = new kakao.maps.LatLng(centerLat, centerLng);
+
+        // 사용자 위치가 있는 경우 사용자 위치 마커 추가
+        if (userLocation) {
+          addUserLocationMarker(userLocation.lat, userLocation.lng);
+        }
+
+        // 지도 컨트롤 이벤트
+        setupMapControls();
+
+        // 지도 로딩 완료 후 마커 재배치 및 생성
+        setTimeout(() => {
+          // 위치 기반 접근인 경우 마커 재배치
+          if (userLocation) {
+            relocateAccommodationsNearUser(userLocation.lat, userLocation.lng);
+          }
+
+          // 마커 생성
+          createMarkers();
+        }, 800); // 지연 시간 증가
+
+        console.log('카카오 지도 초기화 완료');
+      }
+
+      // 사용자 위치 마커 추가
+      function addUserLocationMarker(lat, lng) {
+        const userMarkerContent = `
+          <div class="relative">
+            <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
+              <i class="ri-user-location-fill text-white text-sm"></i>
+            </div>
+          </div>
+        `;
+
+        const userMarker = new kakao.maps.CustomOverlay({
+          position: new kakao.maps.LatLng(lat, lng),
+          content: userMarkerContent,
+          yAnchor: 0.5,
+          zIndex: 200
+        });
+
+        userMarker.setMap(map);
+        console.log('사용자 위치 마커 추가됨:', { lat, lng });
+      }
+
+      // 마커 생성 함수
+      function createMarkers() {
+        console.log('=== 마커 생성 시작 ===');
+        mapMarkers = [];
+
+        accommodations.forEach((accommodation, index) => {
+          console.log(`마커 ${index + 1} 생성 중:`, accommodation.title, `위치: (${accommodation.lat.toFixed(6)}, ${accommodation.lng.toFixed(6)})`);
+
+          try {
+            // 커스텀 마커 HTML 생성
+            const markerContent = `
+              <div class="relative marker-${index}" data-accommodation-id="${accommodation.id}">
+                <div class="w-[90px] h-[36px] flex items-center justify-center bg-primary text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 cursor-pointer marker-clickable">
+                  <span class="text-sm font-medium">${accommodation.price}</span>
+                </div>
+              </div>
+            `;
+
+            // 커스텀 오버레이 생성
+            const customOverlay = new kakao.maps.CustomOverlay({
+              position: new kakao.maps.LatLng(accommodation.lat, accommodation.lng),
+              content: markerContent,
+              yAnchor: 0.5,
+              zIndex: 100 + index
+            });
+
+            // 지도에 마커 추가
+            customOverlay.setMap(map);
+            mapMarkers.push(customOverlay);
+
+            // 마커가 실제로 추가되었는지 확인
+            if (customOverlay.getMap()) {
+              console.log(`✅ 마커 ${index + 1} (${accommodation.title}) 성공적으로 추가됨`);
+            } else {
+              console.error(`❌ 마커 ${index + 1} (${accommodation.title}) 추가 실패`);
+            }
+
+            // 지연 후 마커 클릭 이벤트 바인딩 (DOM이 완전히 로드된 후)
+            setTimeout(() => {
+              const markerElement = document.querySelector(`.marker-${index}`);
+              console.log(`마커 ${index + 1} DOM 요소 찾기:`, markerElement ? '성공' : '실패');
+
+              if (markerElement) {
+                // 기존 이벤트 리스너 제거 (중복 방지)
+                markerElement.removeEventListener('click', markerElement.clickHandler);
+
+                // 새로운 클릭 핸들러 정의
+                markerElement.clickHandler = function (event) {
+                  console.log(`🎯 마커 ${index + 1} 클릭됨: ${accommodation.title}`);
+                  console.log(`클릭한 마커 위치: (${accommodation.lat.toFixed(6)}, ${accommodation.lng.toFixed(6)})`);
+
+                  // 이벤트 버블링 방지
+                  event.stopPropagation();
+                  event.preventDefault();
+
+                  // 다른 팝업이 열려있으면 먼저 닫기
+                  const existingPopup = document.getElementById('infoPopup');
+                  if (existingPopup && !existingPopup.classList.contains('hidden')) {
+                    existingPopup.classList.add('hidden');
+                  }
+
+                  console.log('showAccommodationPopup 호출 시작');
+
+                  // 실제 클릭한 화면 좌표 사용 (가장 정확한 방법)
+                  const mapContainer = document.getElementById('map');
+                  const mapRect = mapContainer.getBoundingClientRect();
+
+                  // 클릭한 화면 좌표를 지도 컨테이너 기준 상대 좌표로 변환
+                  const clickPosition = {
+                    x: event.clientX - mapRect.left,
+                    y: event.clientY - mapRect.top
+                  };
+
+                  console.log('실제 클릭 위치 계산:', {
+                    clientX: event.clientX,
+                    clientY: event.clientY,
+                    mapRect: {
+                      left: mapRect.left,
+                      top: mapRect.top,
+                      width: mapRect.width,
+                      height: mapRect.height
+                    },
+                    relative: clickPosition
+                  });
+
+                  // 클릭 위치가 지도 영역 내에 있는지 확인
+                  if (clickPosition.x >= 0 && clickPosition.x <= mapRect.width &&
+                    clickPosition.y >= 0 && clickPosition.y <= mapRect.height) {
+                    console.log('✅ 클릭 위치가 지도 영역 내에 있음');
+                  } else {
+                    console.log('⚠️ 클릭 위치가 지도 영역을 벗어남');
+                  }
+
+                  // 숙소 정보와 함께 클릭 위치도 전달
+                  showAccommodationPopup(accommodation, clickPosition);
+                };
+
+                // 클릭 이벤트 리스너 추가
+                markerElement.addEventListener('click', markerElement.clickHandler);
+                console.log(`✅ 마커 ${index + 1} 클릭 이벤트 바인딩 완료`);
+              } else {
+                console.error(`❌ 마커 ${index + 1} DOM 요소를 찾을 수 없음`);
+              }
+            }, 200); // 지연 시간 증가
+
+          } catch (error) {
+            console.error(`❌ 마커 ${index + 1} (${accommodation.title}) 생성 실패:`, error);
+          }
+        });
+
+        console.log(`=== 마커 생성 완료: 총 ${mapMarkers.length}개 ===`);
+      }
+
+      // 숙소 정보 팝업 표시
+      function showAccommodationPopup(accommodation, clickPosition) {
+        console.log('🔥 showAccommodationPopup 함수 호출됨:', accommodation.title);
+        console.log('전달받은 클릭 위치:', clickPosition);
+
+        const popup = document.getElementById('infoPopup');
+        const popupImage = document.getElementById('popupImage');
+        const popupTitle = document.getElementById('popupTitle');
+        const popupRating = document.getElementById('popupRating');
+        const popupReviews = document.getElementById('popupReviews');
+        const popupPrice = document.getElementById('popupPrice');
+        const popupDetailBtn = document.getElementById('popupDetailBtn');
+
+        console.log('팝업 DOM 요소들 확인:', {
+          popup: popup ? '✅' : '❌',
+          popupImage: popupImage ? '✅' : '❌',
+          popupTitle: popupTitle ? '✅' : '❌',
+          popupRating: popupRating ? '✅' : '❌',
+          popupReviews: popupReviews ? '✅' : '❌',
+          popupPrice: popupPrice ? '✅' : '❌',
+          popupDetailBtn: popupDetailBtn ? '✅' : '❌'
+        });
+
+        if (!popup) {
+          console.error('❌ 팝업 요소를 찾을 수 없습니다!');
+          return;
+        }
+
+        try {
+          // 팝업 내용 업데이트
+          console.log('팝업 내용 업데이트 시작...');
+
+          if (popupImage) {
+            popupImage.src = accommodation.image;
+            console.log('이미지 URL 설정:', accommodation.image);
+          }
+
+          if (popupTitle) {
+            popupTitle.textContent = accommodation.title;
+            console.log('제목 설정:', accommodation.title);
+          }
+
+          if (popupRating) {
+            popupRating.textContent = accommodation.rating;
+            console.log('평점 설정:', accommodation.rating);
+          }
+
+          if (popupReviews) {
+            popupReviews.textContent = accommodation.reviews;
+            console.log('리뷰 설정:', accommodation.reviews);
+          }
+
+          if (popupPrice) {
+            popupPrice.textContent = accommodation.price;
+            console.log('가격 설정:', accommodation.price);
+          }
+
+          // 상세보기 버튼 이벤트
+          if (popupDetailBtn) {
+            popupDetailBtn.onclick = function () {
+              console.log('상세보기 버튼 클릭됨');
+              // shop_detail.html로 이동 (숙소 정보 전달)
+              const params = new URLSearchParams();
+              params.append('title', accommodation.title);
+              params.append('price', accommodation.price.replace(/[₩,]/g, ''));
+              params.append('rating', accommodation.rating);
+              params.append('image', accommodation.image);
+              params.append('type', accommodation.type);
+
+              window.location.href = `shop_detail.html?${params.toString()}`;
+            };
+          }
+
+          // 팝업 위치 계산 - 클릭 위치를 최우선으로 사용
+          const mapContainer = document.getElementById('map');
+
+          console.log('지도 컨테이너 정보:', {
+            width: mapContainer.offsetWidth,
+            height: mapContainer.offsetHeight
+          });
+
+          // 팝업 크기 (고정)
+          const popupWidth = 280;
+          const popupHeight = 200;
+
+          let popupX, popupY;
+
+          // 클릭 위치가 전달된 경우 이를 직접 사용 (지도 컨테이너 기준)
+          if (clickPosition) {
+            console.log('✅ 실제 클릭 위치 사용:', clickPosition);
+
+            // 클릭 위치 기준으로 팝업 배치
+            popupX = clickPosition.x + 15; // 클릭 위치에서 15px 오른쪽
+            popupY = clickPosition.y - (popupHeight / 2); // 클릭 위치를 팝업 중앙에 맞춤
+
+            console.log('초기 팝업 위치:', `(${popupX}, ${popupY})`);
+
+            // 지도 컨테이너 경계 체크 및 조정
+            const mapWidth = mapContainer.offsetWidth;
+            const mapHeight = mapContainer.offsetHeight;
+
+            // 오른쪽 경계 체크
+            if (popupX + popupWidth > mapWidth) {
+              popupX = clickPosition.x - popupWidth - 15; // 클릭 위치 왼쪽에 배치
+              console.log('팝업을 클릭 위치 왼쪽에 배치');
+            }
+
+            // 위쪽 경계 체크
+            if (popupY < 0) {
+              popupY = 10;
+              console.log('팝업을 위쪽 경계에 맞춤');
+            }
+
+            // 아래쪽 경계 체크
+            if (popupY + popupHeight > mapHeight) {
+              popupY = mapHeight - popupHeight - 10;
+              console.log('팝업을 아래쪽 경계에 맞춤');
+            }
+
+            // 왼쪽 경계 체크 (팝업이 왼쪽으로 이동했을 때)
+            if (popupX < 0) {
+              popupX = 10;
+              popupY = clickPosition.y + 15; // 클릭 위치 아래쪽에 배치
+
+              // 아래쪽으로 이동 후 다시 경계 체크
+              if (popupY + popupHeight > mapHeight) {
+                popupY = clickPosition.y - popupHeight - 15; // 클릭 위치 위쪽에 배치
+              }
+              console.log('팝업을 클릭 위치 아래쪽/위쪽에 배치');
+            }
+
+          } else {
+            console.log('❌ 클릭 위치가 없어서 중앙 배치');
+            // 클릭 위치가 없는 경우 지도 중앙에 배치
+            popupX = (mapContainer.offsetWidth - popupWidth) / 2;
+            popupY = (mapContainer.offsetHeight - popupHeight) / 2;
+          }
+
+          console.log(`🎯 최종 팝업 위치: (${popupX}, ${popupY})`);
+          console.log(`🎯 클릭 위치: (${clickPosition ? clickPosition.x : 'N/A'}, ${clickPosition ? clickPosition.y : 'N/A'})`);
+
+          if (clickPosition) {
+            const distanceX = Math.abs(popupX - clickPosition.x);
+            const distanceY = Math.abs(popupY + popupHeight / 2 - clickPosition.y);
+            console.log(`🎯 팝업과 클릭 위치의 거리: X=${distanceX}px, Y=${distanceY}px`);
+          }
+
+          // 팝업 위치 설정 (지도 컨테이너 기준 절대 위치)
+          console.log('팝업 스타일 설정 중...');
+          popup.style.left = `${popupX}px`;
+          popup.style.top = `${popupY}px`;
+          popup.style.position = 'absolute';
+
+          // 팝업 표시
+          console.log('팝업 표시 중...');
+          popup.classList.remove('hidden');
+
+          // 표시 확인
+          setTimeout(() => {
+            const isVisible = !popup.classList.contains('hidden');
+            console.log('팝업 표시 상태 확인:', isVisible ? '✅ 표시됨' : '❌ 숨겨짐');
+
+            if (isVisible) {
+              const computedStyle = window.getComputedStyle(popup);
+              console.log('팝업 computed 스타일:', {
+                display: computedStyle.display,
+                visibility: computedStyle.visibility,
+                opacity: computedStyle.opacity,
+                left: computedStyle.left,
+                top: computedStyle.top,
+                zIndex: computedStyle.zIndex
+              });
+            }
+          }, 50);
+
+          console.log('✅ 숙소 팝업 표시 완료:', accommodation.title, `위치: (${popupX}, ${popupY})`);
+
+        } catch (error) {
+          console.error('❌ 팝업 표시 중 오류 발생:', error);
+        }
+      }
+
+      // 지도 플레이스홀더 표시
+      function showMapPlaceholder() {
+        const mapContainer = document.getElementById('map');
+        if (mapContainer) {
+          mapContainer.innerHTML = `
+            <div class="w-full h-full flex items-center justify-center bg-gray-100 text-gray-500 rounded-xl">
+              <div class="text-center">
+                <i class="ri-map-2-line text-4xl mb-2"></i>
+                <p>지도를 불러올 수 없습니다</p>
+                <p class="text-sm">잠시 후 다시 시도해주세요</p>
+              </div>
+            </div>
+          `;
+        }
+      }
+
+      // 팝업 닫기 이벤트
+      document.addEventListener('click', function (e) {
+        const popup = document.getElementById('infoPopup');
+        const closeBtn = document.getElementById('closePopup');
+
+        if (popup && !popup.classList.contains('hidden')) {
+          if (e.target === closeBtn || e.target === popup) {
+            popup.classList.add('hidden');
+            console.log('팝업 닫힘');
+          }
         }
       });
+
+      // 지도 클릭 시 팝업 닫기
+      if (map) {
+        kakao.maps.event.addListener(map, 'click', function () {
+          const popup = document.getElementById('infoPopup');
+          if (popup && !popup.classList.contains('hidden')) {
+            popup.classList.add('hidden');
+            console.log('지도 클릭으로 팝업 닫힘');
+          }
+        });
+      }
+
+      // 카카오 지도 API 로드 확인 후 지도 초기화
+      if (typeof kakao !== 'undefined' && kakao.maps) {
+        kakao.maps.load(function () {
+          initMap();
+        });
+      } else {
+        console.error('카카오 지도 API가 로드되지 않았습니다. API 키를 확인해주세요.');
+        // API 키가 없는 경우 대체 지도 표시
+        document.getElementById('map').innerHTML = `
+          <div class="w-full h-full flex items-center justify-center bg-gray-100 text-gray-500 rounded-xl">
+            <div class="text-center">
+              <i class="ri-map-2-line text-4xl mb-2"></i>
+              <p>카카오 지도 API 키가 필요합니다</p>
+              <p class="text-sm">실제 구현 시 유효한 API 키를 입력해주세요</p>
+            </div>
+          </div>
+        `;
+      }
+
+      // 지도 컨트롤 설정
+      function setupMapControls() {
+        const zoomInBtn = document.getElementById('zoomIn');
+        const zoomOutBtn = document.getElementById('zoomOut');
+        const currentLocationBtn = document.getElementById('currentLocation');
+        const closePopup = document.getElementById('closePopup');
+
+        // 확대
+        zoomInBtn.addEventListener('click', function () {
+          if (map) {
+            const level = map.getLevel();
+            if (level > 1) {
+              map.setLevel(level - 1);
+              showLocationNotification('지도가 확대되었습니다.');
+            } else {
+              showLocationNotification('최대 확대 수준입니다.', 'warning');
+            }
+          }
+        });
+
+        // 축소
+        zoomOutBtn.addEventListener('click', function () {
+          if (map) {
+            const level = map.getLevel();
+            if (level < 14) {
+              map.setLevel(level + 1);
+              showLocationNotification('지도가 축소되었습니다.');
+            } else {
+              showLocationNotification('최대 축소 수준입니다.', 'warning');
+            }
+          }
+        });
+
+        // 현재 위치 이동
+        currentLocationBtn.addEventListener('click', async function () {
+          try {
+            // 사용자 현재 위치가 이미 있으면 그 위치로 이동
+            if (userLocation) {
+              const moveLatLng = new kakao.maps.LatLng(userLocation.lat, userLocation.lng);
+              map.setCenter(moveLatLng); // 지도 중심을 사용자 위치로 설정
+              map.setLevel(4); // 적절한 줌 레벨로 설정
+              showLocationNotification('현재 위치로 이동했습니다.');
+            } else {
+              // 사용자 위치가 없으면 새로 가져오기
+              showLocationNotification('현재 위치를 가져오는 중입니다...', 'info');
+
+              userLocation = await getUserLocation();
+              const moveLatLng = new kakao.maps.LatLng(userLocation.lat, userLocation.lng);
+              map.setCenter(moveLatLng); // 지도 중심을 사용자 위치로 설정
+              map.setLevel(4); // 적절한 줌 레벨로 설정
+
+              // 사용자 위치 마커 추가 (아직 없는 경우)
+              addUserLocationMarker(userLocation.lat, userLocation.lng);
+
+              // 숙소 위치 재배치
+              relocateAccommodationsNearUser(userLocation.lat, userLocation.lng);
+
+              // 기존 마커 제거 후 재생성
+              clearAllMarkers(); // 기존 마커 모두 제거
+              createMarkers(); // 새로운 마커 생성
+
+              showLocationNotification('현재 위치로 이동하고 주변 숙소를 업데이트했습니다.');
+            }
+          } catch (error) {
+            console.error('현재 위치 이동 실패:', error);
+            // 위치를 가져올 수 없는 경우 기본 가평 위치로 이동
+            const moveLatLng = new kakao.maps.LatLng(37.8315, 127.5109);
+            map.setCenter(moveLatLng); // 지도 중심을 기본 위치로 설정
+            map.setLevel(5);
+            showLocationNotification('위치 정보를 가져올 수 없어 기본 위치로 이동했습니다.', 'warning');
+          }
+        });
+
+        // 팝업 닫기
+        if (closePopup) {
+          closePopup.addEventListener('click', function () {
+            const popup = document.getElementById('infoPopup');
+            popup.classList.add('hidden');
+            console.log('팝업 닫힘');
+          });
+        }
+
+        // 팝업 외부 클릭 시 닫기
+        const popup = document.getElementById('infoPopup');
+        if (popup) {
+          popup.addEventListener('click', function (e) {
+            if (e.target === this) {
+              this.classList.add('hidden');
+              console.log('팝업 외부 클릭으로 닫힘');
+            }
+          });
+        }
+
+        // 지도 클릭 시 팝업 닫기
+        if (map) {
+          kakao.maps.event.addListener(map, 'click', function () {
+            const popup = document.getElementById('infoPopup');
+            if (popup && !popup.classList.contains('hidden')) {
+              popup.classList.add('hidden');
+              console.log('지도 클릭으로 팝업 닫힘');
+            }
+          });
+        }
+      }
     });
   </script>
 </body>

@@ -40,14 +40,45 @@
       content: "\f3c2";
     }
 
+    /* 위시리스트 버튼 애니메이션 */
+    .wishlist-btn {
+      transition: all 0.3s ease;
+    }
+
+    .wishlist-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .wishlist-btn.active {
+      color: #ef4444 !important;
+      transform: scale(1.2);
+    }
+
+    .wishlist-btn i {
+      transition: all 0.2s ease;
+    }
+
     /* 스크롤바 숨김 */
     ::-webkit-scrollbar {
       display: none;
     }
-    
+
     * {
       -ms-overflow-style: none;
       scrollbar-width: none;
+    }
+
+    /* 하트 버튼 애니메이션 */
+    button i[class*="ri-heart"] {
+      transition: all 0.2s ease;
+    }
+
+    button:has(i[class*="ri-heart"]) {
+      transition: transform 0.15s ease;
+    }
+
+    button:has(i[class*="ri-heart"]):hover {
+      transform: scale(1.05);
     }
   </style>
 </head>
@@ -63,8 +94,7 @@
       <div class="flex-1 flex justify-center">
         <h1 class="text-lg font-medium">가평 글램핑</h1>
       </div>
-      <a href="./index.html"
-        data-readdy="true"
+      <a href="./index.html" data-readdy="true"
         class="w-10 h-10 flex items-center justify-center cursor-pointer hover:bg-gray-50 rounded-full">
         <i class="ri-home-5-line text-xl"></i>
       </a>
@@ -74,18 +104,6 @@
   <div class="fixed top-16 left-0 right-0 bg-white z-40 shadow-sm">
     <div class="overflow-x-auto py-3 px-4">
       <div class="flex gap-2 whitespace-nowrap">
-        <button class="px-3 py-1.5 bg-primary/10 text-primary text-sm rounded-full flex items-center gap-1">
-          7월 8일-9일 (1박2일)
-          <i class="ri-close-line ri-sm"></i>
-        </button>
-        <button class="px-3 py-1.5 bg-primary/10 text-primary text-sm rounded-full flex items-center gap-1">
-          가평
-          <i class="ri-close-line ri-sm"></i>
-        </button>
-        <button class="px-3 py-1.5 bg-primary/10 text-primary text-sm rounded-full flex items-center gap-1">
-          글램핑
-          <i class="ri-close-line ri-sm"></i>
-        </button>
         <button class="px-3 py-1.5 border border-gray-200 text-gray-600 text-sm rounded-full flex items-center gap-1">
           필터 수정
           <i class="ri-filter-3-line ri-sm"></i>
@@ -108,9 +126,11 @@
   </div>
   <!-- 메인 콘텐츠 -->
   <main class="pt-[164px] pb-20 px-4">
-    <div class="space-y-5">
+    <div class="space-y-5 py-5">
       <!-- 숙소 아이템 1 -->
-      <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+      <div
+        class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 accommodation-item"
+        data-price="238000" data-rating="4.8" data-reviews="213" data-newest="5" data-name="숲속 힐링 글램핑">
         <div class="relative">
           <div class="absolute top-3 left-3 z-10">
             <span class="px-3 py-1.5 bg-primary text-white text-xs font-bold tracking-wide rounded-full shadow-md">신규
@@ -118,7 +138,7 @@
           </div>
           <div class="absolute top-2 right-2 z-10">
             <button
-              class="w-8 h-8 flex items-center justify-center bg-white/80 backdrop-blur-sm rounded-full shadow-sm">
+              class="w-8 h-8 flex items-center justify-center bg-white/80 backdrop-blur-sm rounded-full shadow-sm wishlist-btn">
               <i class="ri-heart-line text-gray-600"></i>
             </button>
           </div>
@@ -157,17 +177,19 @@
                 <span class="text-xs font-bold px-2 py-1 bg-primary/10 text-primary rounded-full">15% 할인</span>
               </p>
             </div>
-            <a href="./shop_detail.html" data-readdy="true"
+            <a href="./shop_detail.html?title=숲속 힐링 글램핑&region=가평군 가평읍 달전리&price=238000&rating=4.8&reviews=213&description=자연 속에서 편안함을 느낄 수 있는 숲속 힐링 글램핑&distance=차량 1시간&facilities=바베큐,계곡물놀이,수영장&image=https%3A//readdy.ai/api/search-image%3Fquery%3DLuxury%2520glamping%2520tent%2520in%2520forest%252C%2520cozy%2520outdoor%2520accommodation%2520with%2520wooden%2520deck%252C%2520professional%2520photography%252C%2520daytime%252C%2520beautiful%2520natural%2520surroundings%252C%2520high-end%2520camping%2520experience%26width%3D375%26height%3D250%26seq%3D101%26orientation%3Dlandscape&badge=신규 입점"
+              data-readdy="true"
               class="px-4 py-2 bg-primary text-white text-sm font-bold rounded-full !rounded-button shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 transition-shadow duration-300">상세보기</a>
           </div>
         </div>
       </div>
       <!-- 숙소 아이템 2 -->
-      <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+      <div class="bg-white rounded-xl overflow-hidden shadow-sm accommodation-item" data-price="256000"
+        data-rating="4.9" data-reviews="347" data-newest="3" data-name="가평 프리미엄 글램핑">
         <div class="relative">
           <div class="absolute top-2 right-2 z-10">
             <button
-              class="w-8 h-8 flex items-center justify-center bg-white/80 backdrop-blur-sm rounded-full shadow-sm">
+              class="w-8 h-8 flex items-center justify-center bg-white/80 backdrop-blur-sm rounded-full shadow-sm wishlist-btn">
               <i class="ri-heart-line text-gray-600"></i>
             </button>
           </div>
@@ -197,17 +219,19 @@
               <p class="text-xs text-gray-400 line-through">₩320,000</p>
               <p class="text-lg font-medium text-primary">₩256,000 <span class="text-xs text-primary">20% 할인</span></p>
             </div>
-            <a href="./shop_detail.html" data-readdy="true"
+            <a href="./shop_detail.html?title=가평 프리미엄 글램핑&region=가평군 상면 행현리&price=256000&rating=4.9&reviews=347&description=프리미엄 글램핑 체험을 위한 최고급 시설과 서비스&distance=차량 1시간 10분&facilities=바베큐,수영장,애견동반&image=https%3A//readdy.ai/api/search-image%3Fquery%3DPremium%2520glamping%2520site%2520with%2520mountain%2520view%252C%2520luxury%2520tent%2520with%2520outdoor%2520furniture%252C%2520professional%2520real%2520estate%2520photography%252C%2520scenic%2520natural%2520setting%252C%2520high-end%2520camping%26width%3D375%26height%3D250%26seq%3D102%26orientation%3Dlandscape&badge="
+              data-readdy="true"
               class="px-3 py-1.5 bg-primary/10 text-primary text-sm rounded-full !rounded-button">상세보기</a>
           </div>
         </div>
       </div>
       <!-- 숙소 아이템 3 -->
-      <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+      <div class="bg-white rounded-xl overflow-hidden shadow-sm accommodation-item" data-price="225000"
+        data-rating="4.7" data-reviews="189" data-newest="2" data-name="계곡 뷰 글램핑">
         <div class="relative">
           <div class="absolute top-2 right-2 z-10">
             <button
-              class="w-8 h-8 flex items-center justify-center bg-white/80 backdrop-blur-sm rounded-full shadow-sm">
+              class="w-8 h-8 flex items-center justify-center bg-white/80 backdrop-blur-sm rounded-full shadow-sm wishlist-btn">
               <i class="ri-heart-line text-gray-600"></i>
             </button>
           </div>
@@ -237,21 +261,22 @@
               <p class="text-xs text-gray-400 line-through">₩250,000</p>
               <p class="text-lg font-medium text-primary">₩225,000 <span class="text-xs text-primary">10% 할인</span></p>
             </div>
-            <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/1cf0d814-6ea9-40e4-9232-9102e310c481"
+            <a href="./shop_detail.html?title=계곡 뷰 글램핑&region=가평군 청평면 호반로&price=225000&rating=4.7&reviews=189&description=계곡을 바라보며 즐기는 특별한 글램핑 체험&distance=차량 1시간 20분&facilities=바베큐,계곡물놀이,불멍&image=https%3A//readdy.ai/api/search-image%3Fquery%3DRiverside%2520glamping%2520tent%252C%2520luxury%2520camping%2520by%2520stream%252C%2520professional%2520photography%252C%2520daytime%252C%2520natural%2520setting%252C%2520outdoor%2520accommodation%2520with%2520deck%252C%2520high-quality%2520camping%2520experience%26width%3D375%26height%3D250%26seq%3D103%26orientation%3Dlandscape&badge="
               data-readdy="true"
               class="px-3 py-1.5 bg-primary/10 text-primary text-sm rounded-full !rounded-button">상세보기</a>
           </div>
         </div>
       </div>
       <!-- 숙소 아이템 4 -->
-      <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+      <div class="bg-white rounded-xl overflow-hidden shadow-sm accommodation-item" data-price="297500"
+        data-rating="4.6" data-reviews="78" data-newest="1" data-name="스타돔 글램핑">
         <div class="relative">
           <div class="absolute top-2 left-2 z-10">
             <span class="px-2 py-1 bg-primary text-white text-xs rounded-full">신규 입점</span>
           </div>
           <div class="absolute top-2 right-2 z-10">
             <button
-              class="w-8 h-8 flex items-center justify-center bg-white/80 backdrop-blur-sm rounded-full shadow-sm">
+              class="w-8 h-8 flex items-center justify-center bg-white/80 backdrop-blur-sm rounded-full shadow-sm wishlist-btn">
               <i class="ri-heart-line text-gray-600"></i>
             </button>
           </div>
@@ -281,17 +306,19 @@
               <p class="text-xs text-gray-400 line-through">₩350,000</p>
               <p class="text-lg font-medium text-primary">₩297,500 <span class="text-xs text-primary">15% 할인</span></p>
             </div>
-            <a href="./shop_detail.html" data-readdy="true"
+            <a href="./shop_detail.html?title=스타돔 글램핑&region=가평군 설악면 신천리&price=297500&rating=4.6&reviews=78&description=투명한 돔에서 별을 관찰할 수 있는 특별한 글램핑&distance=차량 1시간 30분&facilities=바베큐,별관측,온수욕조&image=https%3A//readdy.ai/api/search-image%3Fquery%3DLuxury%2520dome%2520glamping%252C%2520transparent%2520geodesic%2520dome%2520tent%2520with%2520stargazing%2520view%252C%2520professional%2520photography%252C%2520evening%2520setting%252C%2520high-end%2520camping%2520experience%252C%2520forest%2520location%26width%3D375%26height%3D250%26seq%3D104%26orientation%3Dlandscape&badge=신규 입점"
+              data-readdy="true"
               class="px-3 py-1.5 bg-primary/10 text-primary text-sm rounded-full !rounded-button">상세보기</a>
           </div>
         </div>
       </div>
       <!-- 숙소 아이템 5 -->
-      <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+      <div class="bg-white rounded-xl overflow-hidden shadow-sm accommodation-item" data-price="246500"
+        data-rating="4.8" data-reviews="256" data-newest="4" data-name="호수 뷰 글램핑">
         <div class="relative">
           <div class="absolute top-2 right-2 z-10">
             <button
-              class="w-8 h-8 flex items-center justify-center bg-white/80 backdrop-blur-sm rounded-full shadow-sm">
+              class="w-8 h-8 flex items-center justify-center bg-white/80 backdrop-blur-sm rounded-full shadow-sm wishlist-btn">
               <i class="ri-heart-line text-gray-600"></i>
             </button>
           </div>
@@ -321,7 +348,8 @@
               <p class="text-xs text-gray-400 line-through">₩290,000</p>
               <p class="text-lg font-medium text-primary">₩246,500 <span class="text-xs text-primary">15% 할인</span></p>
             </div>
-            <a href="./shop_detail.html" data-readdy="true"
+            <a href="./shop_detail.html?title=호수 뷰 글램핑&region=가평군 가평읍 북한강변로&price=246500&rating=4.8&reviews=256&description=호수를 바라보며 즐기는 럭셔리 글램핑&distance=차량 1시간 15분&facilities=바베큐,수상레저,애견동반&image=https%3A//readdy.ai/api/search-image%3Fquery%3DLakeside%2520glamping%2520tent%252C%2520luxury%2520camping%2520with%2520lake%2520view%252C%2520professional%2520photography%252C%2520sunset%2520lighting%252C%2520outdoor%2520accommodation%2520with%2520deck%252C%2520high-end%2520camping%2520experience%26width%3D375%26height%3D250%26seq%3D105%26orientation%3Dlandscape&badge="
+              data-readdy="true"
               class="px-3 py-1.5 bg-primary/10 text-primary text-sm rounded-full !rounded-button">상세보기</a>
           </div>
         </div>
@@ -330,8 +358,8 @@
   </main>
   <!-- 하단 고정 영역 -->
   <div
-    class="fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur-md border-t border-gray-100 flex justify-between items-center">
-    <div class="text-sm font-medium">총 27개의 글램핑</div>
+    class="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-100 flex justify-between items-center z-20">
+    <div class="text-sm font-medium">총 5개의 숙소</div>
     <a href="search_map.html" data-readdy="true"
       class="px-4 py-2 bg-primary text-white rounded-full !rounded-button flex items-center gap-1 shadow-md shadow-primary/20">
       <i class="ri-map-pin-line"></i>
@@ -400,9 +428,8 @@
         <div>
           <h4 class="text-base font-medium mb-3">최소 평점</h4>
           <div class="flex gap-2">
-            <button class="flex-1 py-2 border border-gray-200 rounded-lg text-sm">전체</button>
-            <button class="flex-1 py-2 border border-primary bg-primary/10 text-primary rounded-lg text-sm">4.0
-              이상</button>
+            <button class="flex-1 py-2 border border-primary bg-primary/10 text-primary rounded-lg text-sm">전체</button>
+            <button class="flex-1 py-2 border border-gray-200 rounded-lg text-sm">4.0 이상</button>
             <button class="flex-1 py-2 border border-gray-200 rounded-lg text-sm">4.5 이상</button>
           </div>
         </div>
@@ -417,54 +444,654 @@
   </div>
   <script id="filter-modal-script">
     document.addEventListener('DOMContentLoaded', function () {
-      const filterButtons = document.querySelectorAll('button:not(#close-filter)');
       const filterModal = document.getElementById('filter-modal');
       const closeFilter = document.getElementById('close-filter');
-      filterButtons.forEach(button => {
-        if (button.textContent.includes('필터 수정')) {
-          button.addEventListener('click', function () {
-            filterModal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-          });
-        }
-      });
+      const filterTagsContainer = document.querySelector('.flex.gap-2.whitespace-nowrap');
+
+      // 초기 필터 상태 저장
+      const initialFilters = {
+        minPrice: 100000,
+        maxPrice: 350000,
+        facilities: [],
+        rating: '전체'
+      };
+
+      // 현재 필터 상태
+      let currentFilters = { ...initialFilters };
+      let modalRatingButtons = [];
+
+      // 필터 수정 버튼 클릭
+      const filterButton = document.querySelector('button:has(i.ri-filter-3-line)');
+      if (filterButton) {
+        filterButton.addEventListener('click', function () {
+          filterModal.classList.remove('hidden');
+          document.body.style.overflow = 'hidden';
+          console.log('필터 모달 열림');
+        });
+      }
+
+      // 모달 닫기
       closeFilter.addEventListener('click', function () {
         filterModal.classList.add('hidden');
         document.body.style.overflow = 'auto';
+        console.log('필터 모달 닫힘');
+      });
+
+      // 모달 외부 클릭 시 닫기
+      filterModal.addEventListener('click', function (e) {
+        if (e.target === filterModal) {
+          filterModal.classList.add('hidden');
+          document.body.style.overflow = 'auto';
+        }
+      });
+
+      // 가격 범위 슬라이더 업데이트
+      const minPriceSlider = document.getElementById('min-price');
+      const maxPriceSlider = document.getElementById('max-price');
+      const minPriceDisplay = minPriceSlider.parentElement.querySelector('span');
+      const maxPriceDisplay = maxPriceSlider.parentElement.querySelector('span');
+
+      function updatePriceDisplay() {
+        minPriceDisplay.textContent = `₩${parseInt(minPriceSlider.value).toLocaleString()}`;
+        maxPriceDisplay.textContent = `₩${parseInt(maxPriceSlider.value).toLocaleString()}`;
+        currentFilters.minPrice = parseInt(minPriceSlider.value);
+        currentFilters.maxPrice = parseInt(maxPriceSlider.value);
+      }
+
+      minPriceSlider.addEventListener('input', updatePriceDisplay);
+      maxPriceSlider.addEventListener('input', updatePriceDisplay);
+
+      // 시설 체크박스 처리
+      const facilityCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+      facilityCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function () {
+          const facility = this.nextElementSibling.textContent;
+          if (this.checked) {
+            if (!currentFilters.facilities.includes(facility)) {
+              currentFilters.facilities.push(facility);
+            }
+          } else {
+            currentFilters.facilities = currentFilters.facilities.filter(f => f !== facility);
+          }
+          console.log('선택된 시설:', currentFilters.facilities);
+        });
+      });
+
+      // 평점 필터 버튼 처리 (모달 내부에서만 찾기)
+      setTimeout(() => {
+        modalRatingButtons = filterModal.querySelectorAll('.flex.gap-2 button');
+        console.log('모달 평점 버튼 개수:', modalRatingButtons.length);
+
+        modalRatingButtons.forEach(button => {
+          button.addEventListener('click', function () {
+            console.log('평점 버튼 클릭됨:', this.textContent.trim());
+
+            // 기존 활성 상태 제거
+            modalRatingButtons.forEach(btn => {
+              btn.classList.remove('border-primary', 'bg-primary/10', 'text-primary');
+              btn.classList.add('border-gray-200');
+            });
+
+            // 현재 버튼 활성화
+            this.classList.add('border-primary', 'bg-primary/10', 'text-primary');
+            this.classList.remove('border-gray-200');
+
+            currentFilters.rating = this.textContent.trim();
+            console.log('선택된 평점:', currentFilters.rating);
+          });
+        });
+
+        // 초기 상태에서 "전체" 버튼 활성화
+        modalRatingButtons.forEach(btn => {
+          if (btn.textContent.trim() === '전체') {
+            btn.classList.add('border-primary', 'bg-primary/10', 'text-primary');
+            btn.classList.remove('border-gray-200');
+          }
+        });
+      }, 50);
+
+      // 필터 태그 생성 함수
+      function createFilterTag(text, type, value) {
+        const tag = document.createElement('button');
+        tag.className = 'px-3 py-1.5 bg-primary/10 text-primary text-sm rounded-full flex items-center gap-1';
+        tag.innerHTML = `
+          ${text}
+          <i class="ri-close-line ri-sm"></i>
+        `;
+        tag.dataset.filterType = type;
+        tag.dataset.filterValue = value;
+
+        // 태그 제거 이벤트
+        const closeIcon = tag.querySelector('i.ri-close-line');
+        closeIcon.addEventListener('click', function (e) {
+          e.stopPropagation();
+          removeFilter(type, value);
+          tag.remove();
+          console.log(`필터 태그 제거: ${text}`);
+        });
+
+        return tag;
+      }
+
+      // 필터 제거 함수
+      function removeFilter(type, value) {
+        switch (type) {
+          case 'facility':
+            currentFilters.facilities = currentFilters.facilities.filter(f => f !== value);
+            // 해당 체크박스 해제
+            facilityCheckboxes.forEach(checkbox => {
+              if (checkbox.nextElementSibling.textContent === value) {
+                checkbox.checked = false;
+              }
+            });
+            break;
+          case 'rating':
+            currentFilters.rating = '전체';
+            // 전체 버튼 활성화
+            modalRatingButtons.forEach(btn => {
+              btn.classList.remove('border-primary', 'bg-primary/10', 'text-primary');
+              btn.classList.add('border-gray-200');
+              if (btn.textContent.trim() === '전체') {
+                btn.classList.add('border-primary', 'bg-primary/10', 'text-primary');
+                btn.classList.remove('border-gray-200');
+              }
+            });
+            break;
+          case 'price':
+            currentFilters.minPrice = initialFilters.minPrice;
+            currentFilters.maxPrice = initialFilters.maxPrice;
+            minPriceSlider.value = initialFilters.minPrice;
+            maxPriceSlider.value = initialFilters.maxPrice;
+            updatePriceDisplay();
+            break;
+        }
+      }
+
+      // 필터 태그 업데이트 함수
+      function updateFilterTags() {
+        // 기존 필터 태그들 제거 (초기 태그 3개 제외)
+        const existingTags = filterTagsContainer.querySelectorAll('button[data-filter-type]');
+        existingTags.forEach(tag => tag.remove());
+
+        // 필터 수정 버튼 찾기 (마지막에 추가하기 위해)
+        const filterEditButton = filterTagsContainer.querySelector('button:has(i.ri-filter-3-line)');
+
+        // 가격 필터 태그 추가
+        if (currentFilters.minPrice !== initialFilters.minPrice || currentFilters.maxPrice !== initialFilters.maxPrice) {
+          const minPriceText = Math.floor(currentFilters.minPrice / 10000) + '만원';
+          const maxPriceText = Math.floor(currentFilters.maxPrice / 10000) + '만원';
+          const priceText = `${minPriceText} ~ ${maxPriceText}`;
+          const priceTag = createFilterTag(priceText, 'price', 'range');
+          filterTagsContainer.insertBefore(priceTag, filterEditButton);
+        }
+
+        // 시설 필터 태그 추가
+        currentFilters.facilities.forEach(facility => {
+          const facilityTag = createFilterTag(facility, 'facility', facility);
+          filterTagsContainer.insertBefore(facilityTag, filterEditButton);
+        });
+
+        // 평점 필터 태그 추가
+        if (currentFilters.rating !== '전체') { // 초기값이 '전체'이므로 조건 변경
+          const ratingTag = createFilterTag(currentFilters.rating, 'rating', currentFilters.rating);
+          filterTagsContainer.insertBefore(ratingTag, filterEditButton);
+        }
+      }
+
+      // 적용하기 버튼과 초기화 버튼 처리
+      setTimeout(() => {
+        // 모달 하단의 버튼들 찾기
+        const modalButtons = filterModal.querySelectorAll('.p-4.border-t button');
+        console.log('모달 버튼 개수:', modalButtons.length);
+
+        modalButtons.forEach((btn, index) => {
+          console.log(`버튼 ${index}:`, btn.textContent.trim());
+
+          if (btn.textContent.includes('적용하기')) {
+            btn.addEventListener('click', function () {
+              console.log('적용하기 버튼 클릭됨');
+              updateFilterTags();
+              filterModal.classList.add('hidden');
+              document.body.style.overflow = 'auto';
+              console.log('필터 적용됨:', currentFilters);
+
+              // 실제 필터링 로직은 여기에 추가
+              applyFilters();
+            });
+          }
+
+          if (btn.textContent.includes('초기화')) {
+            btn.addEventListener('click', function () {
+              console.log('초기화 버튼 클릭됨');
+
+              // 필터 상태 초기화
+              currentFilters = { ...initialFilters };
+
+              // 가격 슬라이더 초기화
+              minPriceSlider.value = initialFilters.minPrice;
+              maxPriceSlider.value = initialFilters.maxPrice;
+              updatePriceDisplay();
+
+              // 체크박스 초기화
+              facilityCheckboxes.forEach(checkbox => {
+                checkbox.checked = false;
+              });
+
+              // 평점 버튼 초기화 (전체 버튼 활성화)
+              modalRatingButtons.forEach(btn => {
+                btn.classList.remove('border-primary', 'bg-primary/10', 'text-primary');
+                btn.classList.add('border-gray-200');
+                if (btn.textContent.trim() === '전체') {
+                  btn.classList.add('border-primary', 'bg-primary/10', 'text-primary');
+                  btn.classList.remove('border-gray-200');
+                }
+              });
+
+              console.log('필터 초기화됨');
+            });
+          }
+        });
+      }, 100);
+
+      // 실제 필터링 적용 함수
+      function applyFilters() {
+        console.log('필터링 적용 중...');
+        // 여기에 실제 숙소 목록 필터링 로직을 구현할 수 있습니다
+        // 예: 가격 범위, 시설, 평점에 따른 숙소 표시/숨김
+      }
+
+      // 기존 필터 태그들의 닫기 버튼 이벤트 추가
+      const existingFilterTags = document.querySelectorAll('.flex.gap-2 button:not(:has(i.ri-filter-3-line))');
+      existingFilterTags.forEach(tag => {
+        const closeIcon = tag.querySelector('i.ri-close-line');
+        if (closeIcon) {
+          closeIcon.addEventListener('click', function (e) {
+            e.stopPropagation();
+            tag.style.display = 'none';
+            console.log('기존 필터 태그 숨김:', tag.textContent);
+          });
+        }
       });
     });
   </script>
   <script id="heart-button-script">
     document.addEventListener('DOMContentLoaded', function () {
       const heartButtons = document.querySelectorAll('button i.ri-heart-line');
+
       heartButtons.forEach(button => {
-        button.parentElement.addEventListener('click', function () {
+        button.parentElement.addEventListener('click', function (e) {
+          e.preventDefault();
+          e.stopPropagation(); // 이벤트 버블링 방지
+
+          console.log('위시리스트 버튼 클릭됨');
+
           if (button.classList.contains('ri-heart-line')) {
+            // 빈 하트 → 채워진 하트
             button.classList.remove('ri-heart-line');
             button.classList.add('ri-heart-fill');
             button.classList.add('text-red-500');
+            button.classList.remove('text-gray-600');
+
+            // 부모 버튼에 약간의 애니메이션 효과
+            this.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+              this.style.transform = 'scale(1)';
+            }, 150);
+
+            console.log('위시리스트에 추가됨');
           } else {
+            // 채워진 하트 → 빈 하트
             button.classList.remove('ri-heart-fill');
             button.classList.remove('text-red-500');
             button.classList.add('ri-heart-line');
+            button.classList.add('text-gray-600');
+
+            console.log('위시리스트에서 제거됨');
           }
         });
+      });
+
+      // 동적으로 추가된 하트 버튼에도 이벤트 추가 (정렬 후에도 작동)
+      document.addEventListener('click', function (e) {
+        if (e.target.classList.contains('ri-heart-line') || e.target.classList.contains('ri-heart-fill')) {
+          const button = e.target;
+          const parentButton = button.parentElement;
+
+          // 이미 이벤트가 처리된 버튼인지 확인
+          if (parentButton.dataset.heartHandled) return;
+
+          e.preventDefault();
+          e.stopPropagation();
+
+          console.log('동적 위시리스트 버튼 클릭됨');
+
+          if (button.classList.contains('ri-heart-line')) {
+            // 빈 하트 → 채워진 하트
+            button.classList.remove('ri-heart-line');
+            button.classList.add('ri-heart-fill');
+            button.classList.add('text-red-500');
+            button.classList.remove('text-gray-600');
+
+            // 애니메이션 효과
+            parentButton.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+              parentButton.style.transform = 'scale(1)';
+            }, 150);
+
+            console.log('위시리스트에 추가됨 (동적)');
+          } else {
+            // 채워진 하트 → 빈 하트
+            button.classList.remove('ri-heart-fill');
+            button.classList.remove('text-red-500');
+            button.classList.add('ri-heart-line');
+            button.classList.add('text-gray-600');
+
+            console.log('위시리스트에서 제거됨 (동적)');
+          }
+        }
       });
     });
   </script>
   <script id="sort-tabs-script">
     document.addEventListener('DOMContentLoaded', function () {
       const sortTabs = document.querySelectorAll('.flex.py-2.px-4 button');
+      const accommodationContainer = document.querySelector('.space-y-5');
+
       sortTabs.forEach(tab => {
         tab.addEventListener('click', function () {
+          // 활성 탭 스타일 변경
           sortTabs.forEach(t => {
             t.classList.remove('text-primary', 'font-medium', 'border-b-2', 'border-primary');
             t.classList.add('text-gray-500');
           });
           this.classList.remove('text-gray-500');
           this.classList.add('text-primary', 'font-medium', 'border-b-2', 'border-primary');
+
+          // 정렬 실행
+          const sortType = this.textContent.trim();
+          sortAccommodations(sortType);
         });
       });
+
+      function sortAccommodations(sortType) {
+        console.log(`\n=== ${sortType} 정렬 시작 ===`);
+
+        const accommodationItems = Array.from(document.querySelectorAll('.accommodation-item'));
+
+        console.log('정렬 전:');
+        accommodationItems.forEach((item, index) => {
+          const name = item.dataset.name;
+          const price = item.dataset.price;
+          const rating = item.dataset.rating;
+          const reviews = item.dataset.reviews;
+          console.log(`${index + 1}. ${name} - 가격: ₩${parseInt(price).toLocaleString()}, 평점: ${rating}점, 리뷰: ${reviews}개`);
+        });
+
+        accommodationItems.sort((a, b) => {
+          switch (sortType) {
+            case '추천순':
+              // 평점과 리뷰 수를 조합한 추천 점수로 정렬
+              const scoreA = parseFloat(a.dataset.rating) * Math.log(parseInt(a.dataset.reviews) + 1);
+              const scoreB = parseFloat(b.dataset.rating) * Math.log(parseInt(b.dataset.reviews) + 1);
+              return scoreB - scoreA;
+
+            case '가격 낮은순':
+              return parseInt(a.dataset.price) - parseInt(b.dataset.price);
+
+            case '가격 높은순':
+              return parseInt(b.dataset.price) - parseInt(a.dataset.price);
+
+            case '네이버 리뷰순':
+              // 리뷰 수가 많은 순으로 정렬
+              return parseInt(b.dataset.reviews) - parseInt(a.dataset.reviews);
+
+            case '신규 입점순':
+              // 신규 입점 순서로 정렬 (낮은 숫자가 더 최신)
+              return parseInt(a.dataset.newest) - parseInt(b.dataset.newest);
+
+            default:
+              return 0;
+          }
+        });
+
+        console.log('정렬 후:');
+        accommodationItems.forEach((item, index) => {
+          const name = item.dataset.name;
+          const price = item.dataset.price;
+          const rating = item.dataset.rating;
+          const reviews = item.dataset.reviews;
+          let sortValue = '';
+
+          switch (sortType) {
+            case '가격 낮은순':
+            case '가격 높은순':
+              sortValue = `₩${parseInt(price).toLocaleString()}`;
+              break;
+            case '네이버 리뷰순':
+              sortValue = `${reviews}개 리뷰`;
+              break;
+            case '신규 입점순':
+              sortValue = `신규순위 ${item.dataset.newest}`;
+              break;
+            default:
+              sortValue = `평점 ${rating}점`;
+          }
+          console.log(`${index + 1}. ${name} - ${sortValue}`);
+        });
+
+        // 애니메이션과 함께 재배치
+        accommodationContainer.style.opacity = '0.5';
+        accommodationContainer.style.transition = 'opacity 0.2s ease';
+
+        setTimeout(() => {
+          // 기존 내용 완전히 제거
+          while (accommodationContainer.firstChild) {
+            accommodationContainer.removeChild(accommodationContainer.firstChild);
+          }
+
+          // 정렬된 순서로 다시 추가
+          accommodationItems.forEach(item => {
+            accommodationContainer.appendChild(item);
+          });
+
+          // 애니메이션 복원
+          accommodationContainer.style.opacity = '1';
+          console.log(`✅ ${sortType} 정렬 완료!\n`);
+        }, 100);
+      }
+    });
+  </script>
+
+  <script id="search-params-script">
+    document.addEventListener('DOMContentLoaded', function () {
+      const filterTagsContainer = document.querySelector('.flex.gap-2.whitespace-nowrap');
+      const filterEditButton = filterTagsContainer.querySelector('button:has(i.ri-filter-3-line)');
+
+      // URL 파라미터에서 모든 검색 정보 가져오기
+      const urlParams = new URLSearchParams(window.location.search);
+      const searchQuery = urlParams.get('query');
+      const location = urlParams.get('location');
+      const type = urlParams.get('type');
+      const checkin = urlParams.get('checkin');
+      const checkout = urlParams.get('checkout');
+      const nights = urlParams.get('nights');
+      const maxPrice = urlParams.get('maxPrice');
+      const adults = urlParams.get('adults');
+      const children = urlParams.get('children');
+
+      console.log('전달받은 검색 정보:', {
+        searchQuery, location, type, checkin, checkout, nights,
+        maxPrice, adults, children
+      });
+
+      // 페이지 제목 업데이트
+      const pageTitle = document.querySelector('h1');
+      if (searchQuery && pageTitle) {
+        pageTitle.textContent = `${searchQuery}`;
+      }
+
+      // 페이지 제목 고정
+      const titleElement = document.querySelector('h1');
+      if (titleElement) {
+        titleElement.textContent = '가평 글램핑';
+      }
+
+      // 검색 결과 개수 및 조건 표시 업데이트
+      const resultCount = document.querySelector('.fixed.bottom-0 .text-sm.font-medium');
+      if (resultCount) {
+        resultCount.textContent = "'가평 글램핑' 검색결과 5개";
+      }
+
+      // 검색 조건 필터 태그 생성
+
+      // 1. 날짜 필터 태그
+      if (checkin && checkout) {
+        const dateTag = document.createElement('button');
+        dateTag.className = 'px-3 py-1.5 bg-primary/10 text-primary text-sm rounded-full flex items-center gap-1';
+        const dateText = nights ? `${checkin}~${checkout} (${nights}박)` : `${checkin}~${checkout}`;
+        dateTag.innerHTML = `
+          <i class="ri-calendar-line ri-sm"></i>
+          ${dateText}
+          <i class="ri-close-line ri-sm"></i>
+        `;
+        dateTag.dataset.filterType = 'date';
+
+        // 삭제 버튼 이벤트
+        const closeDateIcon = dateTag.querySelector('i.ri-close-line');
+        closeDateIcon.addEventListener('click', function (e) {
+          e.stopPropagation();
+          dateTag.remove();
+          console.log('날짜 필터 제거됨');
+
+          // URL에서 날짜 정보 제거
+          const newUrl = new URL(window.location);
+          newUrl.searchParams.delete('checkin');
+          newUrl.searchParams.delete('checkout');
+          newUrl.searchParams.delete('nights');
+          window.location.href = newUrl.toString();
+        });
+
+        filterTagsContainer.insertBefore(dateTag, filterEditButton);
+      }
+
+      // 2. 인원 필터 태그
+      if (adults || children) {
+        const totalPeople = (parseInt(adults) || 0) + (parseInt(children) || 0);
+        if (totalPeople > 0) {
+          const peopleTag = document.createElement('button');
+          peopleTag.className = 'px-3 py-1.5 bg-primary/10 text-primary text-sm rounded-full flex items-center gap-1';
+          const peopleText = `${totalPeople}명`;
+          peopleTag.innerHTML = `
+            <i class="ri-user-line ri-sm"></i>
+            ${peopleText}
+            <i class="ri-close-line ri-sm"></i>
+          `;
+          peopleTag.dataset.filterType = 'people';
+
+          // 삭제 버튼 이벤트
+          const closePeopleIcon = peopleTag.querySelector('i.ri-close-line');
+          closePeopleIcon.addEventListener('click', function (e) {
+            e.stopPropagation();
+            peopleTag.remove();
+            console.log('인원 필터 제거됨');
+
+            // URL에서 인원 정보 제거
+            const newUrl = new URL(window.location);
+            newUrl.searchParams.delete('adults');
+            newUrl.searchParams.delete('children');
+            window.location.href = newUrl.toString();
+          });
+
+          filterTagsContainer.insertBefore(peopleTag, filterEditButton);
+        }
+      }
+
+      // 3. 가격 필터 태그
+      if (maxPrice && parseInt(maxPrice) < 1000000) {
+        const priceTag = document.createElement('button');
+        priceTag.className = 'px-3 py-1.5 bg-primary/10 text-primary text-sm rounded-full flex items-center gap-1';
+        const priceText = `최대 ₩${parseInt(maxPrice).toLocaleString()}`;
+        priceTag.innerHTML = `
+          <i class="ri-price-tag-line ri-sm"></i>
+          ${priceText}
+          <i class="ri-close-line ri-sm"></i>
+        `;
+        priceTag.dataset.filterType = 'price';
+
+        // 삭제 버튼 이벤트
+        const closePriceIcon = priceTag.querySelector('i.ri-close-line');
+        closePriceIcon.addEventListener('click', function (e) {
+          e.stopPropagation();
+          priceTag.remove();
+          console.log('가격 필터 제거됨');
+
+          // URL에서 가격 정보 제거
+          const newUrl = new URL(window.location);
+          newUrl.searchParams.delete('maxPrice');
+          window.location.href = newUrl.toString();
+        });
+
+        filterTagsContainer.insertBefore(priceTag, filterEditButton);
+      }
+
+      // 검색어를 띄어쓰기 기준으로 분리하여 필터 태그 생성
+      if (searchQuery) {
+        const searchTerms = searchQuery.trim().split(/\s+/);
+
+        console.log('분리된 검색어:', searchTerms);
+
+        // 각 검색어를 필터 태그로 생성
+        searchTerms.forEach(term => {
+          if (term.length > 0) {
+            const searchTag = document.createElement('button');
+            searchTag.className = 'px-3 py-1.5 bg-primary/10 text-primary text-sm rounded-full flex items-center gap-1';
+            searchTag.innerHTML = `
+              ${term}
+              <i class="ri-close-line ri-sm"></i>
+            `;
+            searchTag.dataset.searchTerm = term;
+
+            // 태그 제거 이벤트
+            const closeIcon = searchTag.querySelector('i.ri-close-line');
+            closeIcon.addEventListener('click', function (e) {
+              e.stopPropagation();
+              searchTag.remove();
+              console.log(`검색어 태그 제거: ${term}`);
+
+              // URL에서 해당 검색어 제거 후 페이지 새로고침
+              const remainingTerms = Array.from(filterTagsContainer.querySelectorAll('button[data-search-term]'))
+                .map(tag => tag.dataset.searchTerm)
+                .filter(t => t !== term);
+
+              if (remainingTerms.length > 0) {
+                const newQuery = remainingTerms.join(' ');
+                const newUrl = new URL(window.location);
+                newUrl.searchParams.set('query', newQuery);
+                window.location.href = newUrl.toString();
+              } else {
+                // 모든 검색어가 제거되어도 현재 페이지에 머무름
+                const newUrl = new URL(window.location);
+                newUrl.searchParams.delete('query');
+                window.location.href = newUrl.toString();
+              }
+            });
+
+            // 필터 수정 버튼 앞에 추가
+            filterTagsContainer.insertBefore(searchTag, filterEditButton);
+          }
+        });
+      }
+
+      // 필터 수정 버튼 클릭 시 현재 검색어 유지
+      const filterButton = document.querySelector('button:has(i.ri-filter-3-line)');
+      if (filterButton) {
+        filterButton.addEventListener('click', function () {
+          console.log('필터 수정 - 현재 검색 조건:', {
+            searchQuery, location, type, checkin, checkout, nights,
+            maxPrice, adults, children
+          });
+        });
+      }
     });
   </script>
 </body>

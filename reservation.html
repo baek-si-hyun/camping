@@ -78,7 +78,7 @@
     ::-webkit-scrollbar {
       display: none;
     }
-    
+
     * {
       -ms-overflow-style: none;
       scrollbar-width: none;
@@ -95,7 +95,7 @@
         <i class="ri-arrow-left-s-line text-xl"></i>
       </a>
       <div class="flex-1 flex justify-center">
-        <h1 class="text-lg font-medium">예약하기</h1>
+        <h1 class="text-lg font-medium absolute left-1/2 transform -translate-x-1/2">예약하기</h1>
       </div>
       <div class="w-10 h-10"></div>
     </div>
@@ -1080,7 +1080,7 @@
         let isValid = true;
         let errorMessage = '';
         let focusElement = null;
-        
+
         // 이름 검사
         if (!guestNameInput.value.trim()) {
           isValid = false;
@@ -1116,7 +1116,7 @@
               const cardNumber = document.getElementById('card-number').value.trim();
               const cardExpiry = document.getElementById('card-expiry').value.trim();
               const cardCvc = document.getElementById('card-cvc').value.trim();
-              
+
               if (!cardNumber || cardNumber.replace(/[^0-9]/g, '').length < 16) {
                 isValid = false;
                 errorMessage = '올바른 카드번호를 입력해주세요';
@@ -1135,7 +1135,7 @@
             // 간편결제 선택 시 추가 검증 없음 (앱 연동)
           }
         }
-        
+
         if (!isValid && errorMessage) {
           showToast(errorMessage);
           if (focusElement) {

@@ -57,8 +57,7 @@
     }
 
     .logo-3d {
-      text-shadow: 2px 2px 0 rgba(74, 144, 226, 0.3),
-        4px 4px 0 rgba(74, 144, 226, 0.2);
+      filter: drop-shadow(2px 2px 4px rgba(74, 144, 226, 0.3)) drop-shadow(4px 4px 8px rgba(74, 144, 226, 0.2));
       transform-style: preserve-3d;
       transition: all 0.3s ease;
     }
@@ -71,7 +70,7 @@
     ::-webkit-scrollbar {
       display: none;
     }
-    
+
     * {
       -ms-overflow-style: none;
       scrollbar-width: none;
@@ -80,17 +79,18 @@
 </head>
 
 <body class="  min-h-[762px] mx-auto bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
-  <main class="w-full min-h-screen flex flex-col items-center justify-center px-6 py-12 relative overflow-hidden">
+  <main class="w-full min-h-screen flex flex-col items-center justify-start px-6 pt-24 pb-12 relative overflow-hidden">
     <div
       class="absolute inset-0 bg-[url('https://readdy.ai/api/search-image?query=modern%20abstract%203d%20background%20with%20flowing%20gradients%20and%20geometric%20elements%2C%20soft%20pastel%20colors%2C%20premium%20luxury%20design%2C%20clean%20minimal%20style&width=375&height=762&seq=1&orientation=portrait')] opacity-40 bg-cover bg-center">
     </div>
     <div class="absolute inset-0 bg-gradient-to-t from-white/60 to-transparent pointer-events-none"></div>
-    <div class="w-full max-w-sm space-y-8 relative" style="animation: fadeIn 1s ease-out;">
-      <div class="text-center space-y-6">
-        <h1 class="font-['Pacifico'] text-5xl text-primary logo-3d" style="animation-delay: 0.2s">Travel&Pet</h1>
-        <p class="text-xl font-medium text-gray-700 glass-effect px-6 py-3 rounded-full inline-block animate-in"
-          style="animation-delay: 0.4s">환영합니다</p>
-        <p class="text-sm text-gray-500 animate-in" style="animation-delay: 0.6s">로그인하여 서비스를 이용하세요</p>
+    <div class="w-full max-w-sm space-y-8 relative -mt-32" style="animation: fadeIn 1s ease-out;">
+      <div class="text-center space-y-6 mb-24">
+        <img
+          src="https://videos.openai.com/vg-assets/assets%2Ftask_01k184cdfde1ktv4sp1zmr92mx%2F1753693555_img_1.webp?st=2025-07-28T07%3A58%3A29Z&se=2025-08-03T08%3A58%3A29Z&sks=b&skt=2025-07-28T07%3A58%3A29Z&ske=2025-08-03T08%3A58%3A29Z&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&skv=2019-02-02&sv=2018-11-09&sr=b&sp=r&spr=https%2Chttp&sig=xsh89I6VLfvn5ESlrp1pB55W%2BnNemwVhYOdLvGHp3Hg%3D&az=oaivgprodscus"
+          alt="Travel&Pet Logo" class="mx-auto w-96 h-96 object-contain mb-[-10rem] relative z-10"
+          style="animation-delay: 0.2s">
+        <p class="text-sm text-gray-500 animate-in relative z-20" style="animation-delay: 0.6s">로그인하여 서비스를 이용하세요</p>
       </div>
       <div class="space-y-4">
         <button onclick="loginWithKakao()"
@@ -114,9 +114,16 @@
         <button onclick="loginWithNaver()"
           class="social-btn w-full flex items-center justify-center gap-3 px-6 py-4 bg-[#03C75A] !rounded-button shadow-lg hover:shadow-xl relative overflow-hidden">
           <div class="w-6 h-6 flex items-center justify-center">
-            <i class="ri-naver-fill text-white text-xl"></i>
+            <i class="ri-checkbox-blank-circle-fill text-white text-xl"></i>
           </div>
           <span class="text-white font-medium">네이버로 로그인</span>
+        </button>
+        <button onclick="loginWithEmail()"
+          class="social-btn w-full flex items-center justify-center gap-3 px-6 py-4 bg-gray-600 !rounded-button shadow-lg hover:shadow-xl relative overflow-hidden">
+          <div class="w-6 h-6 flex items-center justify-center">
+            <i class="ri-mail-line text-white text-xl"></i>
+          </div>
+          <span class="text-white font-medium">이메일로 로그인</span>
         </button>
       </div>
       <div class="relative flex items-center">
@@ -126,12 +133,13 @@
       </div>
       <div class="space-y-4">
         <button onclick="showSignupModal()"
-          class="w-full px-6 py-3 bg-primary text-white font-medium !rounded-button hover:bg-primary/90 transition-colors">
+          class="w-full px-6 py-3 text-white font-medium !rounded-button transition-colors"
+          style="background-color: #10604c;">
           회원가입
         </button>
         <div class="flex justify-center gap-4 text-sm">
           <button onclick="showFindIdModal()" class="text-gray-600 hover:text-primary transition-colors">아이디 찾기</button>
-          <span class="text-gray-300">|</span>
+          <span>•</span>
           <button onclick="showFindPwModal()" class="text-gray-600 hover:text-primary transition-colors">비밀번호
             찾기</button>
         </div>
@@ -221,6 +229,9 @@
       const state = Math.random().toString(36).substr(2, 11);
       const url = `${naverAuthUrl}?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&state=${state}`;
       window.location.href = url;
+    }
+    function loginWithEmail() {
+      showToast('이메일 로그인 기능을 준비 중입니다.');
     }
     function showSignupModal() {
       document.getElementById('signupModal').classList.remove('hidden');
@@ -336,20 +347,6 @@
           }, 200);
           console.log(`${platform} 로그인 시도`);
         });
-      });
-      const logo = document.querySelector('.logo-3d');
-      logo.addEventListener('mousemove', function (e) {
-        const rect = this.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        const rotateX = (y - centerY) / 10;
-        const rotateY = (centerX - x) / 10;
-        this.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(20px)`;
-      });
-      logo.addEventListener('mouseleave', function () {
-        this.style.transform = '';
       });
     });
   </script>
