@@ -13,7 +13,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
   <!-- 카카오 지도 API -->
-  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7c64a249ef8e3b9b648f20a50c07b249"></script>
+  <script type="text/javascript"
+    src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7c64a249ef8e3b9b648f20a50c07b249&libraries=services">
+    </script>
   <style>
     :where([class^="ri-"])::before {
       content: "\f3c2";
@@ -148,14 +150,6 @@
     <!-- 비디오 섹션 -->
     <section id="main-media-container" class="relative h-[300px] overflow-hidden">
       <div id="media-slider" class="flex w-full h-full transition-transform duration-300">
-        <!-- <div id="video-wrapper" class="flex-shrink-0 w-full h-full relative">
-          <video class="w-full h-full object-cover" autoplay muted loop playsinline>
-            <source src="https://public.readdy.ai/gen_page/sample_glamping.mp4" type="video/mp4">
-          </video>
-          <div class="absolute bottom-4 left-4 bg-black/60 text-white px-3 py-1 rounded-full text-xs">
-            동영상
-          </div>
-        </div> -->
       </div>
       <div class="absolute bottom-4 right-4 bg-black/60 text-white px-3 py-1 rounded-full text-xs">
         <span id="media-counter">1/1</span>
@@ -766,7 +760,7 @@
   </main>
   <!-- 하단 고정 메뉴 -->
   <div
-    class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 px-4 py-3 flex items-center justify-between">
+    class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 px-4 py-3 flex items-center justify-between z-10">
     <div class="flex items-center">
       <button id="favoriteBtn" class="w-12 h-12 bg-white flex items-center justify-center  wishlist-btn">
         <i class="ri-heart-line ri-xl"></i>
@@ -1046,20 +1040,13 @@
   <script id="media-slider-handler">
     document.addEventListener('DOMContentLoaded', () => {
       const params = new URLSearchParams(location.search);
-      const firstImg = params.get('image'); // decodeURIComponent 제거
+      const firstImg = params.get('image') || ''; // 일반적인 방식으로 처리
 
       // 디버깅용 로그
-      console.log('URL 파라미터:', params.toString());
-      console.log('전달받은 이미지 URL:', firstImg);
-      console.log('firstImg 타입:', typeof firstImg);
-      console.log('firstImg 길이:', firstImg ? firstImg.length : 'null');
 
       // 이미지 URL이 유효한지 확인
       if (firstImg) {
-        console.log('이미지 URL 테스트 로딩 시작...');
         const testImg = new Image();
-        testImg.onload = () => console.log('✅ 이미지 로딩 성공:', firstImg);
-        testImg.onerror = () => console.log('❌ 이미지 로딩 실패:', firstImg);
         testImg.src = firstImg;
       }
 
@@ -1107,7 +1094,6 @@
       }
 
       // 디버깅용 로그
-      console.log('최종 이미지 배열:', images);
 
       // — 4) 컨테이너 초기화
       mediaSlider.innerHTML = '';
@@ -1283,7 +1269,7 @@
       const description = params.get('description') || '';
       const distance = params.get('distance') || '';
       const facilities = params.get('facilities') || '';
-      const image = params.get('image') || '';
+      const image = params.get('image') || ''; // 일반적인 방식으로 처리
       const badge = params.get('badge') || '';
 
       // 설문 데이터
@@ -1355,98 +1341,58 @@
           `;
         }
       }
-
-      // 설문 데이터를 콘솔에 출력 (디버깅용)
-      console.log('전달받은 숙소 정보:', {
-        title, region, price, rating, description, distance, facilities, image, badge
-      });
-
-      console.log('전달받은 설문 데이터:', {
-        surveyPeople, surveyStyle, surveyBudget, surveyRegions,
-        surveyPet, surveyFacilities, surveyMbti
-      });
-
     });
   </script>
   <script id="kakao-map-handler">
-    document.addEventListener('DOMContentLoaded', function () {
-      // 카카오 지도 초기화
-      function initMap() {
-        const params = new URLSearchParams(window.location.search);
-        const region = params.get('region') || '';
+    // DOMContentLoaded 불필요, load 콜백 안에서 충분히 처리됩니다
+    kakao.maps.load(function () {
+      // URLSearchParams.get() 이 자동으로 디코딩해 주므로 바로 사용
+      const params = new URLSearchParams(window.location.search);
+      const region = params.get('region') || '';
 
-        // 기본 좌표 (서울 시청)
-        let lat = 37.5665;
-        let lng = 126.9780;
+      // 기본 좌표 (서울시청)
+      const defaultLat = 37.5665, defaultLng = 126.9780;
 
-        // 카카오 지도 생성
-        const container = document.getElementById('map');
-        const options = {
-          center: new kakao.maps.LatLng(lat, lng),
-          level: 3,
-          draggable: false, // 지도 움직임 비활성화
-          zoomable: false,  // 줌 비활성화
-          scrollwheel: false // 마우스 휠 줌 비활성화
-        };
+      // 지도 컨테이너와 옵션
+      const container = document.getElementById('map');
+      const options = {
+        center: new kakao.maps.LatLng(defaultLat, defaultLng),
+        level: 3,
+        draggable: false,
+        zoomable: false,
+        scrollwheel: false
+      };
 
-        const map = new kakao.maps.Map(container, options);
+      const map = new kakao.maps.Map(container, options);
+      const geocoder = new kakao.maps.services.Geocoder();
 
-        // 주소-좌표 변환 객체 생성
-        const geocoder = new kakao.maps.services.Geocoder();
-
-        // 주소로 좌표 검색
+      if (region) {
+        console.log('[KakaoMap] 주소 검색 시작:', region);
         geocoder.addressSearch(region, function (result, status) {
-          // 정상적으로 검색이 완료됐으면
+          console.log('[KakaoMap] addressSearch 결과:', status, result);
           if (status === kakao.maps.services.Status.OK) {
             const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-
-            // 지도 중심을 변경
             map.setCenter(coords);
+            new kakao.maps.Marker({ position: coords, map: map });
 
-            // 마커 생성
-            const marker = new kakao.maps.Marker({
-              position: coords
+            // 인포윈도우
+            const infowindow = new kakao.maps.InfoWindow({
+              content: `<div style="padding:5px;font-size:12px;">${region}</div>`
             });
-
-            // 마커를 지도에 표시
-            marker.setMap(map);
-
-            console.log('역지오코딩 성공:', {
-              address: region,
-              lat: result[0].y,
-              lng: result[0].x
-            });
+            kakao.maps.event.addListener(map, 'click', () => infowindow.open(map));
           } else {
-            console.log('역지오코딩 실패:', status);
-            // 실패 시 기본 마커 표시
-            const marker = new kakao.maps.Marker({
-              position: new kakao.maps.LatLng(lat, lng)
-            });
-            marker.setMap(map);
+            console.warn('[KakaoMap] 주소 검색 실패, 기본 좌표에 마커 표시');
+            new kakao.maps.Marker({ position: new kakao.maps.LatLng(defaultLat, defaultLng), map: map });
           }
         });
-
-        // 주소 표시 업데이트
-        const addressDisplay = document.getElementById('address-display');
-        if (addressDisplay) {
-          addressDisplay.textContent = region || '위치 정보';
-        }
-
-        console.log('카카오 지도 초기화 완료:', { region });
-      }
-
-      // 카카오 지도 API 로드 확인 후 초기화
-      if (typeof kakao !== 'undefined' && kakao.maps) {
-        initMap();
       } else {
-        // API 로드 대기
-        const checkKakaoAPI = setInterval(() => {
-          if (typeof kakao !== 'undefined' && kakao.maps) {
-            clearInterval(checkKakaoAPI);
-            initMap();
-          }
-        }, 100);
+        console.warn('[KakaoMap] region 파라미터가 없습니다.');
+        new kakao.maps.Marker({ position: new kakao.maps.LatLng(defaultLat, defaultLng), map: map });
       }
+
+      // 화면상의 주소 텍스트 업데이트
+      const addressEl = document.getElementById('address-display');
+      if (addressEl) addressEl.textContent = region || '위치 정보 없음';
     });
   </script>
   <script>
@@ -1543,28 +1489,26 @@
 
       // 토스트 팝업 생성
       const toast = document.createElement('div');
-      toast.className = 'toast-popup fixed top-20 left-1/2 transform -translate-x-1/2 bg-black/80 text-white px-4 py-3 rounded-lg z-50 animate-fadeIn';
-      toast.textContent = message;
+      toast.className = 'toast-popup fixed top-20 left-0 right-0 mx-auto w-max bg-black/80 text-white px-4 py-3 rounded-lg z-50 animate-fadeIn';
 
-      // 스타일 추가
-      const style = document.createElement('style');
-      style.textContent = `
-        .toast-popup {
-          animation: fadeIn 0.3s ease-out forwards;
-        }
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translate(-50%, -20px); }
-          to { opacity: 1; transform: translate(-50%, 0); }
-        }
+      toast.innerHTML = `
+        <div class="flex items-center gap-2 whitespace-nowrap">
+          <i class="ri-information-line text-lg"></i>
+          <span class="text-sm">${message}</span>
+        </div>
       `;
-      document.head.appendChild(style);
 
       document.body.appendChild(toast);
 
       // 3초 후 자동 제거
       setTimeout(() => {
         if (toast.parentElement) {
-          toast.remove();
+          toast.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+          setTimeout(() => {
+            if (toast.parentElement) {
+              toast.remove();
+            }
+          }, 300);
         }
       }, 3000);
     }

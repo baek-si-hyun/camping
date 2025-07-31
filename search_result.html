@@ -466,7 +466,6 @@
         filterButton.addEventListener('click', function () {
           filterModal.classList.remove('hidden');
           document.body.style.overflow = 'hidden';
-          console.log('필터 모달 열림');
         });
       }
 
@@ -474,7 +473,6 @@
       closeFilter.addEventListener('click', function () {
         filterModal.classList.add('hidden');
         document.body.style.overflow = 'auto';
-        console.log('필터 모달 닫힘');
       });
 
       // 모달 외부 클릭 시 닫기
@@ -513,18 +511,15 @@
           } else {
             currentFilters.facilities = currentFilters.facilities.filter(f => f !== facility);
           }
-          console.log('선택된 시설:', currentFilters.facilities);
         });
       });
 
       // 평점 필터 버튼 처리 (모달 내부에서만 찾기)
       setTimeout(() => {
         modalRatingButtons = filterModal.querySelectorAll('.flex.gap-2 button');
-        console.log('모달 평점 버튼 개수:', modalRatingButtons.length);
 
         modalRatingButtons.forEach(button => {
           button.addEventListener('click', function () {
-            console.log('평점 버튼 클릭됨:', this.textContent.trim());
 
             // 기존 활성 상태 제거
             modalRatingButtons.forEach(btn => {
@@ -537,7 +532,6 @@
             this.classList.remove('border-gray-200');
 
             currentFilters.rating = this.textContent.trim();
-            console.log('선택된 평점:', currentFilters.rating);
           });
         });
 
@@ -567,7 +561,6 @@
           e.stopPropagation();
           removeFilter(type, value);
           tag.remove();
-          console.log(`필터 태그 제거: ${text}`);
         });
 
         return tag;
@@ -642,18 +635,14 @@
       setTimeout(() => {
         // 모달 하단의 버튼들 찾기
         const modalButtons = filterModal.querySelectorAll('.p-4.border-t button');
-        console.log('모달 버튼 개수:', modalButtons.length);
 
         modalButtons.forEach((btn, index) => {
-          console.log(`버튼 ${index}:`, btn.textContent.trim());
 
           if (btn.textContent.includes('적용하기')) {
             btn.addEventListener('click', function () {
-              console.log('적용하기 버튼 클릭됨');
               updateFilterTags();
               filterModal.classList.add('hidden');
               document.body.style.overflow = 'auto';
-              console.log('필터 적용됨:', currentFilters);
 
               // 실제 필터링 로직은 여기에 추가
               applyFilters();
@@ -662,7 +651,6 @@
 
           if (btn.textContent.includes('초기화')) {
             btn.addEventListener('click', function () {
-              console.log('초기화 버튼 클릭됨');
 
               // 필터 상태 초기화
               currentFilters = { ...initialFilters };
@@ -686,8 +674,6 @@
                   btn.classList.remove('border-gray-200');
                 }
               });
-
-              console.log('필터 초기화됨');
             });
           }
         });
@@ -695,7 +681,6 @@
 
       // 실제 필터링 적용 함수
       function applyFilters() {
-        console.log('필터링 적용 중...');
         // 여기에 실제 숙소 목록 필터링 로직을 구현할 수 있습니다
         // 예: 가격 범위, 시설, 평점에 따른 숙소 표시/숨김
       }
@@ -708,7 +693,6 @@
           closeIcon.addEventListener('click', function (e) {
             e.stopPropagation();
             tag.style.display = 'none';
-            console.log('기존 필터 태그 숨김:', tag.textContent);
           });
         }
       });
@@ -723,8 +707,6 @@
           e.preventDefault();
           e.stopPropagation(); // 이벤트 버블링 방지
 
-          console.log('위시리스트 버튼 클릭됨');
-
           if (button.classList.contains('ri-heart-line')) {
             // 빈 하트 → 채워진 하트
             button.classList.remove('ri-heart-line');
@@ -738,7 +720,6 @@
               this.style.transform = 'scale(1)';
             }, 150);
 
-            console.log('위시리스트에 추가됨');
           } else {
             // 채워진 하트 → 빈 하트
             button.classList.remove('ri-heart-fill');
@@ -746,7 +727,6 @@
             button.classList.add('ri-heart-line');
             button.classList.add('text-gray-600');
 
-            console.log('위시리스트에서 제거됨');
           }
         });
       });
@@ -763,8 +743,6 @@
           e.preventDefault();
           e.stopPropagation();
 
-          console.log('동적 위시리스트 버튼 클릭됨');
-
           if (button.classList.contains('ri-heart-line')) {
             // 빈 하트 → 채워진 하트
             button.classList.remove('ri-heart-line');
@@ -778,7 +756,6 @@
               parentButton.style.transform = 'scale(1)';
             }, 150);
 
-            console.log('위시리스트에 추가됨 (동적)');
           } else {
             // 채워진 하트 → 빈 하트
             button.classList.remove('ri-heart-fill');
@@ -786,7 +763,6 @@
             button.classList.add('ri-heart-line');
             button.classList.add('text-gray-600');
 
-            console.log('위시리스트에서 제거됨 (동적)');
           }
         }
       });
@@ -814,18 +790,7 @@
       });
 
       function sortAccommodations(sortType) {
-        console.log(`\n=== ${sortType} 정렬 시작 ===`);
-
         const accommodationItems = Array.from(document.querySelectorAll('.accommodation-item'));
-
-        console.log('정렬 전:');
-        accommodationItems.forEach((item, index) => {
-          const name = item.dataset.name;
-          const price = item.dataset.price;
-          const rating = item.dataset.rating;
-          const reviews = item.dataset.reviews;
-          console.log(`${index + 1}. ${name} - 가격: ₩${parseInt(price).toLocaleString()}, 평점: ${rating}점, 리뷰: ${reviews}개`);
-        });
 
         accommodationItems.sort((a, b) => {
           switch (sortType) {
@@ -854,31 +819,6 @@
           }
         });
 
-        console.log('정렬 후:');
-        accommodationItems.forEach((item, index) => {
-          const name = item.dataset.name;
-          const price = item.dataset.price;
-          const rating = item.dataset.rating;
-          const reviews = item.dataset.reviews;
-          let sortValue = '';
-
-          switch (sortType) {
-            case '가격 낮은순':
-            case '가격 높은순':
-              sortValue = `₩${parseInt(price).toLocaleString()}`;
-              break;
-            case '네이버 리뷰순':
-              sortValue = `${reviews}개 리뷰`;
-              break;
-            case '신규 입점순':
-              sortValue = `신규순위 ${item.dataset.newest}`;
-              break;
-            default:
-              sortValue = `평점 ${rating}점`;
-          }
-          console.log(`${index + 1}. ${name} - ${sortValue}`);
-        });
-
         // 애니메이션과 함께 재배치
         accommodationContainer.style.opacity = '0.5';
         accommodationContainer.style.transition = 'opacity 0.2s ease';
@@ -896,7 +836,6 @@
 
           // 애니메이션 복원
           accommodationContainer.style.opacity = '1';
-          console.log(`✅ ${sortType} 정렬 완료!\n`);
         }, 100);
       }
     });
@@ -918,11 +857,6 @@
       const maxPrice = urlParams.get('maxPrice');
       const adults = urlParams.get('adults');
       const children = urlParams.get('children');
-
-      console.log('전달받은 검색 정보:', {
-        searchQuery, location, type, checkin, checkout, nights,
-        maxPrice, adults, children
-      });
 
       // 페이지 제목 업데이트
       const pageTitle = document.querySelector('h1');
@@ -961,7 +895,6 @@
         closeDateIcon.addEventListener('click', function (e) {
           e.stopPropagation();
           dateTag.remove();
-          console.log('날짜 필터 제거됨');
 
           // URL에서 날짜 정보 제거
           const newUrl = new URL(window.location);
@@ -993,7 +926,6 @@
           closePeopleIcon.addEventListener('click', function (e) {
             e.stopPropagation();
             peopleTag.remove();
-            console.log('인원 필터 제거됨');
 
             // URL에서 인원 정보 제거
             const newUrl = new URL(window.location);
@@ -1023,7 +955,6 @@
         closePriceIcon.addEventListener('click', function (e) {
           e.stopPropagation();
           priceTag.remove();
-          console.log('가격 필터 제거됨');
 
           // URL에서 가격 정보 제거
           const newUrl = new URL(window.location);
@@ -1037,8 +968,6 @@
       // 검색어를 띄어쓰기 기준으로 분리하여 필터 태그 생성
       if (searchQuery) {
         const searchTerms = searchQuery.trim().split(/\s+/);
-
-        console.log('분리된 검색어:', searchTerms);
 
         // 각 검색어를 필터 태그로 생성
         searchTerms.forEach(term => {
@@ -1056,7 +985,6 @@
             closeIcon.addEventListener('click', function (e) {
               e.stopPropagation();
               searchTag.remove();
-              console.log(`검색어 태그 제거: ${term}`);
 
               // URL에서 해당 검색어 제거 후 페이지 새로고침
               const remainingTerms = Array.from(filterTagsContainer.querySelectorAll('button[data-search-term]'))
@@ -1086,10 +1014,6 @@
       const filterButton = document.querySelector('button:has(i.ri-filter-3-line)');
       if (filterButton) {
         filterButton.addEventListener('click', function () {
-          console.log('필터 수정 - 현재 검색 조건:', {
-            searchQuery, location, type, checkin, checkout, nights,
-            maxPrice, adults, children
-          });
         });
       }
     });

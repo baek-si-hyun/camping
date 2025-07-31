@@ -475,6 +475,18 @@
           <i class="ri-building-line text-xl text-gray-600"></i>
           <span>호텔</span>
         </a>
+        <a href="equipment.html" class="flex items-center gap-3">
+          <i class="ri-tent-line text-xl text-gray-600"></i>
+          <span>캠핑 장비 렌탈</span>
+        </a>
+        <a href="recomend_course_tmap.html" class="flex items-center gap-3">
+          <i class="ri-map-pin-line text-xl text-gray-600"></i>
+          <span>T맵 연동 관광 코스</span>
+        </a>
+        <a href="surroundings.html" class="flex items-center gap-3">
+          <i class="ri-restaurant-line text-xl text-gray-600"></i>
+          <span>주변 맛집</span>
+        </a>
         <a href="event.html" class="flex items-center gap-3">
           <i class="ri-gift-line text-xl text-gray-600"></i>
           <span>이벤트</span>
@@ -495,20 +507,6 @@
       toggles.forEach(toggle => {
         toggle.addEventListener('click', function () {
           this.classList.toggle('active');
-
-          // 토글 상태에 따른 추가 동작
-          const toggleId = this.id;
-          if (toggleId === 'pushToggle') {
-            console.log('푸시 알림:', this.classList.contains('active') ? 'ON' : 'OFF');
-          } else if (toggleId === 'emailToggle') {
-            console.log('이메일 알림:', this.classList.contains('active') ? 'ON' : 'OFF');
-          } else if (toggleId === 'smsToggle') {
-            console.log('SMS 알림:', this.classList.contains('active') ? 'ON' : 'OFF');
-          } else if (toggleId === 'darkModeToggle') {
-            console.log('다크 모드:', this.classList.contains('active') ? 'ON' : 'OFF');
-          } else if (toggleId === 'locationToggle') {
-            console.log('위치 서비스:', this.classList.contains('active') ? 'ON' : 'OFF');
-          }
         });
       });
 
@@ -518,7 +516,6 @@
       settingItems.forEach(item => {
         item.addEventListener('click', function () {
           const title = this.querySelector('h4')?.textContent;
-          console.log('설정 항목 클릭:', title);
 
           // 특정 항목에 대한 처리
           if (title === '로그아웃') {

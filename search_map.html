@@ -168,6 +168,11 @@
     .wishlist-btn i {
       transition: all 0.2s ease;
     }
+
+    .toast {
+      z-index: 9999;
+      transition: all 0.3s ease;
+    }
   </style>
 </head>
 
@@ -609,7 +614,6 @@
 
           calendarModal.classList.add('hidden');
           document.body.style.overflow = 'auto';
-          console.log('선택된 날짜:', displayText);
         } else {
           alert('체크인과 체크아웃 날짜를 모두 선택해주세요.');
         }
@@ -703,7 +707,6 @@
             iconContainer.classList.remove('w-10', 'h-10');
           }
 
-          console.log('선택된 캠핑 타입:', this.dataset.type);
         });
       });
 
@@ -718,6 +721,7 @@
           id: 1,
           title: '숲속 글램핑 리조트',
           type: 'glamping',
+          region: '경기도 가평군 청평면 대성리',
           lat: 37.8315 + (Math.random() - 0.5) * 0.02, // 가평 중심 좌표에서 랜덤 오프셋
           lng: 127.5109 + (Math.random() - 0.5) * 0.02,
           price: '₩130,000',
@@ -729,6 +733,7 @@
           id: 2,
           title: '마운틴 뷰 카라반',
           type: 'caravan',
+          region: '경기도 양평군 양서면 용담리',
           lat: 37.8315 + (Math.random() - 0.5) * 0.02,
           lng: 127.5109 + (Math.random() - 0.5) * 0.02,
           price: '₩145,000',
@@ -740,6 +745,7 @@
           id: 3,
           title: '한옥 스타일 펜션',
           type: 'pension',
+          region: '경기도 포천시 영중면 영평리',
           lat: 37.8315 + (Math.random() - 0.5) * 0.02,
           lng: 127.5109 + (Math.random() - 0.5) * 0.02,
           price: '₩120,000',
@@ -751,12 +757,13 @@
           id: 4,
           title: '레이크 오토캠핑장',
           type: 'autoCamping',
+          region: '경기도 용인시 처인구 백암면 백암리',
           lat: 37.8315 + (Math.random() - 0.5) * 0.02,
           lng: 127.5109 + (Math.random() - 0.5) * 0.02,
           price: '₩160,000',
           rating: '4.9',
           reviews: '리뷰 210개',
-          image: 'https://readdy.ai/api/search-image?query=Luxury%20auto%20camping%20site%20by%20the%20lake%2C%20modern%20tent%20setup%2C%20campfire%2C%20evening%20atmosphere%2C%20professional%20photography%2C%20no%20people%2C%20outdoor%20adventure&width=600&height=400&seq=104&orientation=landscape'
+          image: 'http://videos.openai.com/vg-assets/assets%2Ftask_01k1dd13kne4csgqz2n7wxnp4c%2F1753870383_img_1.webp?st=2025-07-30T23%3A04%3A56Z&se=2025-08-06T00%3A04%3A56Z&sks=b&skt=2025-07-30T23%3A04%3A56Z&ske=2025-08-06T00%3A04%3A56Z&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&skv=2019-02-02&sv=2018-11-09&sr=b&sp=r&spr=https%2Chttp&sig=K7MHZEBlWOtdQvNs90Xa5nen%2B5vG4vm2TQT9wDmSDS0%3D&az=oaivgprodscus'
         }
       ];
 
@@ -781,11 +788,9 @@
                 lng: position.coords.longitude,
                 accuracy: position.coords.accuracy
               };
-              console.log('사용자 현재 위치:', location);
               resolve(location);
             },
             (error) => {
-              console.error('위치 정보를 가져올 수 없습니다:', error);
               let errorMessage = '';
               switch (error.code) {
                 case error.PERMISSION_DENIED:
@@ -814,24 +819,14 @@
         const fromNearby = urlParams.get('from') === 'nearby';
         const referer = document.referrer;
 
-        console.log('위치 기반 접근 확인:');
-        console.log('- URL 파라미터 from:', urlParams.get('from'));
-        console.log('- fromNearby:', fromNearby);
-        console.log('- referer:', referer);
-
         // URL 파라미터로 확인하거나, 다른 페이지에서 "내 주변" 버튼으로 접근한 경우
         const isLocationBased = fromNearby || referer.includes('index.html') || referer.includes('search.html') || referer.includes('shop_list.html');
-
-        console.log('- 위치 기반 접근 여부:', isLocationBased);
 
         return isLocationBased;
       }
 
       // 사용자 위치 주변에 숙소 마커 재배치
       function relocateAccommodationsNearUser(userLat, userLng) {
-        console.log(`사용자 위치: (${userLat}, ${userLng})`);
-        console.log('재배치 전 숙소 위치들:', accommodations.map(acc => ({ title: acc.title, lat: acc.lat, lng: acc.lng })));
-
         // 지도가 존재하는 경우에만 bounds 사용, 없으면 기본 반경 사용
         let latRange, lngRange, bounds;
 
@@ -842,21 +837,11 @@
             latRange = (bounds.getNorthEast().getLat() - bounds.getSouthWest().getLat()) * 0.4;
             lngRange = (bounds.getNorthEast().getLng() - bounds.getSouthWest().getLng()) * 0.4;
 
-            console.log('지도 bounds 기반 배치:', {
-              latRange: latRange.toFixed(6),
-              lngRange: lngRange.toFixed(6),
-              bounds: {
-                sw: `(${bounds.getSouthWest().getLat().toFixed(6)}, ${bounds.getSouthWest().getLng().toFixed(6)})`,
-                ne: `(${bounds.getNorthEast().getLat().toFixed(6)}, ${bounds.getNorthEast().getLng().toFixed(6)})`
-              }
-            });
           } catch (error) {
-            console.warn('지도 bounds 가져오기 실패, 기본 반경 사용:', error);
             latRange = 0.02; // 기본 반경
             lngRange = 0.02;
           }
         } else {
-          console.log('지도 객체 없음, 기본 반경 사용');
           latRange = 0.02; // 기본 반경
           lngRange = 0.02;
         }
@@ -903,7 +888,6 @@
 
           // 적절한 위치를 찾지 못한 경우 강제로 원형 배치
           if (!validPosition) {
-            console.warn(`${accommodation.title}: 적절한 위치를 찾지 못해 원형 배치 사용`);
             const angle = (index * Math.PI * 2) / accommodations.length;
             const distance = Math.min(latRange, lngRange) * 0.6;
             newLat = userLat + Math.cos(angle) * distance;
@@ -919,30 +903,23 @@
           // 사용된 위치에 추가
           usedPositions.push({ lat: newLat, lng: newLng });
 
-          console.log(`${accommodation.title}: (${oldLat.toFixed(6)}, ${oldLng.toFixed(6)}) → (${accommodation.lat.toFixed(6)}, ${accommodation.lng.toFixed(6)}) [시도: ${attempts}회]`);
         });
 
-        console.log('재배치 후 숙소 위치들:', accommodations.map(acc => ({ title: acc.title, lat: acc.lat.toFixed(6), lng: acc.lng.toFixed(6) })));
-        console.log('사용자 위치 주변으로 숙소 재배치 완료');
       }
 
       // 기존 마커 모두 제거
       function clearAllMarkers() {
-        console.log(`기존 마커 ${mapMarkers.length}개 제거 시작`);
-
         mapMarkers.forEach((marker, index) => {
           try {
             if (marker && marker.setMap) {
               marker.setMap(null);
-              console.log(`마커 ${index + 1} 제거됨`);
             }
           } catch (error) {
-            console.error(`마커 ${index + 1} 제거 중 오류:`, error);
+            return
           }
         });
 
         mapMarkers.length = 0; // 배열 완전히 비우기
-        console.log('기존 마커 모두 제거 완료. mapMarkers 길이:', mapMarkers.length);
       }
 
       // 지도 초기화
@@ -955,21 +932,16 @@
         // 위치 기반 접근인지 확인
         if (isLocationBasedAccess()) {
           try {
-            console.log('위치 기반 접근 감지 - 사용자 현재 위치 가져오는 중...');
-
             // 사용자 현재 위치 가져오기
             userLocation = await getUserLocation();
             centerLat = userLocation.lat;
             centerLng = userLocation.lng;
             mapLevel = 4; // 조금 더 확대
 
-            console.log(`지도 중심을 사용자 위치로 설정: (${centerLat}, ${centerLng})`);
-
             // 사용자에게 위치 기반 서비스 시작을 알림
             showLocationNotification('현재 위치 기반으로 주변 숙소를 찾고 있습니다.');
 
           } catch (error) {
-            console.error('위치 정보 가져오기 실패:', error);
 
             // 위치 정보를 가져올 수 없는 경우 사용자에게 알림
             showLocationNotification('위치 정보를 가져올 수 없어 기본 지역(가평)으로 설정합니다.', 'warning');
@@ -1001,16 +973,11 @@
           // 마커 생성
           createMarkers();
         }, 800); // 지연 시간 증가
-
-        console.log('카카오 지도 초기화 완료');
       }
 
       // 마커 생성 함수
       function createMarkers() {
-        console.log('=== 마커 생성 시작 ===');
-
         accommodations.forEach((accommodation, index) => {
-          console.log(`마커 ${index + 1} 생성 중:`, accommodation.title, `위치: (${accommodation.lat.toFixed(6)}, ${accommodation.lng.toFixed(6)})`);
 
           try {
             // 커스텀 마커 HTML 생성
@@ -1033,17 +1000,9 @@
             // 지도에 마커 추가
             customOverlay.setMap(map);
 
-            // 마커가 실제로 추가되었는지 확인
-            if (customOverlay.getMap()) {
-              console.log(`✅ 마커 ${index + 1} (${accommodation.title}) 성공적으로 추가됨`);
-            } else {
-              console.error(`❌ 마커 ${index + 1} (${accommodation.title}) 추가 실패`);
-            }
-
             // 지연 후 마커 클릭 이벤트 바인딩 (DOM이 완전히 로드된 후)
             setTimeout(() => {
               const markerElement = document.querySelector(`.marker-${index}`);
-              console.log(`마커 ${index + 1} DOM 요소 찾기:`, markerElement ? '성공' : '실패');
 
               if (markerElement) {
                 // 기존 이벤트 리스너 제거 (중복 방지)
@@ -1051,9 +1010,6 @@
 
                 // 새로운 클릭 핸들러 정의
                 markerElement.clickHandler = function (event) {
-                  console.log(`🎯 마커 ${index + 1} 클릭됨: ${accommodation.title}`);
-                  console.log(`클릭한 마커 위치: (${accommodation.lat.toFixed(6)}, ${accommodation.lng.toFixed(6)})`);
-
                   // 이벤트 버블링 방지
                   event.stopPropagation();
                   event.preventDefault();
@@ -1063,8 +1019,6 @@
                   if (existingPopup && !existingPopup.classList.contains('hidden')) {
                     existingPopup.classList.add('hidden');
                   }
-
-                  console.log('showAccommodationPopup 호출 시작');
 
                   // 실제 클릭한 화면 좌표 사용 (가장 정확한 방법)
                   const mapContainer = document.getElementById('map');
@@ -1076,64 +1030,24 @@
                     y: event.clientY - mapRect.top
                   };
 
-                  console.log('실제 클릭 위치 계산:', {
-                    clientX: event.clientX,
-                    clientY: event.clientY,
-                    mapRect: {
-                      left: mapRect.left,
-                      top: mapRect.top,
-                      width: mapRect.width,
-                      height: mapRect.height
-                    },
-                    relative: clickPosition
-                  });
-
-                  // 클릭 위치가 지도 영역 내에 있는지 확인
-                  if (clickPosition.x >= 0 && clickPosition.x <= mapRect.width &&
-                    clickPosition.y >= 0 && clickPosition.y <= mapRect.height) {
-                    console.log('✅ 클릭 위치가 지도 영역 내에 있음');
-                  } else {
-                    console.log('⚠️ 클릭 위치가 지도 영역을 벗어남');
-                  }
-
                   // 숙소 정보와 함께 클릭 위치도 전달
                   showAccommodationPopup(accommodation, clickPosition);
                 };
 
                 // 이벤트 리스너 추가
                 markerElement.addEventListener('click', markerElement.clickHandler);
-
-                // 추가 확인을 위해 hover 이벤트도 추가
-                markerElement.addEventListener('mouseenter', function () {
-                  console.log(`마커 ${index + 1} 호버: ${accommodation.title}`);
-                });
-
-                console.log(`✅ 마커 ${index + 1} 클릭 이벤트 바인딩 완료`);
-              } else {
-                console.error(`❌ 마커 ${index + 1} DOM 요소를 찾을 수 없음`);
               }
             }, 100); // 100ms 지연
 
             mapMarkers.push(customOverlay);
 
           } catch (error) {
-            console.error(`마커 ${index + 1} 생성 중 오류:`, error);
+            return
           }
         });
 
-        console.log(`총 ${accommodations.length}개의 마커 생성 완료`);
-        console.log(`mapMarkers 배열 길이: ${mapMarkers.length}`);
-        console.log('현재 지도 중심:', map.getCenter().getLat().toFixed(6), map.getCenter().getLng().toFixed(6));
-        console.log('현재 지도 레벨:', map.getLevel());
-
         // 지도 범위 확인
         const bounds = map.getBounds();
-        console.log('지도 범위:', {
-          sw: `(${bounds.getSouthWest().getLat().toFixed(6)}, ${bounds.getSouthWest().getLng().toFixed(6)})`,
-          ne: `(${bounds.getNorthEast().getLat().toFixed(6)}, ${bounds.getNorthEast().getLng().toFixed(6)})`
-        });
-
-        console.log('=== 마커 생성 완료 ===');
       }
 
       // 사용자 위치 마커 추가
@@ -1155,7 +1069,6 @@
         });
 
         userMarker.setMap(map);
-        console.log('사용자 위치 마커 추가됨');
       }
 
       // 위치 알림 표시
@@ -1186,9 +1099,6 @@
 
       // 숙소 정보 팝업 표시
       function showAccommodationPopup(accommodation, clickPosition) {
-        console.log('🔥 showAccommodationPopup 함수 호출됨:', accommodation.title);
-        console.log('전달받은 클릭 위치:', clickPosition);
-
         const popup = document.getElementById('infoPopup');
         const popupImage = document.getElementById('popupImage');
         const popupTitle = document.getElementById('popupTitle');
@@ -1197,54 +1107,34 @@
         const popupPrice = document.getElementById('popupPrice');
         const popupDetailBtn = document.getElementById('popupDetailBtn');
 
-        console.log('팝업 DOM 요소들 확인:', {
-          popup: popup ? '✅' : '❌',
-          popupImage: popupImage ? '✅' : '❌',
-          popupTitle: popupTitle ? '✅' : '❌',
-          popupRating: popupRating ? '✅' : '❌',
-          popupReviews: popupReviews ? '✅' : '❌',
-          popupPrice: popupPrice ? '✅' : '❌',
-          popupDetailBtn: popupDetailBtn ? '✅' : '❌'
-        });
-
         if (!popup) {
-          console.error('❌ 팝업 요소를 찾을 수 없습니다!');
           return;
         }
 
         try {
-          // 팝업 내용 업데이트
-          console.log('팝업 내용 업데이트 시작...');
-
           if (popupImage) {
             popupImage.src = accommodation.image;
-            console.log('이미지 URL 설정:', accommodation.image);
           }
 
           if (popupTitle) {
             popupTitle.textContent = accommodation.title;
-            console.log('제목 설정:', accommodation.title);
           }
 
           if (popupRating) {
             popupRating.textContent = accommodation.rating;
-            console.log('평점 설정:', accommodation.rating);
           }
 
           if (popupReviews) {
             popupReviews.textContent = accommodation.reviews;
-            console.log('리뷰 설정:', accommodation.reviews);
           }
 
           if (popupPrice) {
             popupPrice.textContent = accommodation.price;
-            console.log('가격 설정:', accommodation.price);
           }
 
           // 상세보기 버튼 이벤트
           if (popupDetailBtn) {
             popupDetailBtn.onclick = function () {
-              console.log('상세보기 버튼 클릭됨');
               // shop_detail.html로 이동 (숙소 정보 전달)
               const params = new URLSearchParams();
               params.append('title', accommodation.title);
@@ -1252,6 +1142,7 @@
               params.append('rating', accommodation.rating);
               params.append('image', accommodation.image);
               params.append('type', accommodation.type);
+              params.append('region', accommodation.region);
 
               window.location.href = `shop_detail.html?${params.toString()}`;
             };
@@ -1259,11 +1150,6 @@
 
           // 팝업 위치 계산 - 클릭 위치를 최우선으로 사용
           const mapContainer = document.getElementById('map');
-
-          console.log('지도 컨테이너 정보:', {
-            width: mapContainer.offsetWidth,
-            height: mapContainer.offsetHeight
-          });
 
           // 팝업 크기 (고정)
           const popupWidth = 280;
@@ -1273,13 +1159,9 @@
 
           // 클릭 위치가 전달된 경우 이를 직접 사용 (지도 컨테이너 기준)
           if (clickPosition) {
-            console.log('✅ 실제 클릭 위치 사용:', clickPosition);
-
             // 클릭 위치 기준으로 팝업 배치
             popupX = clickPosition.x + 15; // 클릭 위치에서 15px 오른쪽
             popupY = clickPosition.y - (popupHeight / 2); // 클릭 위치를 팝업 중앙에 맞춤
-
-            console.log('초기 팝업 위치:', `(${popupX}, ${popupY})`);
 
             // 지도 컨테이너 경계 체크 및 조정
             const mapWidth = mapContainer.offsetWidth;
@@ -1288,19 +1170,16 @@
             // 오른쪽 경계 체크
             if (popupX + popupWidth > mapWidth) {
               popupX = clickPosition.x - popupWidth - 15; // 클릭 위치 왼쪽에 배치
-              console.log('팝업을 클릭 위치 왼쪽에 배치');
             }
 
             // 위쪽 경계 체크
             if (popupY < 0) {
               popupY = 10;
-              console.log('팝업을 위쪽 경계에 맞춤');
             }
 
             // 아래쪽 경계 체크
             if (popupY + popupHeight > mapHeight) {
               popupY = mapHeight - popupHeight - 10;
-              console.log('팝업을 아래쪽 경계에 맞춤');
             }
 
             // 왼쪽 경계 체크 (팝업이 왼쪽으로 이동했을 때)
@@ -1312,57 +1191,38 @@
               if (popupY + popupHeight > mapHeight) {
                 popupY = clickPosition.y - popupHeight - 15; // 클릭 위치 위쪽에 배치
               }
-              console.log('팝업을 클릭 위치 아래쪽/위쪽에 배치');
             }
 
           } else {
-            console.log('❌ 클릭 위치가 없어서 중앙 배치');
             // 클릭 위치가 없는 경우 지도 중앙에 배치
             popupX = (mapContainer.offsetWidth - popupWidth) / 2;
             popupY = (mapContainer.offsetHeight - popupHeight) / 2;
           }
 
-          console.log(`🎯 최종 팝업 위치: (${popupX}, ${popupY})`);
-          console.log(`🎯 클릭 위치: (${clickPosition ? clickPosition.x : 'N/A'}, ${clickPosition ? clickPosition.y : 'N/A'})`);
-
           if (clickPosition) {
             const distanceX = Math.abs(popupX - clickPosition.x);
             const distanceY = Math.abs(popupY + popupHeight / 2 - clickPosition.y);
-            console.log(`🎯 팝업과 클릭 위치의 거리: X=${distanceX}px, Y=${distanceY}px`);
           }
 
           // 팝업 위치 설정 (지도 컨테이너 기준 절대 위치)
-          console.log('팝업 스타일 설정 중...');
           popup.style.left = `${popupX}px`;
           popup.style.top = `${popupY}px`;
           popup.style.position = 'absolute';
 
           // 팝업 표시
-          console.log('팝업 표시 중...');
           popup.classList.remove('hidden');
 
           // 표시 확인
           setTimeout(() => {
             const isVisible = !popup.classList.contains('hidden');
-            console.log('팝업 표시 상태 확인:', isVisible ? '✅ 표시됨' : '❌ 숨겨짐');
 
             if (isVisible) {
               const computedStyle = window.getComputedStyle(popup);
-              console.log('팝업 computed 스타일:', {
-                display: computedStyle.display,
-                visibility: computedStyle.visibility,
-                opacity: computedStyle.opacity,
-                left: computedStyle.left,
-                top: computedStyle.top,
-                zIndex: computedStyle.zIndex
-              });
             }
           }, 50);
 
-          console.log('✅ 숙소 팝업 표시 완료:', accommodation.title, `위치: (${popupX}, ${popupY})`);
-
         } catch (error) {
-          console.error('❌ 팝업 표시 중 오류 발생:', error);
+          return
         }
       }
 
@@ -1430,7 +1290,6 @@
               showLocationNotification('현재 위치로 이동하고 주변 숙소를 업데이트했습니다.');
             }
           } catch (error) {
-            console.error('현재 위치 이동 실패:', error);
             // 위치를 가져올 수 없는 경우 기본 가평 위치로 이동
             const moveLatLng = new kakao.maps.LatLng(37.8315, 127.5109);
             map.setCenter(moveLatLng); // 지도 중심을 기본 위치로 설정
@@ -1443,14 +1302,12 @@
         closePopup.addEventListener('click', function () {
           const popup = document.getElementById('infoPopup');
           popup.classList.add('hidden');
-          console.log('팝업 닫힘');
         });
 
         // 팝업 외부 클릭 시 닫기
         document.getElementById('infoPopup').addEventListener('click', function (e) {
           if (e.target === this) {
             this.classList.add('hidden');
-            console.log('팝업 외부 클릭으로 닫힘');
           }
         });
 
@@ -1460,7 +1317,6 @@
             const popup = document.getElementById('infoPopup');
             if (!popup.classList.contains('hidden')) {
               popup.classList.add('hidden');
-              console.log('지도 클릭으로 팝업 닫힘');
             }
           });
         }
@@ -1472,7 +1328,6 @@
           initMap();
         });
       } else {
-        console.error('카카오 지도 API가 로드되지 않았습니다. API 키를 확인해주세요.');
         // API 키가 없는 경우 대체 지도 표시
         document.getElementById('map').innerHTML = `
           <div class="w-full h-full flex items-center justify-center bg-gray-100 text-gray-500 rounded-xl">
@@ -1490,7 +1345,6 @@
 
       // 대체 마커 생성 (API 키가 없을 때)
       function createFallbackMarkers() {
-        console.log('🔄 대체 마커 생성 시작');
 
         const mapContainer = document.getElementById('map');
         mapContainer.style.position = 'relative';
@@ -1536,7 +1390,6 @@
         // 현재 위치 이동 기능
         currentLocationBtn.fallbackLocationHandler = async function () {
           try {
-            console.log('현재 위치 버튼 클릭됨');
             showLocationNotification('현재 위치를 가져오는 중입니다...', 'info');
 
             // 간단한 geolocation API 사용
@@ -1580,7 +1433,6 @@
               );
             });
 
-            console.log('사용자 위치 가져오기 성공:', position);
             userLocation = position;
 
             // 사용자 위치를 지도 중앙으로 설정
@@ -1595,7 +1447,6 @@
 
             showLocationNotification('현재 위치로 이동했습니다.');
           } catch (error) {
-            console.error('현재 위치 이동 실패:', error);
             showLocationNotification(error.message, 'warning');
           }
         };
@@ -1603,14 +1454,12 @@
 
         // 대체 지도 업데이트 함수
         function updateFallbackMap() {
-          console.log('대체 지도 업데이트:', { fallbackZoomLevel, fallbackCenterX, fallbackCenterY });
           mapContainer.style.transform = `scale(${fallbackZoomLevel})`;
           mapContainer.style.transformOrigin = `${fallbackCenterX}% ${fallbackCenterY}%`;
         }
 
         // 대체 사용자 위치 마커 추가
         function addFallbackUserLocationMarker() {
-          console.log('대체 사용자 위치 마커 추가');
 
           // 기존 사용자 마커 제거
           const existingUserMarker = document.querySelector('.fallback-user-marker');
@@ -1636,11 +1485,9 @@
           `;
 
           mapContainer.appendChild(userMarkerDiv);
-          console.log('대체 사용자 위치 마커 추가 완료');
         }
 
         accommodations.forEach((accommodation, index) => {
-          console.log(`대체 마커 ${index + 1} 생성 중: ${accommodation.title}`);
 
           const markerDiv = document.createElement('div');
           markerDiv.className = `absolute cursor-pointer marker-fallback-${index}`;
@@ -1661,7 +1508,6 @@
           markerDiv.style.top = `${topPercent}%`;
           markerDiv.style.left = `${leftPercent}%`;
 
-          console.log(`대체 마커 ${index + 1} (${accommodation.title}): ${topPercent}%, ${leftPercent}%`);
 
           markerDiv.innerHTML = `
             <div class="w-[90px] h-[36px] flex items-center justify-center bg-primary text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 marker-clickable">
@@ -1671,7 +1517,6 @@
 
           // 클릭 이벤트 추가
           markerDiv.addEventListener('click', function (event) {
-            console.log(`🎯 대체 마커 ${index + 1} 클릭됨: ${accommodation.title}`);
 
             // 이벤트 버블링 방지
             event.stopPropagation();
@@ -1693,24 +1538,9 @@
               y: event.clientY - mapRect.top
             };
 
-            console.log('대체 마커 실제 클릭 위치 계산:', {
-              clientX: event.clientX,
-              clientY: event.clientY,
-              mapRect: {
-                left: mapRect.left,
-                top: mapRect.top,
-                width: mapRect.width,
-                height: mapRect.height
-              },
-              relative: clickPosition
-            });
-
             // 클릭 위치가 지도 영역 내에 있는지 확인
             if (clickPosition.x >= 0 && clickPosition.x <= mapRect.width &&
               clickPosition.y >= 0 && clickPosition.y <= mapRect.height) {
-              console.log('✅ 대체 마커 클릭 위치가 지도 영역 내에 있음');
-            } else {
-              console.log('⚠️ 대체 마커 클릭 위치가 지도 영역을 벗어남');
             }
 
             showAccommodationPopup(accommodation, clickPosition);
@@ -1718,22 +1548,17 @@
 
           // 호버 이벤트 추가
           markerDiv.addEventListener('mouseenter', function () {
-            console.log(`대체 마커 ${index + 1} 호버: ${accommodation.title}`);
           });
 
           mapContainer.appendChild(markerDiv);
-          console.log(`✅ 대체 마커 ${index + 1} 생성 및 이벤트 바인딩 완료`);
         });
 
-        console.log('✅ 대체 마커가 생성되었습니다.');
       }
 
       // 검색 버튼 클릭 이벤트 추가
       const searchButton = document.getElementById('searchButton');
 
       searchButton.addEventListener('click', function () {
-        console.log('검색 버튼 클릭됨');
-
         // 선택된 캠핑 타입 가져오기
         const selectedCampingType = document.querySelector('#campingTypeFilter button.bg-primary\\/10');
         const campingType = selectedCampingType ? selectedCampingType.dataset.type : 'glamping';
@@ -1790,23 +1615,54 @@
           }
         });
 
-        console.log('검색 데이터:', searchData);
-        console.log('생성된 URL 파라미터:', params.toString());
-
         // 기본 유효성 검사
         if (totalPeople === 0) {
-          alert('인원을 선택해주세요.');
+          showToast('인원을 선택해주세요.', 'warning');
           return;
         }
 
         if (!selectedStartCalendarDate || !selectedEndCalendarDate) {
-          alert('체크인과 체크아웃 날짜를 선택해주세요.');
+          showToast('체크인과 체크아웃 날짜를 선택해주세요.', 'warning');
           return;
         }
 
         // search_result.html로 이동
         window.location.href = `search_result.html?${params.toString()}`;
       });
+
+      // 토스트 팝업 표시 함수
+      function showToast(message, type = 'info') {
+        // 기존 토스트 제거
+        const existingToast = document.querySelector('.toast-popup');
+        if (existingToast) {
+          existingToast.remove();
+        }
+
+        // 토스트 팝업 생성
+        const toast = document.createElement('div');
+        toast.className = 'toast-popup fixed top-20 left-0 right-0 mx-auto w-max bg-black/80 text-white px-4 py-3 rounded-lg z-50 animate-fadeIn';
+
+        toast.innerHTML = `
+          <div class="flex items-center gap-2 whitespace-nowrap">
+            <i class="ri-information-line text-lg"></i>
+            <span class="text-sm">${message}</span>
+          </div>
+        `;
+
+        document.body.appendChild(toast);
+
+        // 3초 후 자동 제거
+        setTimeout(() => {
+          if (toast.parentElement) {
+            toast.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+            setTimeout(() => {
+              if (toast.parentElement) {
+                toast.remove();
+              }
+            }, 300);
+          }
+        }, 3000);
+      }
     });
 
     // 위시리스트 토글 기능

@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=375px, initial-scale=1.0">
+  <title>주변 맛집 - ThankQ Camping</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7c64a249ef8e3b9b648f20a50c07b249"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#FF7A45',
+            secondary: '#4A90E2'
+          },
+          borderRadius: {
+            'none': '0px',
+            'sm': '4px',
+            DEFAULT: '8px',
+            'md': '12px',
+            'lg': '16px',
+            'xl': '20px',
+            '2xl': '24px',
+            '3xl': '32px',
+            'full': '9999px',
+            'button': '8px'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :where([class^="ri-"])::before {
+      content: "\f3c2";
+    }
+
+    .search-input::-webkit-search-cancel-button {
+      display: none;
+    }
+
+    /* 스크롤바 숨김 */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+
+    * {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .restaurant-card {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .restaurant-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .map-marker {
+      animation: bounce 2s infinite;
+    }
+
+    .restaurant-card.focused {
+      box-shadow: 0 0 0 2px rgba(255, 122, 69, 0.6), 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    @keyframes bounce {
+
+      0%,
+      20%,
+      50%,
+      80%,
+      100% {
+        transform: translateY(0);
+      }
+
+      40% {
+        transform: translateY(-10px);
+      }
+
+      60% {
+        transform: translateY(-5px);
+      }
+    }
+
+    .waiting-pulse {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    .filter-slide {
+      transform: translateY(-100%);
+      transition: transform 0.3s ease;
+    }
+
+    .filter-slide.active {
+      transform: translateY(0);
+    }
+  </style>
+</head>
+
+<body class="min-h-[762px] bg-gray-50">
+  <header class="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
+    <div class="flex items-center justify-between px-4 py-3">
+      <a href="javascript:void(0)" onclick="history.back()"
+        class="w-8 h-8 flex items-center justify-center cursor-pointer">
+        <i class="ri-arrow-left-line text-xl"></i>
+      </a>
+      <h1 class="text-lg font-medium">주변 맛집</h1>
+      <button id="filterBtn" class="w-8 h-8 flex items-center justify-center cursor-pointer">
+        <i class="ri-equalizer-line text-xl"></i>
+      </button>
+    </div>
+  </header>
+
+  <div id="filterPanel" class="fixed top-0 left-0 right-0 z-40 bg-white shadow-lg filter-slide">
+    <div class="px-4 py-3 border-b">
+      <div class="flex items-center justify-between">
+        <h2 class="text-lg font-medium">필터</h2>
+        <button id="closeFilter" class="w-8 h-8 flex items-center justify-center cursor-pointer">
+          <i class="ri-close-line text-xl"></i>
+        </button>
+      </div>
+    </div>
+    <div class="px-4 py-4 space-y-4">
+      <div>
+        <h3 class="font-medium mb-3">정렬 기준</h3>
+        <div class="grid grid-cols-3 gap-2">
+          <button
+            class="sort-btn p-2 text-sm border-2 border-gray-200 !rounded-button text-center cursor-pointer transition-all "
+            data-sort="distance">거리순</button>
+          <button
+            class="sort-btn p-2 text-sm border-2 border-primary bg-primary/5 !rounded-button text-center cursor-pointer transition-all"
+            data-sort="rating">평점순</button>
+          <button
+            class="sort-btn p-2 text-sm border-2 border-gray-200 !rounded-button text-center cursor-pointer transition-all "
+            data-sort="waiting">웨이팅순</button>
+        </div>
+      </div>
+      <div>
+        <h3 class="font-medium mb-3">가격대</h3>
+        <div class="grid grid-cols-4 gap-2">
+          <button
+            class="price-btn p-2 text-sm border-2 border-gray-200 !rounded-button text-center cursor-pointer transition-all "
+            data-price="1">1만원대</button>
+          <button
+            class="price-btn p-2 text-sm border-2 border-gray-200 !rounded-button text-center cursor-pointer transition-all "
+            data-price="2">2만원대</button>
+          <button
+            class="price-btn p-2 text-sm border-2 border-gray-200 !rounded-button text-center cursor-pointer transition-all "
+            data-price="3">3만원대</button>
+          <button
+            class="price-btn p-2 text-sm border-2 border-gray-200 !rounded-button text-center cursor-pointer transition-all "
+            data-price="4">4만원+</button>
+        </div>
+      </div>
+      <div>
+        <h3 class="font-medium mb-3">음식 종류</h3>
+        <div class="grid grid-cols-3 gap-2">
+          <button
+            class="category-btn p-2 text-sm border-2 border-gray-200 !rounded-button text-center cursor-pointer transition-all "
+            data-category="korean">한식</button>
+          <button
+            class="category-btn p-2 text-sm border-2 border-gray-200 !rounded-button text-center cursor-pointer transition-all "
+            data-category="western">양식</button>
+          <button
+            class="category-btn p-2 text-sm border-2 border-gray-200 !rounded-button text-center cursor-pointer transition-all "
+            data-category="chinese">중식</button>
+          <button
+            class="category-btn p-2 text-sm border-2 border-gray-200 !rounded-button text-center cursor-pointer transition-all "
+            data-category="japanese">일식</button>
+          <button
+            class="category-btn p-2 text-sm border-2 border-gray-200 !rounded-button text-center cursor-pointer transition-all "
+            data-category="cafe">카페</button>
+          <button
+            class="category-btn p-2 text-sm border-2 border-gray-200 !rounded-button text-center cursor-pointer transition-all "
+            data-category="bbq">고기</button>
+        </div>
+      </div>
+      <div class="flex gap-2 pt-4">
+        <button id="resetFilter"
+          class="flex-1 py-3 border-2 border-gray-200 !rounded-button text-center cursor-pointer">초기화</button>
+        <button id="applyFilter"
+          class="flex-1 py-3 bg-primary text-white !rounded-button text-center cursor-pointer">적용하기</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="pt-14 pb-4">
+    <div class="relative h-64 bg-cover bg-center">
+      <div id="map" class="absolute inset-0"></div>
+      <div class="absolute top-4 left-4 bg-white rounded-lg px-3 py-2 shadow-lg z-10">
+        <div class="flex items-center gap-2">
+          <i class="ri-map-pin-fill text-primary"></i>
+          <span class="text-sm font-medium">가평 프리미엄 글램핑</span>
+        </div>
+      </div>
+      <div class="absolute bottom-4 right-4 flex flex-col gap-2 z-10">
+        <button id="zoomInBtn"
+          class="w-10 h-10 bg-white rounded-lg shadow-lg flex items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors">
+          <i class="ri-add-line text-xl"></i>
+        </button>
+        <button id="zoomOutBtn"
+          class="w-10 h-10 bg-white rounded-lg shadow-lg flex items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors">
+          <i class="ri-subtract-line text-xl"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="py-4 px-4">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-medium">주변 맛집 8곳</h2>
+        <div class="flex items-center gap-2">
+          <button id="notificationBtn"
+            class="px-3 py-1 bg-secondary/10 text-secondary text-sm !rounded-button cursor-pointer">
+            <i class="ri-notification-line text-sm mr-1"></i>
+            웨이팅 알림
+          </button>
+        </div>
+      </div>
+
+      <div class="space-y-4 pb-10" id="restaurantList">
+        <div class="restaurant-card bg-white rounded-xl overflow-hidden shadow-sm cursor-pointer" data-restaurant="1">
+          <div class="flex h-[136px]">
+            <div class="w-24 h-full flex-shrink-0 overflow-hidden">
+              <img
+                src="https://readdy.ai/api/search-image?query=Korean%20traditional%20restaurant%20interior%20with%20wooden%20tables%20and%20warm%20lighting%2C%20cozy%20atmosphere%2C%20authentic%20Korean%20dishes%20on%20table%2C%20professional%20food%20photography&width=120&height=120&seq=61&orientation=squarish"
+                class="h-full w-auto object-cover object-center" alt="맛집">
+            </div>
+            <div class="flex-1 p-4">
+              <div class="flex justify-between items-start mb-2">
+                <h3 class="font-medium text-base">가평 한정식</h3>
+                <div class="flex items-center gap-1">
+                  <i class="ri-star-fill text-yellow-400 text-sm"></i>
+                  <span class="text-sm font-medium">4.8</span>
+                </div>
+              </div>
+              <p class="text-sm text-gray-600 mb-2">전통 한정식 • 2만원대</p>
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2 text-sm text-gray-500">
+                  <i class="ri-map-pin-line text-xs"></i>
+                  <span>캠핑장에서 0.8km</span>
+                </div>
+                <div class="flex items-center gap-1 text-primary">
+                  <div class="w-2 h-2 bg-primary rounded-full waiting-pulse"></div>
+                  <span class="text-xs">예약가능</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between text-xs">
+                <div class="flex items-center gap-2">
+                  <span class="text-gray-500">웨이팅</span>
+                  <span class="font-medium text-orange-500">5분</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <i class="ri-time-line text-gray-400"></i>
+                  <span class="text-gray-500">11:30-21:00</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="px-4 py-3 bg-gray-50 flex items-center justify-between">
+            <div class="flex items-center gap-4 text-xs text-gray-600">
+              <span>주차가능</span>
+              <span>단체석</span>
+              <span>포장가능</span>
+            </div>
+            <button class="px-4 py-2 bg-primary text-white text-xs !rounded-button cursor-pointer">
+              예약하기
+            </button>
+          </div>
+        </div>
+
+        <div class="restaurant-card bg-white rounded-xl overflow-hidden shadow-sm cursor-pointer" data-restaurant="2">
+          <div class="flex h-[136px]">
+            <div class="w-24 h-full flex-shrink-0 overflow-hidden">
+              <img
+                src="https://readdy.ai/api/search-image?query=Italian%20restaurant%20with%20wood-fired%20pizza%20oven%2C%20rustic%20interior%20design%2C%20pasta%20and%20pizza%20on%20wooden%20table%2C%20warm%20ambient%20lighting%2C%20cozy%20dining%20atmosphere&width=120&height=120&seq=62&orientation=squarish"
+                class="h-full w-auto object-cover object-center" alt="맛집">
+            </div>
+            <div class="flex-1 p-4">
+              <div class="flex justify-between items-start mb-2">
+                <h3 class="font-medium text-base">피자마루</h3>
+                <div class="flex items-center gap-1">
+                  <i class="ri-star-fill text-yellow-400 text-sm"></i>
+                  <span class="text-sm font-medium">4.6</span>
+                </div>
+              </div>
+              <p class="text-sm text-gray-600 mb-2">이탈리안 • 2만원대</p>
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2 text-sm text-gray-500">
+                  <i class="ri-map-pin-line text-xs"></i>
+                  <span>캠핑장에서 1.2km</span>
+                </div>
+                <div class="flex items-center gap-1 text-yellow-600">
+                  <div class="w-2 h-2 bg-yellow-500 rounded-full waiting-pulse"></div>
+                  <span class="text-xs">웨이팅 중</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between text-xs">
+                <div class="flex items-center gap-2">
+                  <span class="text-gray-500">웨이팅</span>
+                  <span class="font-medium text-orange-500">15분</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <i class="ri-time-line text-gray-400"></i>
+                  <span class="text-gray-500">11:00-22:00</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="px-4 py-3 bg-gray-50 flex items-center justify-between">
+            <div class="flex items-center gap-4 text-xs text-gray-600">
+              <span>주차가능</span>
+              <span>배달가능</span>
+              <span>테라스석</span>
+            </div>
+            <button class="px-4 py-2 bg-yellow-500 text-white text-xs !rounded-button cursor-pointer">
+              웨이팅 신청
+            </button>
+          </div>
+        </div>
+
+        <div class="restaurant-card bg-white rounded-xl overflow-hidden shadow-sm cursor-pointer" data-restaurant="3">
+          <div class="flex h-[136px]">
+            <div class="w-24 h-full flex-shrink-0 overflow-hidden">
+              <img
+                src="https://readdy.ai/api/search-image?query=Korean%20BBQ%20restaurant%20with%20grilling%20meat%20on%20table%2C%20traditional%20side%20dishes%2C%20modern%20interior%20with%20ventilation%20system%2C%20sizzling%20beef%20and%20pork%2C%20authentic%20Korean%20dining&width=120&height=120&seq=63&orientation=squarish"
+                class="h-full w-auto object-cover object-center" alt="맛집">
+            </div>
+            <div class="flex-1 p-4">
+              <div class="flex justify-between items-start mb-2">
+                <h3 class="font-medium text-base">산골 숯불갈비</h3>
+                <div class="flex items-center gap-1">
+                  <i class="ri-star-fill text-yellow-400 text-sm"></i>
+                  <span class="text-sm font-medium">4.7</span>
+                </div>
+              </div>
+              <p class="text-sm text-gray-600 mb-2">한우 전문점 • 4만원대</p>
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2 text-sm text-gray-500">
+                  <i class="ri-map-pin-line text-xs"></i>
+                  <span>캠핑장에서 1.5km</span>
+                </div>
+                <div class="flex items-center gap-1 text-primary">
+                  <div class="w-2 h-2 bg-primary rounded-full waiting-pulse"></div>
+                  <span class="text-xs">예약가능</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between text-xs">
+                <div class="flex items-center gap-2">
+                  <span class="text-gray-500">웨이팅</span>
+                  <span class="font-medium text-orange-500">10분</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <i class="ri-time-line text-gray-400"></i>
+                  <span class="text-gray-500">12:00-22:00</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="px-4 py-3 bg-gray-50 flex items-center justify-between">
+            <div class="flex items-center gap-4 text-xs text-gray-600">
+              <span>주차가능</span>
+              <span>룸 있음</span>
+              <span>한우인증</span>
+            </div>
+            <button class="px-4 py-2 bg-primary text-white text-xs !rounded-button cursor-pointer">
+              예약하기
+            </button>
+          </div>
+        </div>
+
+        <div class="restaurant-card bg-white rounded-xl overflow-hidden shadow-sm cursor-pointer" data-restaurant="4">
+          <div class="flex h-[136px]">
+            <div class="w-24 h-full flex-shrink-0 overflow-hidden">
+              <img
+                src="https://readdy.ai/api/search-image?query=Cozy%20cafe%20interior%20with%20wooden%20furniture%2C%20coffee%20cups%20and%20desserts%20on%20table%2C%20warm%20lighting%2C%20plants%20decoration%2C%20comfortable%20seating%20area%2C%20modern%20cafe%20atmosphere&width=120&height=120&seq=64&orientation=squarish"
+                class="h-full w-auto object-cover object-center" alt="맛집">
+            </div>
+            <div class="flex-1 p-4">
+              <div class="flex justify-between items-start mb-2">
+                <h3 class="font-medium text-base">숲속 카페</h3>
+                <div class="flex items-center gap-1">
+                  <i class="ri-star-fill text-yellow-400 text-sm"></i>
+                  <span class="text-sm font-medium">4.5</span>
+                </div>
+              </div>
+              <p class="text-sm text-gray-600 mb-2">카페 • 1만원대</p>
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2 text-sm text-gray-500">
+                  <i class="ri-map-pin-line text-xs"></i>
+                  <span>캠핑장에서 0.5km</span>
+                </div>
+                <div class="flex items-center gap-1 text-green-600">
+                  <div class="w-2 h-2 bg-green-500 rounded-full waiting-pulse"></div>
+                  <span class="text-xs">바로입장</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between text-xs">
+                <div class="flex items-center gap-2">
+                  <span class="text-gray-500">웨이팅</span>
+                  <span class="font-medium text-green-500">없음</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <i class="ri-time-line text-gray-400"></i>
+                  <span class="text-gray-500">09:00-21:00</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="px-4 py-3 bg-gray-50 flex items-center justify-between">
+            <div class="flex items-center gap-4 text-xs text-gray-600">
+              <span>WiFi</span>
+              <span>테이크아웃</span>
+              <span>반려동물</span>
+            </div>
+            <button class="px-4 py-2 bg-green-500 text-white text-xs !rounded-button cursor-pointer">
+              바로입장
+            </button>
+          </div>
+        </div>
+
+        <div class="restaurant-card bg-white rounded-xl overflow-hidden shadow-sm cursor-pointer" data-restaurant="5">
+          <div class="flex h-[136px]">
+            <div class="w-24 h-full flex-shrink-0 overflow-hidden">
+              <img
+                src="https://readdy.ai/api/search-image?query=Japanese%20sushi%20restaurant%20with%20fresh%20sashimi%20and%20sushi%20rolls%20on%20wooden%20board%2C%20minimalist%20interior%20design%2C%20chef%20preparing%20food%2C%20authentic%20Japanese%20dining%20atmosphere&width=120&height=120&seq=65&orientation=squarish"
+                class="h-full w-auto object-cover object-center" alt="맛집">
+            </div>
+            <div class="flex-1 p-4">
+              <div class="flex justify-between items-start mb-2">
+                <h3 class="font-medium text-base">스시 하나</h3>
+                <div class="flex items-center gap-1">
+                  <i class="ri-star-fill text-yellow-400 text-sm"></i>
+                  <span class="text-sm font-medium">4.9</span>
+                </div>
+              </div>
+              <p class="text-sm text-gray-600 mb-2">일식 • 3만원대</p>
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2 text-sm text-gray-500">
+                  <i class="ri-map-pin-line text-xs"></i>
+                  <span>캠핑장에서 2.1km</span>
+                </div>
+                <div class="flex items-center gap-1 text-red-600">
+                  <div class="w-2 h-2 bg-red-500 rounded-full waiting-pulse"></div>
+                  <span class="text-xs">예약마감</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between text-xs">
+                <div class="flex items-center gap-2">
+                  <span class="text-gray-500">웨이팅</span>
+                  <span class="font-medium text-red-500">30분</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <i class="ri-time-line text-gray-400"></i>
+                  <span class="text-gray-500">17:00-22:00</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="px-4 py-3 bg-gray-50 flex items-center justify-between">
+            <div class="flex items-center gap-4 text-xs text-gray-600">
+              <span>오마카세</span>
+              <span>예약필수</span>
+              <span>카운터석</span>
+            </div>
+            <button class="px-4 py-2 bg-gray-400 text-white text-xs !rounded-button cursor-not-allowed" disabled>
+              예약마감
+            </button>
+          </div>
+        </div>
+
+        <div class="restaurant-card bg-white rounded-xl overflow-hidden shadow-sm cursor-pointer" data-restaurant="6">
+          <div class="flex h-[136px]">
+            <div class="w-24 h-full flex-shrink-0 overflow-hidden">
+              <img
+                src="https://readdy.ai/api/search-image?query=Chinese%20restaurant%20with%20traditional%20dishes%20like%20dumplings%20and%20noodles%2C%20red%20and%20gold%20interior%20decoration%2C%20round%20dining%20table%2C%20authentic%20Chinese%20cuisine%20presentation&width=120&height=120&seq=66&orientation=squarish"
+                class="h-full w-auto object-cover object-center" alt="맛집">
+            </div>
+            <div class="flex-1 p-4">
+              <div class="flex justify-between items-start mb-2">
+                <h3 class="font-medium text-base">북경반점</h3>
+                <div class="flex items-center gap-1">
+                  <i class="ri-star-fill text-yellow-400 text-sm"></i>
+                  <span class="text-sm font-medium">4.4</span>
+                </div>
+              </div>
+              <p class="text-sm text-gray-600 mb-2">중식 • 1만원대</p>
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2 text-sm text-gray-500">
+                  <i class="ri-map-pin-line text-xs"></i>
+                  <span>캠핑장에서 1.8km</span>
+                </div>
+                <div class="flex items-center gap-1 text-primary">
+                  <div class="w-2 h-2 bg-primary rounded-full waiting-pulse"></div>
+                  <span class="text-xs">예약가능</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between text-xs">
+                <div class="flex items-center gap-2">
+                  <span class="text-gray-500">웨이팅</span>
+                  <span class="font-medium text-orange-500">8분</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <i class="ri-time-line text-gray-400"></i>
+                  <span class="text-gray-500">11:00-21:30</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="px-4 py-3 bg-gray-50 flex items-center justify-between">
+            <div class="flex items-center gap-4 text-xs text-gray-600">
+              <span>배달가능</span>
+              <span>단체석</span>
+              <span>포장할인</span>
+            </div>
+            <button class="px-4 py-2 bg-primary text-white text-xs !rounded-button cursor-pointer">
+              예약하기
+            </button>
+          </div>
+        </div>
+
+        <div class="restaurant-card bg-white rounded-xl overflow-hidden shadow-sm cursor-pointer" data-restaurant="7">
+          <div class="flex h-[136px]">
+            <div class="w-24 h-full flex-shrink-0 overflow-hidden">
+              <img
+                src="https://readdy.ai/api/search-image?query=Korean%20chicken%20restaurant%20with%20fried%20chicken%20and%20beer%2C%20casual%20dining%20atmosphere%2C%20wooden%20tables%20and%20chairs%2C%20golden%20crispy%20chicken%20wings%2C%20modern%20interior%20design&width=120&height=120&seq=67&orientation=squarish"
+                class="h-full w-auto object-cover object-center" alt="맛집">
+            </div>
+            <div class="flex-1 p-4">
+              <div class="flex justify-between items-start mb-2">
+                <h3 class="font-medium text-base">치킨마을</h3>
+                <div class="flex items-center gap-1">
+                  <i class="ri-star-fill text-yellow-400 text-sm"></i>
+                  <span class="text-sm font-medium">4.3</span>
+                </div>
+              </div>
+              <p class="text-sm text-gray-600 mb-2">치킨 • 2만원대</p>
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2 text-sm text-gray-500">
+                  <i class="ri-map-pin-line text-xs"></i>
+                  <span>캠핑장에서 1.0km</span>
+                </div>
+                <div class="flex items-center gap-1 text-yellow-600">
+                  <div class="w-2 h-2 bg-yellow-500 rounded-full waiting-pulse"></div>
+                  <span class="text-xs">웨이팅 중</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between text-xs">
+                <div class="flex items-center gap-2">
+                  <span class="text-gray-500">웨이팅</span>
+                  <span class="font-medium text-orange-500">20분</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <i class="ri-time-line text-gray-400"></i>
+                  <span class="text-gray-500">16:00-24:00</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="px-4 py-3 bg-gray-50 flex items-center justify-between">
+            <div class="flex items-center gap-4 text-xs text-gray-600">
+              <span>배달가능</span>
+              <span>포장가능</span>
+              <span>생맥주</span>
+            </div>
+            <button class="px-4 py-2 bg-yellow-500 text-white text-xs !rounded-button cursor-pointer">
+              웨이팅 신청
+            </button>
+          </div>
+        </div>
+
+        <div class="restaurant-card bg-white rounded-xl overflow-hidden shadow-sm cursor-pointer" data-restaurant="8">
+          <div class="flex h-[136px]">
+            <div class="w-24 h-full flex-shrink-0 overflow-hidden">
+              <img
+                src="https://readdy.ai/api/search-image?query=Korean%20seafood%20restaurant%20with%20fresh%20fish%20and%20shellfish%20display%2C%20traditional%20Korean%20seafood%20dishes%2C%20aquarium%20tanks%2C%20coastal%20restaurant%20atmosphere%2C%20grilled%20fish%20presentation&width=120&height=120&seq=68&orientation=squarish"
+                class="h-full w-auto object-cover object-center" alt="맛집">
+            </div>
+            <div class="flex-1 p-4">
+              <div class="flex justify-between items-start mb-2">
+                <h3 class="font-medium text-base">바다횟집</h3>
+                <div class="flex items-center gap-1">
+                  <i class="ri-star-fill text-yellow-400 text-sm"></i>
+                  <span class="text-sm font-medium">4.6</span>
+                </div>
+              </div>
+              <p class="text-sm text-gray-600 mb-2">해산물 • 3만원대</p>
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2 text-sm text-gray-500">
+                  <i class="ri-map-pin-line text-xs"></i>
+                  <span>캠핑장에서 2.5km</span>
+                </div>
+                <div class="flex items-center gap-1 text-primary">
+                  <div class="w-2 h-2 bg-primary rounded-full waiting-pulse"></div>
+                  <span class="text-xs">예약가능</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between text-xs">
+                <div class="flex items-center gap-2">
+                  <span class="text-gray-500">웨이팅</span>
+                  <span class="font-medium text-orange-500">12분</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <i class="ri-time-line text-gray-400"></i>
+                  <span class="text-gray-500">11:00-22:00</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="px-4 py-3 bg-gray-50 flex items-center justify-between">
+            <div class="flex items-center gap-4 text-xs text-gray-600">
+              <span>활어회</span>
+              <span>룸 있음</span>
+              <span>주차가능</span>
+            </div>
+            <button class="px-4 py-2 bg-primary text-white text-xs !rounded-button cursor-pointer">
+              예약하기
+            </button>
+          </div>
+        </div>
+      </div>
+      <div id="emptyState" class="hidden py-8 text-center text-gray-500">
+        필터 결과가 없습니다.
+      </div>
+    </div>
+  </main>
+  <nav class="fixed bottom-0 left-0 right-0 bg-white border-t">
+    <div class="grid grid-cols-6 py-1">
+      <a href="search_map.html?from=nearby" data-readdy="true" class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+          <i class="ri-map-pin-2-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
+        </div>
+        <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">내주변</span>
+      </a>
+      <a href="./index.html" class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+          <i class="ri-home-5-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
+        </div>
+        <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">홈</span>
+      </a>
+      <a href="wishlist.html" data-readdy="true" class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+          <i class="ri-heart-3-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
+        </div>
+        <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">찜</span>
+      </a>
+      <a href="mypage.html" data-readdy="true" class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+          <i class="ri-user-3-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
+        </div>
+        <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">마이</span>
+      </a>
+      <button class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+          <i class="ri-wallet-3-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
+        </div>
+        <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">페이</span>
+      </button>
+      <button id="bottomMenuButton" class="flex flex-col items-center gap-1 group">
+        <div
+          class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+          <i class="ri-menu-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
+        </div>
+        <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">전체</span>
+      </button>
+    </div>
+  </nav>
+
+  <div id="restaurantModal" class="fixed inset-0 bg-black/50 z-50 hidden">
+    <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-xl max-h-[80vh] overflow-y-auto">
+      <div class="sticky top-0 bg-white border-b px-4 py-3">
+        <div class="flex items-center justify-between">
+          <h3 class="text-lg font-medium" id="modalTitle">가평 한정식</h3>
+          <button id="closeModal" class="w-8 h-8 flex items-center justify-center cursor-pointer">
+            <i class="ri-close-line text-xl"></i>
+          </button>
+        </div>
+      </div>
+      <div class="p-4">
+        <div class="mb-4">
+          <img
+            src="https://readdy.ai/api/search-image?query=Korean%20traditional%20restaurant%20interior%20with%20wooden%20tables%20and%20warm%20lighting%2C%20cozy%20atmosphere%2C%20authentic%20Korean%20dishes%20on%20table%2C%20professional%20food%20photography&width=400&height=200&seq=69&orientation=landscape"
+            class="w-full h-48 object-cover rounded-lg" alt="맛집 상세">
+        </div>
+        <div class="space-y-4">
+          <div>
+            <h4 class="font-medium mb-2">영업 정보</h4>
+            <div class="space-y-2 text-sm text-gray-600">
+              <div class="flex items-center gap-2">
+                <i class="ri-time-line"></i>
+                <span>영업시간: 11:30 - 21:00</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <i class="ri-phone-line"></i>
+                <span>전화: 031-123-4567</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <i class="ri-map-pin-line"></i>
+                <span>주소: 경기도 가평군 가평읍 중앙로 123</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <i class="ri-car-line"></i>
+                <span>주차: 가능 (20대)</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h4 class="font-medium mb-2">대표 메뉴</h4>
+            <div class="space-y-2">
+              <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                <span class="text-sm">한정식 정식</span>
+                <span class="text-sm font-medium">25,000원</span>
+              </div>
+              <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                <span class="text-sm">갈비탕</span>
+                <span class="text-sm font-medium">18,000원</span>
+              </div>
+              <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                <span class="text-sm">불고기 정식</span>
+                <span class="text-sm font-medium">22,000원</span>
+              </div>
+              <div class="flex justify-between items-center py-2">
+                <span class="text-sm">된장찌개 정식</span>
+                <span class="text-sm font-medium">15,000원</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h4 class="font-medium mb-2">예약 가능 시간</h4>
+            <div class="grid grid-cols-3 gap-2">
+              <button
+                class="p-2 border-2 border-gray-200 !rounded-button text-sm text-center cursor-pointer ">12:00</button>
+              <button
+                class="p-2 border-2 border-gray-200 !rounded-button text-sm text-center cursor-pointer ">12:30</button>
+              <button
+                class="p-2 border-2 border-primary bg-primary/5 !rounded-button text-sm text-center cursor-pointer">13:00</button>
+              <button
+                class="p-2 border-2 border-gray-200 !rounded-button text-sm text-center cursor-pointer ">13:30</button>
+              <button
+                class="p-2 border-2 border-gray-200 !rounded-button text-sm text-center cursor-pointer ">18:00</button>
+              <button
+                class="p-2 border-2 border-gray-200 !rounded-button text-sm text-center cursor-pointer ">18:30</button>
+            </div>
+          </div>
+          <div>
+            <h4 class="font-medium mb-2">리뷰</h4>
+            <div class="space-y-3">
+              <div class="bg-gray-50 rounded-lg p-3">
+                <div class="flex items-center gap-2 mb-2">
+                  <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                    <span class="text-white text-xs font-medium">김</span>
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-1">
+                      <i class="ri-star-fill text-yellow-400 text-xs"></i>
+                      <i class="ri-star-fill text-yellow-400 text-xs"></i>
+                      <i class="ri-star-fill text-yellow-400 text-xs"></i>
+                      <i class="ri-star-fill text-yellow-400 text-xs"></i>
+                      <i class="ri-star-fill text-yellow-400 text-xs"></i>
+                    </div>
+                    <span class="text-xs text-gray-500">김민수 • 2일 전</span>
+                  </div>
+                </div>
+                <p class="text-sm text-gray-700">음식이 정말 맛있고 양도 많아요. 캠핑 후 식사로 최고입니다!</p>
+              </div>
+              <div class="bg-gray-50 rounded-lg p-3">
+                <div class="flex items-center gap-2 mb-2">
+                  <div class="w-8 h-8 bg-secondary rounded-full flex items-center justify-center">
+                    <span class="text-white text-xs font-medium">박</span>
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-1">
+                      <i class="ri-star-fill text-yellow-400 text-xs"></i>
+                      <i class="ri-star-fill text-yellow-400 text-xs"></i>
+                      <i class="ri-star-fill text-yellow-400 text-xs"></i>
+                      <i class="ri-star-fill text-yellow-400 text-xs"></i>
+                      <i class="ri-star-line text-gray-300 text-xs"></i>
+                    </div>
+                    <span class="text-xs text-gray-500">박지영 • 1주 전</span>
+                  </div>
+                </div>
+                <p class="text-sm text-gray-700">전통 한정식이 정말 맛있어요. 주차도 편리하고 서비스도 좋습니다.</p>
+              </div>
+            </div>
+          </div>
+          <div class="flex gap-3 pt-4">
+            <button id="waitingBtn"
+              class="flex-1 py-3 border-2 border-primary text-primary !rounded-button text-center cursor-pointer">
+              웨이팅 신청
+            </button>
+            <button id="reserveBtn"
+              class="flex-1 py-3 bg-primary text-white !rounded-button text-center cursor-pointer">
+              예약하기
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="notificationModal" class="fixed inset-0 bg-black/50 z-50 hidden">
+    <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-xl">
+      <div class="px-4 py-3 border-b">
+        <div class="flex items-center justify-between">
+          <h3 class="text-lg font-medium">웨이팅 알림 설정</h3>
+          <button id="closeNotificationModal" class="w-8 h-8 flex items-center justify-center cursor-pointer">
+            <i class="ri-close-line text-xl"></i>
+          </button>
+        </div>
+      </div>
+      <div class="p-4">
+        <div class="space-y-4">
+          <div class="flex items-center justify-between py-3 border-b border-gray-100">
+            <div class="flex items-center gap-3">
+              <i class="ri-restaurant-line text-primary"></i>
+              <div>
+                <p class="font-medium">가평 한정식</p>
+                <p class="text-sm text-gray-600">현재 웨이팅: 5분</p>
+              </div>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" class="sr-only peer" checked>
+              <div
+                class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary">
+              </div>
+            </label>
+          </div>
+          <div class="flex items-center justify-between py-3 border-b border-gray-100">
+            <div class="flex items-center gap-3">
+              <i class="ri-restaurant-line text-primary"></i>
+              <div>
+                <p class="font-medium">피자마루</p>
+                <p class="text-sm text-gray-600">현재 웨이팅: 15분</p>
+              </div>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" class="sr-only peer">
+              <div
+                class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary">
+              </div>
+            </label>
+          </div>
+          <div class="flex items-center justify-between py-3">
+            <div class="flex items-center gap-3">
+              <i class="ri-restaurant-line text-primary"></i>
+              <div>
+                <p class="font-medium">치킨마을</p>
+                <p class="text-sm text-gray-600">현재 웨이팅: 20분</p>
+              </div>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" class="sr-only peer">
+              <div
+                class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary">
+              </div>
+            </label>
+          </div>
+        </div>
+        <div class="bg-secondary/10 rounded-lg p-3 mt-4">
+          <div class="flex items-center gap-2 mb-2">
+            <i class="ri-information-line text-secondary"></i>
+            <span class="text-sm font-medium text-secondary">알림 설정</span>
+          </div>
+          <p class="text-xs text-gray-600">웨이팅 시간이 5분 이하로 줄어들면 카카오톡으로 알림을 보내드립니다.</p>
+        </div>
+        <button class="w-full py-3 bg-primary text-white !rounded-button cursor-pointer mt-4">
+          알림 설정 완료
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 예약 완료 모달 -->
+  <div id="reservationCompleteModal" class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-xl w-[320px] p-6 animate-scaleIn">
+      <div class="text-center">
+        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="ri-check-line text-2xl text-green-600"></i>
+        </div>
+        <h3 class="text-lg font-medium mb-2">예약되었습니다</h3>
+        <p class="text-sm text-gray-600 mb-6">카카오톡으로 예약 확정 알림을 보내드렸습니다.</p>
+        <button id="confirmReservationBtn"
+          class="w-full py-3 bg-primary text-white rounded-lg font-medium cursor-pointer !rounded-button">
+          확인
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 웨이팅 신청 완료 모달 -->
+  <div id="waitingCompleteModal" class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-xl w-[320px] p-6 animate-scaleIn">
+      <div class="text-center">
+        <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="ri-time-line text-2xl text-yellow-600"></i>
+        </div>
+        <h3 class="text-lg font-medium mb-2">웨이팅이 신청되었습니다</h3>
+        <p class="text-sm text-gray-600 mb-6">순서가 되면 알림을 보내드리겠습니다.</p>
+        <button id="confirmWaitingBtn"
+          class="w-full py-3 bg-primary text-white rounded-lg font-medium cursor-pointer !rounded-button">
+          확인
+        </button>
+      </div>
+    </div>
+  </div>
+  <script>
+    function lockScroll() {
+      document.body.style.overflow = 'hidden';
+    }
+    function unlockScroll() {
+      document.body.style.overflow = '';
+    }
+  </script>
+  <script id="filterScript">
+    document.addEventListener('DOMContentLoaded', function () {
+      const filterBtn = document.getElementById('filterBtn');
+      const filterPanel = document.getElementById('filterPanel');
+      const closeFilter = document.getElementById('closeFilter');
+      const resetFilter = document.getElementById('resetFilter');
+      const applyFilter = document.getElementById('applyFilter');
+      const restaurantList = document.getElementById('restaurantList');
+      const emptyState = document.getElementById('emptyState');
+
+      // 1) 최초 음식점 리스트 원본 저장
+      const originalRestaurants = Array.from(restaurantList.children);
+
+      // 2) 필터 상태 객체
+      let filterState = {
+        sort: 'rating', // 기본 평점순
+        price: [],       // 선택된 가격대 배열
+        category: []        // 선택된 카테고리 배열
+      };
+
+      // 3) 필터 패널 열기/닫기 (닫힐 때 blur() 호출)
+      filterBtn.addEventListener('click', () => {
+        filterPanel.classList.toggle('active');
+        // 패널이 닫힌 상태라면 버튼 포커스 해제
+        if (!filterPanel.classList.contains('active')) filterBtn.blur();
+      });
+      closeFilter.addEventListener('click', () => {
+        filterPanel.classList.remove('active');
+        closeFilter.blur();
+      });
+
+      // 4) 정렬 버튼 클릭
+      document.querySelectorAll('.sort-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+          document.querySelectorAll('.sort-btn').forEach(b => {
+            b.classList.remove('border-primary', 'bg-primary/5');
+            b.classList.add('border-gray-200');
+          });
+          this.classList.add('border-primary', 'bg-primary/5');
+          this.classList.remove('border-gray-200');
+          filterState.sort = this.dataset.sort;
+        });
+      });
+
+      // 5) 가격대 버튼 클릭 (다중 선택)
+      document.querySelectorAll('.price-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+          const price = this.dataset.price;
+          if (this.classList.contains('border-primary')) {
+            this.classList.remove('border-primary', 'bg-primary/5');
+            this.classList.add('border-gray-200');
+            filterState.price = filterState.price.filter(p => p !== price);
+          } else {
+            this.classList.add('border-primary', 'bg-primary/5');
+            this.classList.remove('border-gray-200');
+            filterState.price.push(price);
+          }
+        });
+      });
+
+      // 6) 카테고리 버튼 클릭 (다중 선택)
+      document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+          const cat = this.dataset.category;
+          if (this.classList.contains('border-primary')) {
+            this.classList.remove('border-primary', 'bg-primary/5');
+            this.classList.add('border-gray-200');
+            filterState.category = filterState.category.filter(c => c !== cat);
+          } else {
+            this.classList.add('border-primary', 'bg-primary/5');
+            this.classList.remove('border-gray-200');
+            filterState.category.push(cat);
+          }
+        });
+      });
+
+      // 7) 초기화 버튼
+      resetFilter.addEventListener('click', function () {
+        document.querySelectorAll('.sort-btn, .price-btn, .category-btn').forEach(b => {
+          b.classList.remove('border-primary', 'bg-primary/5');
+          b.classList.add('border-gray-200');
+        });
+        document.querySelector('.sort-btn[data-sort="rating"]')
+          .classList.add('border-primary', 'bg-primary/5');
+        filterState = { sort: 'rating', price: [], category: [] };
+      });
+
+      // 8) 적용 버튼 (패널 닫고 blur())
+      applyFilter.addEventListener('click', function () {
+        applyFilters();
+        filterPanel.classList.remove('active');
+        applyFilter.blur();
+      });
+
+      // 9) 필터링·정렬·화면 갱신 함수
+      function applyFilters() {
+        // (1) 원본에서 조건에 맞는 카드만 추출
+        let filtered = originalRestaurants.filter(card => {
+          // 가격 필터
+          const priceText = card.querySelector('.text-gray-600').textContent;
+          if (filterState.price.length) {
+            const ok = filterState.price.some(p => priceText.includes(`${p}만원대`));
+            if (!ok) return false;
+          }
+          // 카테고리 필터
+          const title = card.querySelector('h3').textContent;
+          if (filterState.category.length) {
+            const ok = filterState.category.some(cat => (
+              (cat === 'korean' && title.includes('한정식')) ||
+              (cat === 'western' && title.includes('피자')) ||
+              (cat === 'chinese' && title.includes('북경')) ||
+              (cat === 'japanese' && title.includes('스시')) ||
+              (cat === 'cafe' && title.includes('카페')) ||
+              (cat === 'bbq' && title.includes('고기'))
+            ));
+            if (!ok) return false;
+          }
+          return true;
+        });
+
+        // (2) 정렬
+        filtered.sort((a, b) => {
+          if (filterState.sort === 'distance') {
+            const da = parseFloat(a.querySelector('.text-gray-500').textContent);
+            const db = parseFloat(b.querySelector('.text-gray-500').textContent);
+            return da - db;
+          }
+          if (filterState.sort === 'rating') {
+            const ra = parseFloat(a.querySelector('.text-sm.font-medium').textContent);
+            const rb = parseFloat(b.querySelector('.text-sm.font-medium').textContent);
+            return rb - ra;
+          }
+          if (filterState.sort === 'waiting') {
+            const getW = el => {
+              const span = el.querySelector('span.font-medium:not(.text-sm)');
+              const txt = span ? span.textContent.trim() : '0분';
+              if (txt === '없음') return 0;
+              const m = txt.match(/(\d+)/);
+              return m ? parseInt(m[1], 10) : 0;
+            };
+            return getW(a) - getW(b);
+          }
+          return 0;
+        });
+
+        // (3) 화면 갱신
+        restaurantList.innerHTML = '';
+        filtered.forEach(r => restaurantList.appendChild(r));
+
+        // (4) “결과 없음” 토글
+        emptyState.classList.toggle('hidden', filtered.length > 0);
+
+        // (5) 지도 마커 보이기/숨기기
+        const visibleIds = new Set(filtered.map(r => r.dataset.restaurant));
+        for (const [id, overlay] of Object.entries(window.markers)) {
+          overlay.setMap(visibleIds.has(id) ? window.map : null);
+        }
+      }
+    });
+  </script>
+
+  <script id="restaurantModalScript">
+    document.addEventListener('DOMContentLoaded', function () {
+      const restaurantCards = document.querySelectorAll('.restaurant-card');
+      const restaurantModal = document.getElementById('restaurantModal');
+      const closeModal = document.getElementById('closeModal');
+      const modalTitle = document.getElementById('modalTitle');
+
+      restaurantCards.forEach(card => {
+        card.addEventListener('click', function () {
+          const restaurantName = this.querySelector('h3').textContent;
+          modalTitle.textContent = restaurantName;
+          restaurantModal.classList.remove('hidden');
+          lockScroll();
+        });
+      });
+
+      closeModal.addEventListener('click', function () {
+        restaurantModal.classList.add('hidden');
+        unlockScroll();
+      });
+
+      restaurantModal.addEventListener('click', function (e) {
+        if (e.target === restaurantModal) {
+          restaurantModal.classList.add('hidden');
+          unlockScroll();
+        }
+      });
+
+      // 예약 가능 시간 버튼 클릭 이벤트
+      document.addEventListener('click', function (e) {
+        // 예약 가능 시간 버튼인지 확인
+        if (e.target.matches('#restaurantModal .grid button')) {
+          // 모든 예약 시간 버튼의 활성화 상태 제거
+          const timeButtons = restaurantModal.querySelectorAll('.grid button');
+          timeButtons.forEach(btn => {
+            btn.classList.remove('border-primary', 'bg-primary/5');
+            btn.classList.add('border-gray-200');
+          });
+
+          // 클릭된 버튼만 활성화
+          e.target.classList.remove('border-gray-200');
+          e.target.classList.add('border-primary', 'bg-primary/5');
+        }
+      });
+
+      // 예약하기 버튼 클릭 이벤트
+      document.addEventListener('click', function (e) {
+        if (e.target.id === 'reserveBtn') {
+          const reservationCompleteModal = document.getElementById('reservationCompleteModal');
+          reservationCompleteModal.classList.remove('hidden');
+        }
+      });
+
+      // 웨이팅 신청 버튼 클릭 이벤트
+      document.addEventListener('click', function (e) {
+        if (e.target.id === 'waitingBtn') {
+          const waitingCompleteModal = document.getElementById('waitingCompleteModal');
+          waitingCompleteModal.classList.remove('hidden');
+        }
+      });
+
+      // 예약 완료 모달 확인 버튼
+      document.addEventListener('click', function (e) {
+        if (e.target.id === 'confirmReservationBtn') {
+          const reservationCompleteModal = document.getElementById('reservationCompleteModal');
+          const restaurantModal = document.getElementById('restaurantModal');
+          reservationCompleteModal.classList.add('hidden');
+          restaurantModal.classList.add('hidden');
+        }
+      });
+
+      // 웨이팅 완료 모달 확인 버튼
+      document.addEventListener('click', function (e) {
+        if (e.target.id === 'confirmWaitingBtn') {
+          const waitingCompleteModal = document.getElementById('waitingCompleteModal');
+          const restaurantModal = document.getElementById('restaurantModal');
+          waitingCompleteModal.classList.add('hidden');
+          restaurantModal.classList.add('hidden');
+        }
+      });
+    });
+  </script>
+
+  <script id="notificationScript">
+    document.addEventListener('DOMContentLoaded', function () {
+      const notificationBtn = document.getElementById('notificationBtn');
+      const notificationModal = document.getElementById('notificationModal');
+      const closeNotificationModal = document.getElementById('closeNotificationModal');
+
+      notificationBtn.addEventListener('click', function () {
+        notificationModal.classList.remove('hidden');
+      });
+
+      closeNotificationModal.addEventListener('click', function () {
+        notificationModal.classList.add('hidden');
+      });
+
+      notificationModal.addEventListener('click', function (e) {
+        if (e.target === notificationModal) {
+          notificationModal.classList.add('hidden');
+        }
+      });
+    });
+  </script>
+
+  <script id="reservationScript">
+    document.addEventListener('DOMContentLoaded', function () {
+      const reserveButtons = document.querySelectorAll('button:contains("예약하기")');
+      const waitingButtons = document.querySelectorAll('button:contains("웨이팅 신청")');
+
+      document.addEventListener('click', function (e) {
+        if (e.target.textContent.includes('예약하기')) {
+          const restaurantName = e.target.closest('.restaurant-card').querySelector('h3').textContent;
+          const confirmReservation = confirm(`${restaurantName}에 예약하시겠습니까?`);
+          if (confirmReservation) {
+            e.target.textContent = '예약완료';
+            e.target.classList.remove('bg-primary');
+            e.target.classList.add('bg-green-500');
+            setTimeout(() => {
+              alert('예약이 완료되었습니다. 카카오톡으로 예약 확정 알림을 보내드렸습니다.');
+            }, 500);
+          }
+        }
+
+        if (e.target.textContent.includes('웨이팅 신청')) {
+          const restaurantName = e.target.closest('.restaurant-card').querySelector('h3').textContent;
+          const confirmWaiting = confirm(`${restaurantName}에 웨이팅 신청하시겠습니까?`);
+          if (confirmWaiting) {
+            e.target.textContent = '웨이팅 중';
+            e.target.classList.remove('bg-yellow-500');
+            e.target.classList.add('bg-orange-500');
+            setTimeout(() => {
+              alert('웨이팅 신청이 완료되었습니다. 순서가 되면 알림을 보내드리겠습니다.');
+            }, 500);
+          }
+        }
+      });
+    });
+  </script>
+  <script id="mapScript">
+    document.addEventListener('DOMContentLoaded', function () {
+      kakao.maps.load(function () {
+        const mapContainer = document.getElementById('map');
+        // 1) 전역 map, markers 객체
+        window.map = new kakao.maps.Map(mapContainer, {
+          center: new kakao.maps.LatLng(37.8315, 127.5109),
+          level: 4
+        });
+        window.markers = {};
+
+        // bounds 계산
+        const bounds = window.map.getBounds();
+        const sw = bounds.getSouthWest();
+        const ne = bounds.getNorthEast();
+
+        const cards = document.querySelectorAll('#restaurantList .restaurant-card');
+
+        function clearFocus() {
+          cards.forEach(c => c.classList.remove('focused'));
+        }
+        document.body.addEventListener('click', e => {
+          if (!e.target.closest('.map-marker')) clearFocus();
+        });
+
+        cards.forEach(card => {
+          const id = card.dataset.restaurant;
+
+          // 상태별 색상 결정 (기존 로직)
+          const statusSpan = card.querySelector(
+            '.flex.items-center.gap-1.text-red-600 span,' +
+            '.flex.items-center.gap-1.text-yellow-600 span,' +
+            '.flex.items-center.gap-1.text-green-600 span'
+          );
+          const status = statusSpan?.textContent.trim();
+          let colorClass = 'bg-primary';
+          if (status === '예약마감') colorClass = 'bg-red-500';
+          else if (status === '웨이팅 중') colorClass = 'bg-yellow-500';
+          else if (status === '바로입장') colorClass = 'bg-green-500';
+
+          // 랜덤 좌표
+          const lat = sw.getLat() + Math.random() * (ne.getLat() - sw.getLat());
+          const lng = sw.getLng() + Math.random() * (ne.getLng() - sw.getLng());
+
+          const markerContent = `
+        <div data-marker-for="${id}"
+             class="map-marker w-8 h-8 ${colorClass} rounded-full flex items-center justify-center"
+             style="animation-delay:0.5s; cursor:pointer;">
+          <i class="ri-restaurant-fill text-white text-sm"></i>
+        </div>`;
+
+          // 2) 마커 생성 후 전역에 저장
+          const overlay = new kakao.maps.CustomOverlay({
+            position: new kakao.maps.LatLng(lat, lng),
+            content: markerContent,
+            yAnchor: 0.5
+          });
+          overlay.setMap(window.map);
+          window.markers[id] = overlay;
+
+          // 3) 클릭 핸들러 (포커싱 + 스크롤)
+          setTimeout(() => {
+            const el = document.querySelector(`[data-marker-for="${id}"]`);
+            if (!el) return;
+
+            el.addEventListener('click', e => {
+              e.stopPropagation();
+              clearFocus();
+              const cardEl = document.querySelector(`.restaurant-card[data-restaurant="${id}"]`);
+              cardEl.classList.add('focused');
+              const { top, bottom } = cardEl.getBoundingClientRect();
+              const vh = window.innerHeight;
+              if (top < 0 || bottom > vh) {
+                cardEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              }
+            });
+          }, 100);
+        });
+
+        // 4) 확대/축소 버튼 기능
+        const zoomInBtn = document.getElementById('zoomInBtn');
+        const zoomOutBtn = document.getElementById('zoomOutBtn');
+
+        zoomInBtn.addEventListener('click', () => {
+          const currentLevel = window.map.getLevel();
+          window.map.setLevel(currentLevel - 1);
+        });
+
+        zoomOutBtn.addEventListener('click', () => {
+          const currentLevel = window.map.getLevel();
+          window.map.setLevel(currentLevel + 1);
+        });
+      });
+    });
+  </script>
+
+
+</body>
+
+</html>
