@@ -732,6 +732,72 @@
       </button>
     </div>
   </nav>
+
+  <!-- 사이드 메뉴바 -->
+  <div id="sideMenu"
+    class="fixed top-0 right-0 w-[280px] h-full bg-white transform translate-x-full transition-transform duration-300 z-50 shadow-lg flex flex-col">
+    <div class="flex items-center justify-between p-4 border-b">
+      <h2 class="text-lg font-medium">메뉴</h2>
+      <button id="closeMenu" class="w-8 h-8 flex items-center justify-center">
+        <i class="ri-close-line text-xl"></i>
+      </button>
+    </div>
+    <div class="flex-1 overflow-y-auto">
+      <div class="p-4 border-b">
+        <a href="./login.html" data-readdy="true" class="flex items-center gap-3 py-3 px-4 bg-gray-50 rounded-xl">
+          <i class="ri-user-add-line text-xl text-primary"></i>
+          <span>로그인/회원가입</span>
+        </a>
+      </div>
+      <div class="p-4 space-y-4">
+        <a href="./mypage.html" class="flex items-center gap-3">
+          <i class="ri-calendar-check-line text-xl text-gray-600"></i>
+          <span>예약 내역</span>
+        </a>
+        <a href="search.html" class="flex items-center gap-3">
+          <i class="ri-search-line text-xl text-gray-600"></i>
+          <span>캠핑장 검색</span>
+        </a>
+        <a href="shop_list.html?type=glamping" class="flex items-center gap-3">
+          <i class="ri-home-smile-line text-xl text-gray-600"></i>
+          <span>글램핑</span>
+        </a>
+        <a href="shop_list.html?type=caravan" class="flex items-center gap-3">
+          <i class="ri-caravan-line text-xl text-gray-600"></i>
+          <span>카라반</span>
+        </a>
+        <a href="shop_list.html?type=pension" class="flex items-center gap-3">
+          <i class="ri-hotel-line text-xl text-gray-600"></i>
+          <span>펜션</span>
+        </a>
+        <a href="shop_list.html?type=hotel" class="flex items-center gap-3">
+          <i class="ri-building-line text-xl text-gray-600"></i>
+          <span>호텔</span>
+        </a>
+        <a href="equipment.html" class="flex items-center gap-3">
+          <i class="ri-tent-line text-xl text-gray-600"></i>
+          <span>캠핑 장비 렌탈</span>
+        </a>
+        <a href="recomend_course_tmap.html" class="flex items-center gap-3">
+          <i class="ri-map-pin-line text-xl text-gray-600"></i>
+          <span>T맵 연동 관광 코스</span>
+        </a>
+        <a href="surroundings.html" class="flex items-center gap-3">
+          <i class="ri-restaurant-line text-xl text-gray-600"></i>
+          <span>주변 맛집</span>
+        </a>
+        <a href="event.html" class="flex items-center gap-3">
+          <i class="ri-gift-line text-xl text-gray-600"></i>
+          <span>이벤트</span>
+        </a>
+        <a href="customer_service.html" class="flex items-center gap-3">
+          <i class="ri-customer-service-line text-xl text-gray-600"></i>
+          <span>고객센터</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
   <div class="fixed bottom-[52px] left-0 right-0 bg-white border-t px-4 py-3 z-40">
     <div class="flex items-center justify-between mb-3">
       <div class="text-sm text-gray-600">
@@ -956,14 +1022,14 @@
           const cartItem = document.createElement('div');
           cartItem.className = 'flex items-center gap-3 bg-gray-50 rounded-lg p-3';
           cartItem.innerHTML = `
-<div class="flex-1">
-<h4 class="font-medium text-sm">${item.name}</h4>
-<p class="text-xs text-gray-600">${item.price.toLocaleString()}원/일 × ${item.quantity}개</p>
-</div>
-<div class="text-right">
-<p class="font-medium text-sm">${itemTotal.toLocaleString()}원</p>
-</div>
-`;
+            <div class="flex-1">
+            <h4 class="font-medium text-sm">${item.name}</h4>
+            <p class="text-xs text-gray-600">${item.price.toLocaleString()}원/일 × ${item.quantity}개</p>
+            </div>
+            <div class="text-right">
+            <p class="font-medium text-sm">${itemTotal.toLocaleString()}원</p>
+            </div>
+          `;
           cartItems.appendChild(cartItem);
         });
         cartSubtotal.textContent = subtotal.toLocaleString() + '원';
@@ -1012,7 +1078,7 @@
         // 토스트 팝업 생성
         const toast = document.createElement('div');
         toast.className = 'toast-popup fixed top-20 left-0 right-0 mx-auto w-max bg-black/80 text-white px-4 py-3 rounded-lg z-50 animate-fadeIn';
-        
+
         toast.innerHTML = `
           <div class="flex items-center gap-2 whitespace-nowrap">
             <i class="ri-information-line text-lg"></i>
@@ -1170,6 +1236,32 @@
       }
 
       updateCartUI();
+    });
+  </script>
+
+  <!-- 사이드 메뉴바 스크립트 -->
+  <script id="sideMenuScript">
+    document.addEventListener('DOMContentLoaded', function () {
+      const bottomMenuButton = document.getElementById('bottomMenuButton');
+      const closeMenu = document.getElementById('closeMenu');
+      const sideMenu = document.getElementById('sideMenu');
+
+      // 하단 네비게이션의 전체 버튼 클릭
+      bottomMenuButton.addEventListener('click', function () {
+        sideMenu.classList.remove('translate-x-full');
+      });
+
+      // 닫기 버튼 클릭
+      closeMenu.addEventListener('click', function () {
+        sideMenu.classList.add('translate-x-full');
+      });
+
+      // 외부 클릭 시 닫기
+      document.addEventListener('click', function (event) {
+        if (!sideMenu.contains(event.target) && !bottomMenuButton.contains(event.target)) {
+          sideMenu.classList.add('translate-x-full');
+        }
+      });
     });
   </script>
 </body>
