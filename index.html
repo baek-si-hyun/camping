@@ -47,7 +47,7 @@
     ::-webkit-scrollbar {
       display: none;
     }
-    
+
     * {
       -ms-overflow-style: none;
       scrollbar-width: none;
@@ -59,12 +59,15 @@
   <header class="fixed top-0 left-0 right-0 z-50 bg-white">
     <div class="flex items-center justify-between px-4 py-3">
       <div class="h-8">
-        <img src="https://static.readdy.ai/image/8e132e14d40e39950729448e3ee1a5fe/02ba30866da6053b6048c04a7f5cc66d.png"
-          alt="DaeCamp" class="h-full">
+        <img
+          src="https://videos.openai.com/vg-assets/assets%2Ftask_01k19z5fmqfkts58jss9s2xgez%2F1753755192_img_0.webp?st=2025-07-29T00%3A42%3A58Z&se=2025-08-04T01%3A42%3A58Z&sks=b&skt=2025-07-29T00%3A42%3A58Z&ske=2025-08-04T01%3A42%3A58Z&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&skv=2019-02-02&sv=2018-11-09&sr=b&sp=r&spr=https%2Chttp&sig=9sPPeqjj27qmEN6pm1KUsYXfmh%2FqqgwTFedSOy2Tcks%3D&az=oaivgprodscus"
+          alt="DaeCamp" class="w-32 relative -left-9 -top-2.5">
       </div>
       <div class="flex items-center gap-2">
         <a href="./login.html" data-readdy="true">
-          <button class="px-4 py-1.5 text-sm text-primary border border-primary !rounded-button">로그인</button>
+          <button class="w-8 h-8 flex items-center justify-center">
+            <i class="ri-user-line text-xl text-black"></i>
+          </button>
         </a>
         <button id="menuButton" class="w-8 h-8 flex items-center justify-center">
           <i class="ri-menu-line text-xl"></i>
@@ -73,11 +76,13 @@
     </div>
     <div class="px-4 pb-3">
       <div class="relative">
-        <input type="search" class="w-full h-12 pl-12 pr-4 text-sm bg-gray-50 border-none !rounded-button search-input"
-          placeholder="올 봄엔 어디로 캠핑을 떠날까요?" readonly>
-        <div class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center">
-          <i class="ri-search-line text-gray-400"></i>
-        </div>
+        <input type="search" id="searchInput"
+          class="w-full h-12 pl-4 pr-12 text-sm bg-gray-50 border-none !rounded-button search-input"
+          placeholder="올 봄엔 어디로 캠핑을 떠날까요?">
+        <button id="searchButton"
+          class="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center cursor-pointer">
+          <i class="ri-search-line text-gray-400 hover:text-primary transition-colors"></i>
+        </button>
       </div>
     </div>
   </header>
@@ -158,10 +163,10 @@
     </div>
     <div class="px-4 mb-8">
       <div class="relative h-64 rounded-xl overflow-hidden bg-black">
-        <video class="w-full h-full object-cover" autoplay muted loop playsinline
+        <video class="w-full h-full object-cover" muted loop playsinline preload="metadata"
           poster="https://readdy.ai/api/search-image?query=Beautiful%20camping%20site%20in%20nature%20with%20tent%20and%20campfire%20at%20sunset%2C%20cinematic%20shot%2C%204k%20quality&width=800&height=600&seq=10&orientation=landscape">
           <source
-            src="https://player.vimeo.com/external/517090081.sd.mp4?s=ee4cd63dcd613f16ce69890a7f68ba63d2b4876b&profile_id=164"
+            src="https://videos.openai.com/vg-assets/assets%2Ftask_01k17apgxae7wvgysn9ykhdztn%2Ftask_01k17apgxae7wvgysn9ykhdztn_genid_943fd74a-1bd6-472e-86e4-aaf7ac235de6_25_07_28_01_35_240460%2Fvideos%2F00000_21562451%2Fsource.mp4?st=2025-07-28T07%3A02%3A55Z&se=2025-08-03T08%3A02%3A55Z&sks=b&skt=2025-07-28T07%3A02%3A55Z&ske=2025-08-03T08%3A02%3A55Z&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&skv=2019-02-02&sv=2018-11-09&sr=b&sp=r&spr=https%2Chttp&sig=NNMKW%2B%2BWQKfKiEgLnXsJmV0kQzBataZLmYNBC0Y65vs%3D&az=oaivgprodscus"
             type="video/mp4">
         </video>
         <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
@@ -169,7 +174,9 @@
           <h2 class="text-2xl font-medium text-white mb-2">캠핑의 모든 것</h2>
           <p class="text-white/90 text-sm mb-4">자연 속에서 특별한 순간을 만나보세요</p>
           <div class="flex gap-3">
-            <a href="./shop_detail.html?title=숲속 글램핑 리조트&region=강원도 홍천군&price=130000&id=forest-glamping&img=forest-glamping-img" data-readdy="true"
+            <a href="./shop_detail.html?title=숲속 글램핑 리조트&region=경기도 가평군 청평면 대성리&price=130000&id=forest-glamping&rating=4.8&description=자연 속에서 특별한 순간을 만나보세요. 럭셔리 글램핑으로 힐링하는 완벽한 휴식&distance=45km&facilities=글램핑,데크,바베큐장,샤워실,주차장&badge=프리미엄 글램핑"
+              data-readdy="true"
+              data-image="https://readdy.ai/api/search-image?query=Beautiful%20camping%20site%20in%20nature%20with%20tent%20and%20campfire%20at%20sunset%2C%20cinematic%20shot%2C%204k%20quality&width=800&height=600&seq=10&orientation=landscape"
               class="px-6 py-2 bg-primary text-white !rounded-button flex items-center gap-2">
               <i class="ri-play-fill"></i>
               <span>둘러보기</span>
@@ -194,28 +201,6 @@
         </div>
       </div>
     </div>
-    <script id="videoControlScript">
-      document.addEventListener('DOMContentLoaded', function () {
-        const video = document.querySelector('video');
-        const muteButton = document.getElementById('muteButton');
-        const playPauseButton = document.getElementById('playPauseButton');
-        muteButton.addEventListener('click', function () {
-          video.muted = !video.muted;
-          muteButton.innerHTML = video.muted ?
-            '<i class="ri-volume-mute-fill"></i>' :
-            '<i class="ri-volume-up-fill"></i>';
-        });
-        playPauseButton.addEventListener('click', function () {
-          if (video.paused) {
-            video.play();
-            playPauseButton.innerHTML = '<i class="ri-pause-fill"></i>';
-          } else {
-            video.pause();
-            playPauseButton.innerHTML = '<i class="ri-play-fill"></i>';
-          }
-        });
-      });
-    </script>
     <div class="px-4">
       <div class="flex justify-between gap-4 overflow-x-auto pb-4 mb-8">
         <a href="recommend.html" data-readdy="true" class="flex flex-col items-center gap-2 min-w-[80px]">
@@ -282,7 +267,9 @@
           <h3 class="text-lg font-medium">프리미엄 글램핑</h3>
         </div>
         <div class="flex gap-3 overflow-x-auto pb-2">
-          <a href="shop_detail.html?title=프리미엄 글램핑 A&region=강원도 홍천군&price=280000&id=premium-a&img=premium-a-img" data-readdy="true"
+          <a href="shop_detail.html?title=프리미엄 글램핑 A&region=경기도 가평군 청평면 대성리&price=280000&id=premium-a&img=premium-a-img"
+            data-readdy="true"
+            data-image="https://readdy.ai/api/search-image?query=Luxury%20glamping%20tent%20interior%20with%20king%20size%20bed%2C%20warm%20lighting%2C%20premium%20camping%20experience%2C%20cozy%20atmosphere&width=560&height=300&seq=17&orientation=landscape"
             class="min-w-[280px] bg-white rounded-xl overflow-hidden shadow-sm transition-transform hover:scale-[0.98] active:scale-95">
             <div class="relative">
               <img
@@ -295,7 +282,9 @@
               <p class="text-sm text-gray-600">₩280,000 부터</p>
             </div>
           </a>
-          <a href="shop_detail.html?title=글램핑 돔 B&region=강원도 홍천군&price=250000&id=dome-b&img=dome-b-img" data-readdy="true"
+          <a href="shop_detail.html?title=글램핑 돔 B&region=경기도 양평군 양서면 용담리&price=250000&id=dome-b&img=dome-b-img"
+            data-readdy="true"
+            data-image="https://readdy.ai/api/search-image?query=Modern%20glamping%20dome%20with%20panoramic%20windows%2C%20forest%20view%2C%20luxury%20camping%20setup&width=560&height=300&seq=18&orientation=landscape"
             class="min-w-[280px] bg-white rounded-xl overflow-hidden shadow-sm transition-transform hover:scale-[0.98] active:scale-95">
             <div class="relative">
               <img
@@ -316,7 +305,9 @@
           <h3 class="text-lg font-medium">반려견 동반 풀빌라</h3>
         </div>
         <div class="flex gap-3 overflow-x-auto pb-2">
-          <a href="./shop_detail.html?title=프리미엄 펫 풀빌라&region=강원도 홍천군&price=320000&id=pet-villa&img=pet-villa-img" data-readdy="true"
+          <a href="./shop_detail.html?title=프리미엄 펫 풀빌라&region=경기도 포천시 영중면 영평리&price=320000&id=pet-villa&img=pet-villa-img"
+            data-readdy="true"
+            data-image="https://readdy.ai/api/search-image?query=Luxury%20pet-friendly%20villa%20with%20private%20pool%2C%20modern%20design%2C%20spacious%20outdoor%20area%2C%20perfect%20for%20dogs&width=560&height=300&seq=19&orientation=landscape"
             class="min-w-[280px] bg-white rounded-xl overflow-hidden shadow-sm transition-transform hover:scale-[0.98] active:scale-95">
             <div class="relative">
               <img
@@ -329,7 +320,9 @@
               <p class="text-sm text-gray-600">₩320,000 부터</p>
             </div>
           </a>
-          <a href="./shop_detail.html?title=디럭스 펫 룸&region=강원도 홍천군&price=270000&id=pet-room&img=pet-room-img" data-readdy="true"
+          <a href="./shop_detail.html?title=디럭스 펫 룸&region=경기도 용인시 처인구 백암면 백암리&price=270000&id=pet-room&img=pet-room-img"
+            data-readdy="true"
+            data-image="https://readdy.ai/api/search-image?query=Pet-friendly%20luxury%20accommodation%20with%20garden%20view%2C%20dog%20amenities%2C%20modern%20interior&width=560&height=300&seq=20&orientation=landscape"
             class="min-w-[280px] bg-white rounded-xl overflow-hidden shadow-sm transition-transform hover:scale-[0.98] active:scale-95">
             <div class="relative">
               <img
@@ -361,7 +354,9 @@
         </div>
         <div class="flex justify-between items-center mb-4">
           <h3 class="text-lg font-medium">실시간 리뷰</h3>
-          <a href="shop_detail.html?title=프리미엄 펫 풀빌라&region=강원도 홍천군&price=320000&id=pet-villa&img=pet-villa-img" class="text-sm text-primary">전체보기</a>
+          <a href="shop_detail.html?title=프리미엄 펫 풀빌라&region=경기도 포천시 영중면 영평리&price=320000&id=pet-villa&img=pet-villa-img"
+            data-image="https://readdy.ai/api/search-image?query=Luxury%20pet-friendly%20villa%20with%20private%20pool%2C%20modern%20design%2C%20spacious%20outdoor%20area%2C%20perfect%20for%20dogs&width=560&height=300&seq=19&orientation=landscape"
+            class="text-sm text-primary">전체보기</a>
         </div>
         <div class="space-y-4">
           <div class="bg-white rounded-xl p-4 shadow-sm">
@@ -401,7 +396,10 @@
     <div class="mb-8 px-4">
       <h3 class="text-lg font-medium mb-4">추천 캠핑장</h3>
       <div class="space-y-4">
-        <a href="./shop_detail.html?title=서울 글램핑 파크&region=서울시 강동구&price=120000&id=seoul-glamping&img=seoul-glamping-img" data-readdy="true" class="block bg-white rounded-xl overflow-hidden shadow-sm">
+        <a href="./shop_detail.html?title=서울 글램핑 파크&region=서울시 강동구 천호동&price=120000&id=seoul-glamping&img=seoul-glamping-img"
+          data-readdy="true"
+          data-image="https://readdy.ai/api/search-image?query=Luxurious%20camping%20site%20at%20night%20with%20warm%20lighting%2C%20comfortable%20tents%2C%20and%20natural%20surroundings%2C%20professional%20photography&width=800&height=400&seq=11&orientation=landscape"
+          class="block bg-white rounded-xl overflow-hidden shadow-sm">
           <img
             src="https://readdy.ai/api/search-image?query=Luxurious%20camping%20site%20at%20night%20with%20warm%20lighting%2C%20comfortable%20tents%2C%20and%20natural%20surroundings%2C%20professional%20photography&width=800&height=400&seq=11&orientation=landscape"
             class="w-full h-48 object-cover" alt="캠핑장">
@@ -413,11 +411,14 @@
             <p class="text-sm text-gray-600 mb-2">도심 속 프리미엄 글램핑</p>
             <div class="flex items-center gap-2 text-sm text-gray-500">
               <i class="ri-map-pin-line"></i>
-              <span>서울시 강동구</span>
+              <span>서울시 강동구 천호동</span>
             </div>
           </div>
         </a>
-        <a href="./shop_detail.html?title=가평 숲속 캠핑장&region=경기도 가평군&price=80000&id=gapyeong-camping&img=gapyeong-camping-img" data-readdy="true" class="block bg-white rounded-xl overflow-hidden shadow-sm">
+        <a href="./shop_detail.html?title=가평 숲속 캠핑장&region=경기도 가평군 청평면 대성리&price=80000&id=gapyeong-camping&img=gapyeong-camping-img"
+          data-readdy="true"
+          data-image="https://readdy.ai/api/search-image?query=Scenic%20mountain%20camping%20ground%20with%20modern%20facilities%2C%20tents%20surrounded%20by%20pine%20trees%2C%20morning%20atmosphere&width=800&height=400&seq=12&orientation=landscape"
+          class="block bg-white rounded-xl overflow-hidden shadow-sm">
           <img
             src="https://readdy.ai/api/search-image?query=Scenic%20mountain%20camping%20ground%20with%20modern%20facilities%2C%20tents%20surrounded%20by%20pine%20trees%2C%20morning%20atmosphere&width=800&height=400&seq=12&orientation=landscape"
             class="w-full h-48 object-cover" alt="캠핑장">
@@ -429,7 +430,7 @@
             <p class="text-sm text-gray-600 mb-2">자연 그대로의 캠핑</p>
             <div class="flex items-center gap-2 text-sm text-gray-500">
               <i class="ri-map-pin-line"></i>
-              <span>경기도 가평군</span>
+              <span>경기도 가평군 청평면 대성리</span>
             </div>
           </div>
         </a>
@@ -441,7 +442,9 @@
         <a href="shop_list.html?type=caravan" class="text-sm text-primary">전체보기</a>
       </div>
       <div class="flex gap-3 overflow-x-auto pb-2">
-        <a href="./shop_detail.html?title=프리미엄 카라반 A동&region=강원도 홍천군&price=180000&id=caravan-a&img=caravan-a-img" data-readdy="true"
+        <a href="./shop_detail.html?title=프리미엄 카라반 A동&region=경기도 가평군 청평면 대성리&price=180000&id=caravan-a&img=caravan-a-img"
+          data-readdy="true"
+          data-image="https://readdy.ai/api/search-image?query=Modern%20luxury%20caravan%20camping%2C%20stylish%20interior%20and%20exterior%20view%2C%20sunset%20lighting&width=560&height=300&seq=13&orientation=landscape"
           class="min-w-[280px] bg-white rounded-xl overflow-hidden shadow-sm transition-transform hover:scale-[0.98] active:scale-95">
           <img
             src="https://readdy.ai/api/search-image?query=Modern%20luxury%20caravan%20camping%2C%20stylish%20interior%20and%20exterior%20view%2C%20sunset%20lighting&width=560&height=300&seq=13&orientation=landscape"
@@ -451,7 +454,9 @@
             <p class="text-sm text-gray-600">최대 4인 / 취사가능</p>
           </div>
         </a>
-        <a href="./shop_detail.html?title=디럭스 카라반 B동&region=강원도 홍천군&price=150000&id=caravan-b&img=caravan-b-img" data-readdy="true"
+        <a href="./shop_detail.html?title=디럭스 카라반 B동&region=경기도 양평군 양서면 용담리&price=150000&id=caravan-b&img=caravan-b-img"
+          data-readdy="true"
+          data-image="https://readdy.ai/api/search-image?query=Cozy%20caravan%20interior%20with%20modern%20amenities%2C%20warm%20lighting%2C%20comfortable%20living%20space&width=560&height=300&seq=14&orientation=landscape"
           class="min-w-[280px] bg-white rounded-xl overflow-hidden shadow-sm transition-transform hover:scale-[0.98] active:scale-95">
           <img
             src="https://readdy.ai/api/search-image?query=Cozy%20caravan%20interior%20with%20modern%20amenities%2C%20warm%20lighting%2C%20comfortable%20living%20space&width=560&height=300&seq=14&orientation=landscape"
@@ -466,7 +471,9 @@
     <div class="mb-8 px-4">
       <h3 class="text-lg font-medium mb-4">이번주 특가</h3>
       <div class="grid grid-cols-2 gap-3">
-        <a href="./shop_detail.html?title=양평 리버뷰&region=경기도 양평군&price=70000&id=yangpyeong-river&img=yangpyeong-river-img" data-readdy="true"
+        <a href="./shop_detail.html?title=양평 리버뷰&region=경기도 양평군 양서면 용담리&price=70000&id=yangpyeong-river&img=yangpyeong-river-img"
+          data-readdy="true"
+          data-image="https://readdy.ai/api/search-image?query=Peaceful%20lakeside%20camping%20spot%20with%20tent%20and%20campfire%2C%20evening%20atmosphere&width=400&height=300&seq=15&orientation=landscape"
           class="bg-white rounded-xl overflow-hidden shadow-sm transition-transform hover:scale-[0.98] active:scale-95">
           <div class="relative">
             <img
@@ -476,10 +483,16 @@
           </div>
           <div class="p-3">
             <h4 class="text-sm font-medium mb-1">양평 리버뷰</h4>
-            <p class="text-xs text-gray-500">주중 특가</p>
+            <p class="text-xs text-gray-500 mb-1">주중 특가</p>
+            <div class="flex items-center gap-1 text-xs text-gray-400">
+              <i class="ri-map-pin-line"></i>
+              <span>경기도 양평군 양서면 용담리</span>
+            </div>
           </div>
         </a>
-        <a href="./shop_detail.html?title=포천 숲속캠핑&region=경기도 포천시&price=60000&id=pocheon-forest&img=pocheon-forest-img" data-readdy="true"
+        <a href="./shop_detail.html?title=포천 숲속캠핑&region=경기도 포천시 영중면 영평리&price=60000&id=pocheon-forest&img=pocheon-forest-img"
+          data-readdy="true"
+          data-image="https://readdy.ai/api/search-image?query=Forest%20camping%20ground%20with%20wooden%20deck%2C%20morning%20mist%20atmosphere&width=400&height=300&seq=16&orientation=landscape"
           class="bg-white rounded-xl overflow-hidden shadow-sm transition-transform hover:scale-[0.98] active:scale-95">
           <div class="relative">
             <img
@@ -489,7 +502,11 @@
           </div>
           <div class="p-3">
             <h4 class="text-sm font-medium mb-1">포천 숲속캠핑</h4>
-            <p class="text-xs text-gray-500">주말 패키지</p>
+            <p class="text-xs text-gray-500 mb-1">주말 패키지</p>
+            <div class="flex items-center gap-1 text-xs text-gray-400">
+              <i class="ri-map-pin-line"></i>
+              <span>경기도 포천시 영중면 영평리</span>
+            </div>
           </div>
         </a>
       </div>
@@ -498,11 +515,10 @@
   </main>
   <nav class="fixed bottom-0 left-0 right-0 bg-white border-t">
     <div class="grid grid-cols-6 py-1">
-      <a href="search_map.html"
-        data-readdy="true" class="flex flex-col items-center gap-1 group">
+      <a href="search_map.html?from=nearby" data-readdy="true" class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-map-pin-2-fill text-lg group-hover:text-primary"></i>
+          <i class="ri-map-pin-2-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
         </div>
         <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">내주변</span>
       </a>
@@ -510,15 +526,15 @@
       <a href="./index.html" class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-home-5-fill text-lg text-primary"></i>
+          <i class="ri-home-5-fill text-lg text-primary transition-colors duration-300"></i>
         </div>
-        <span class="text-[10px] text-primary">홈</span>
+        <span class="text-[10px] text-primary transition-colors duration-300">홈</span>
       </a>
 
       <a href="wishlist.html" data-readdy="true" class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-heart-3-fill text-lg group-hover:text-primary"></i>
+          <i class="ri-heart-3-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
         </div>
         <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">찜</span>
       </a>
@@ -526,7 +542,7 @@
       <a href="mypage.html" data-readdy="true" class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-user-3-fill text-lg group-hover:text-primary"></i>
+          <i class="ri-user-3-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
         </div>
         <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">마이</span>
       </a>
@@ -534,14 +550,14 @@
       <button class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-wallet-3-fill text-lg group-hover:text-primary"></i>
+          <i class="ri-wallet-3-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
         </div>
         <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">페이</span>
       </button>
       <button id="bottomMenuButton" class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-menu-fill text-lg group-hover:text-primary"></i>
+          <i class="ri-menu-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
         </div>
         <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">전체</span>
       </button>
@@ -587,70 +603,155 @@
           <i class="ri-building-line text-xl text-gray-600"></i>
           <span>호텔</span>
         </a>
-        <a href="#" class="flex items-center gap-3">
+        <a href="equipment.html" class="flex items-center gap-3">
+          <i class="ri-tent-line text-xl text-gray-600"></i>
+          <span>캠핑 장비 렌탈</span>
+        </a>
+        <a href="recomend_course_tmap.html" class="flex items-center gap-3">
+          <i class="ri-map-pin-line text-xl text-gray-600"></i>
+          <span>T맵 연동 관광 코스</span>
+        </a>
+        <a href="surroundings.html" class="flex items-center gap-3">
+          <i class="ri-restaurant-line text-xl text-gray-600"></i>
+          <span>주변 맛집</span>
+        </a>
+        <a href="event.html" class="flex items-center gap-3">
           <i class="ri-gift-line text-xl text-gray-600"></i>
           <span>이벤트</span>
         </a>
-        <a href="#" class="flex items-center gap-3">
+        <a href="customer_service.html" class="flex items-center gap-3">
           <i class="ri-customer-service-line text-xl text-gray-600"></i>
           <span>고객센터</span>
         </a>
       </div>
     </div>
   </div>
-  <script id="imageUrlHandler">
+
+  <!-- 모든 JavaScript를 여기에 통합 -->
+  <script id="videoControlScript">
     document.addEventListener('DOMContentLoaded', function () {
-      // 이미지 URL 매핑
-      const imageUrls = {
-        'premium-a-img': 'https://readdy.ai/api/search-image?query=Luxury glamping tent interior with king size bed, warm lighting, premium camping experience, cozy atmosphere&width=560&height=300&seq=17&orientation=landscape',
-        'dome-b-img': 'https://readdy.ai/api/search-image?query=Modern glamping dome with panoramic windows, forest view, luxury camping setup&width=560&height=300&seq=18&orientation=landscape',
-        'pet-villa-img': 'https://readdy.ai/api/search-image?query=Luxury pet-friendly villa with private pool, modern design, spacious outdoor area, perfect for dogs&width=560&height=300&seq=19&orientation=landscape',
-        'pet-room-img': 'https://readdy.ai/api/search-image?query=Pet-friendly luxury accommodation with garden view, dog amenities, modern interior&width=560&height=300&seq=20&orientation=landscape',
-        'seoul-glamping-img': 'https://readdy.ai/api/search-image?query=Luxurious camping site at night with warm lighting, comfortable tents, and natural surroundings, professional photography&width=800&height=400&seq=11&orientation=landscape',
-        'gapyeong-camping-img': 'https://readdy.ai/api/search-image?query=Scenic mountain camping ground with modern facilities, tents surrounded by pine trees, morning atmosphere&width=800&height=400&seq=12&orientation=landscape',
-        'caravan-a-img': 'https://readdy.ai/api/search-image?query=Modern luxury caravan camping, stylish interior and exterior view, sunset lighting&width=560&height=300&seq=13&orientation=landscape',
-        'caravan-b-img': 'https://readdy.ai/api/search-image?query=Cozy caravan interior with modern amenities, warm lighting, comfortable living space&width=560&height=300&seq=14&orientation=landscape',
-        'yangpyeong-river-img': 'https://readdy.ai/api/search-image?query=Peaceful lakeside camping spot with tent and campfire, evening atmosphere&width=400&height=300&seq=15&orientation=landscape',
-        'pocheon-forest-img': 'https://readdy.ai/api/search-image?query=Forest camping ground with wooden deck, morning mist atmosphere&width=400&height=300&seq=16&orientation=landscape',
-        'forest-glamping-img': 'https://readdy.ai/api/search-image?query=luxury glamping tent exterior with wooden deck at sunset&width=800&height=600&seq=18&orientation=landscape'
+      const video = document.querySelector('video');
+      const muteButton = document.getElementById('muteButton');
+      const playPauseButton = document.getElementById('playPauseButton');
+
+      let isProcessing = false; // 비디오 상태 변경 중인지 확인하는 플래그
+
+      // 비디오 자동재생 시도 및 에러 처리
+      const tryAutoPlay = async () => {
+        if (isProcessing) return;
+        isProcessing = true;
+
+        try {
+          await video.play();
+          playPauseButton.innerHTML = '<i class="ri-pause-fill"></i>';
+        } catch (error) {
+          // 자동재생이 차단되었습니다. 사용자가 재생 버튼을 클릭해야 합니다.
+          playPauseButton.innerHTML = '<i class="ri-play-fill"></i>';
+        } finally {
+          isProcessing = false;
+        }
       };
 
-      // 모든 링크에 이미지 URL 추가
-      const links = document.querySelectorAll('a[href*="shop_detail.html"]');
-      links.forEach(link => {
-        const href = link.getAttribute('href');
-        if (href.includes('img=')) {
-          const imgKey = href.match(/img=([^&]+)/)[1];
-          if (imageUrls[imgKey]) {
-            const encodedUrl = encodeURIComponent(imageUrls[imgKey]);
-            const newHref = href.replace(`img=${imgKey}`, `img=${encodedUrl}`);
-            link.setAttribute('href', newHref);
-          }
+      // 페이지 로드 후 자동재생 시도
+      setTimeout(tryAutoPlay, 500); // 약간의 지연을 두어 안정성 향상
+
+      // 음소거 버튼 이벤트
+      muteButton.addEventListener('click', function () {
+        video.muted = !video.muted;
+        muteButton.innerHTML = video.muted ?
+          '<i class="ri-volume-mute-fill"></i>' :
+          '<i class="ri-volume-up-fill"></i>';
+      });
+
+      // 재생/일시정지 버튼 이벤트
+      playPauseButton.addEventListener('click', async function () {
+        if (isProcessing) {
+          return; // 이미 처리 중이면 무시
         }
+        isProcessing = true;
+
+        try {
+          if (video.paused || video.ended) {
+            // 재생 시도
+            const playPromise = video.play();
+            if (playPromise !== undefined) {
+              await playPromise;
+            }
+            // 재생 시작 시 즉시 버튼 업데이트
+            playPauseButton.innerHTML = '<i class="ri-pause-fill"></i>';
+          } else {
+            // 일시정지
+            video.pause();
+            // 일시정지 시 즉시 버튼 업데이트
+            playPauseButton.innerHTML = '<i class="ri-play-fill"></i>';
+          }
+        } catch (error) {
+          // 비디오 제어 중 일시적인 오류가 발생했습니다. 다시 시도해주세요.
+          // 에러 발생 시 현재 상태에 맞게 버튼 업데이트
+          if (video.paused) {
+            playPauseButton.innerHTML = '<i class="ri-play-fill"></i>';
+          } else {
+            playPauseButton.innerHTML = '<i class="ri-pause-fill"></i>';
+          }
+        } finally {
+          setTimeout(() => {
+            isProcessing = false;
+          }, 100); // 짧은 지연을 두어 연속 클릭 방지
+        }
+      });
+
+      // 비디오 이벤트 리스너 추가 (상태 동기화)
+      video.addEventListener('play', () => {
+        // 비디오 재생 이벤트 발생
+        playPauseButton.innerHTML = '<i class="ri-pause-fill"></i>';
+      });
+
+      video.addEventListener('pause', () => {
+        // 비디오 일시정지 이벤트 발생
+        playPauseButton.innerHTML = '<i class="ri-play-fill"></i>';
+      });
+
+      video.addEventListener('ended', () => {
+        // 비디오 종료 이벤트 발생
+        playPauseButton.innerHTML = '<i class="ri-play-fill"></i>';
+      });
+
+      // 비디오 로딩 상태 확인
+      video.addEventListener('loadstart', () => {
+        // 비디오 로딩 시작
+      });
+
+      video.addEventListener('canplay', () => {
+        // 비디오 재생 준비 완료
+      });
+
+      video.addEventListener('error', (e) => {
+        playPauseButton.innerHTML = '<i class="ri-play-fill"></i>';
       });
     });
   </script>
+
   <script id="weatherScript">
     document.addEventListener('DOMContentLoaded', function () {
       const weatherContainer = document.getElementById('weather-container');
-      
+
       // 요일 이름 배열
       const dayNames = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
-      
+
       // 날씨 데이터 (대부분 맑음)
       const weatherTypes = [
         { icon: 'ri-sun-line', color: 'text-yellow-500', condition: '맑음', weight: 7 },
         { icon: 'ri-sun-cloudy-line', color: 'text-blue-500', condition: '구름', weight: 3 }
       ];
-      
+
       // 온도 범위 (20-28도)
       const getRandomTemp = () => Math.floor(Math.random() * 9) + 20;
-      
+
       // 가중치를 고려한 날씨 선택 함수
       function getRandomWeather() {
         const totalWeight = weatherTypes.reduce((sum, weather) => sum + weather.weight, 0);
         let random = Math.random() * totalWeight;
-        
+
         for (const weather of weatherTypes) {
           random -= weather.weight;
           if (random <= 0) {
@@ -659,62 +760,141 @@
         }
         return weatherTypes[0]; // 기본값
       }
-      
+
       // 날씨 생성 함수
       function generateWeather() {
         weatherContainer.innerHTML = '';
-        
+
         for (let i = 0; i < 7; i++) {
           const date = new Date();
           date.setDate(date.getDate() + i);
-          
+
           const dayName = dayNames[date.getDay()];
           const weather = getRandomWeather();
           const temp = getRandomTemp();
-          
+
           const weatherCard = document.createElement('div');
           weatherCard.className = 'min-w-[100px] bg-white rounded-xl p-3 text-center';
-          
+
           weatherCard.innerHTML = `
             <p class="text-sm font-medium mb-2">${dayName}</p>
             <i class="${weather.icon} text-2xl ${weather.color} mb-2"></i>
             <p class="text-xs text-gray-600">${weather.condition} ${temp}°</p>
           `;
-          
+
           weatherContainer.appendChild(weatherCard);
         }
       }
-      
+
       // 초기 날씨 생성
       generateWeather();
     });
   </script>
+
   <script id="sideMenuScript">
     document.addEventListener('DOMContentLoaded', function () {
       const menuButton = document.getElementById('menuButton');
       const bottomMenuButton = document.getElementById('bottomMenuButton');
       const closeMenu = document.getElementById('closeMenu');
       const sideMenu = document.getElementById('sideMenu');
-      
+
       // 헤더의 메뉴 버튼 클릭
       menuButton.addEventListener('click', function () {
         sideMenu.classList.remove('translate-x-full');
       });
-      
+
       // 하단 네비게이션의 전체 버튼 클릭
       bottomMenuButton.addEventListener('click', function () {
         sideMenu.classList.remove('translate-x-full');
       });
-      
+
       // 닫기 버튼 클릭
       closeMenu.addEventListener('click', function () {
         sideMenu.classList.add('translate-x-full');
       });
-      
+
       // 외부 클릭 시 닫기
       document.addEventListener('click', function (event) {
         if (!sideMenu.contains(event.target) && !menuButton.contains(event.target) && !bottomMenuButton.contains(event.target)) {
           sideMenu.classList.add('translate-x-full');
+        }
+      });
+    });
+  </script>
+
+  <script id="shopDetailImageTransfer">
+    document.addEventListener('DOMContentLoaded', function () {
+      // shop_detail.html로 이동하는 모든 링크에 이벤트 추가
+      document.querySelectorAll('a[href*="shop_detail.html"]').forEach(function (link) {
+        link.addEventListener('click', function (e) {
+          e.preventDefault();
+
+          // 링크에서 기존 파라미터들과 data-image 읽기
+          const href = link.getAttribute('href');
+          const url = new URL(href, window.location.origin);
+          const params = new URLSearchParams(url.search);
+
+          // data-image 속성에서 이미지 URL 가져오기
+          const image = link.getAttribute('data-image');
+          if (image) {
+            // img 파라미터 제거하고 image 파라미터 추가
+            params.delete('img');
+            params.set('image', image);
+          }
+
+          // shop_detail.html로 이동
+          window.location.href = `shop_detail.html?${params.toString()}`;
+        });
+      });
+    });
+  </script>
+
+  <script id="searchScript">
+    document.addEventListener('DOMContentLoaded', function () {
+      const searchInput = document.getElementById('searchInput');
+      const searchButton = document.getElementById('searchButton');
+
+      // 검색 실행 함수
+      function performSearch() {
+        const searchQuery = searchInput.value.trim();
+
+        if (searchQuery === '') {
+          alert('검색어를 입력해주세요.');
+          return;
+        }
+
+        // 검색어를 URL 파라미터로 전달하여 search_result.html로 이동
+        const params = new URLSearchParams();
+        params.set('query', searchQuery);
+        params.set('location', '전국'); // 기본 위치
+        params.set('type', '전체'); // 기본 숙소 타입
+
+        // search_result.html로 이동
+        window.location.href = `search_result.html?${params.toString()}`;
+      }
+
+      // 검색 버튼 클릭 이벤트
+      searchButton.addEventListener('click', function (e) {
+        e.preventDefault();
+        performSearch();
+      });
+
+      // Enter 키 입력 이벤트
+      searchInput.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          performSearch();
+        }
+      });
+
+      // 입력 필드 포커스 시 placeholder 변경
+      searchInput.addEventListener('focus', function () {
+        this.placeholder = '지역, 숙소명을 입력하세요';
+      });
+
+      searchInput.addEventListener('blur', function () {
+        if (this.value === '') {
+          this.placeholder = '올 봄엔 어디로 캠핑을 떠날까요?';
         }
       });
     });

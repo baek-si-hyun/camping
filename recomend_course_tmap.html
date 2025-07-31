@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=375px, initial-scale=1.0">
+  <title>T맵 연동 관광 코스 - ThankQ Camping</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7c64a249ef8e3b9b648f20a50c07b249"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#FF7A45',
+            secondary: '#4A90E2'
+          },
+          borderRadius: {
+            'none': '0px',
+            'sm': '4px',
+            DEFAULT: '8px',
+            'md': '12px',
+            'lg': '16px',
+            'xl': '20px',
+            '2xl': '24px',
+            '3xl': '32px',
+            'full': '9999px',
+            'button': '8px'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :where([class^="ri-"])::before {
+      content: "\f3c2";
+    }
+
+    .search-input::-webkit-search-cancel-button {
+      display: none;
+    }
+
+    /* 스크롤바 숨김 */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+
+    * {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .map-marker {
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+
+      0%,
+      20%,
+      50%,
+      80%,
+      100% {
+        transform: translateY(0);
+      }
+
+      40% {
+        transform: translateY(-10px);
+      }
+
+      60% {
+        transform: translateY(-5px);
+      }
+    }
+
+    .attraction-card {
+      scroll-snap-align: start;
+    }
+
+    .attraction-scroll {
+      scroll-snap-type: x mandatory;
+    }
+
+    .route-line {
+      stroke-dasharray: 5, 5;
+      animation: dash 1s linear infinite;
+    }
+
+    @keyframes dash {
+      to {
+        stroke-dashoffset: -10;
+      }
+    }
+
+    .filter-active {
+      background: linear-gradient(135deg, #FF7A45 0%, #FF6B35 100%);
+    }
+
+    /* 위시리스트 버튼 애니메이션 */
+    .wishlist-btn {
+      transition: all 0.3s ease;
+    }
+
+    .wishlist-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .wishlist-btn.active {
+      color: #ef4444 !important;
+      transform: scale(1.2);
+    }
+
+    .wishlist-btn i {
+      transition: all 0.2s ease;
+    }
+
+    /* 하트 버튼 애니메이션 */
+    button i[class*="ri-heart"] {
+      transition: all 0.2s ease;
+    }
+
+    button:has(i[class*="ri-heart"]) {
+      transition: transform 0.15s ease;
+    }
+
+    button:has(i[class*="ri-heart"]):hover {
+      transform: scale(1.05);
+    }
+
+    .mbti-tag {
+      background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+    }
+  </style>
+</head>
+
+<body class=" min-h-[762px]  bg-gray-50">
+  <header class="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
+    <div class="flex items-center justify-between px-4 py-3">
+      <a href="javascript:void(0)" onclick="history.back()"
+        class="w-8 h-8 flex items-center justify-center cursor-pointer">
+        <i class="ri-arrow-left-line text-xl"></i>
+      </a>
+      <h1 class="text-lg font-medium">T맵 연동 관광 코스</h1>
+      <button class="w-8 h-8 flex items-center justify-center cursor-pointer" id="mapToggleBtn">
+        <i class="ri-fullscreen-line text-xl"></i>
+      </button>
+    </div>
+  </header>
+  <main class="pt-14 pb-20 min-h-screen">
+    <div class="relative">
+      <div class="w-full h-64 relative overflow-hidden" id="mapContainer">
+        <div id="map" class="absolute inset-0"></div>
+        <div class="absolute top-4 left-4 bg-white rounded-lg px-3 py-1 shadow-sm z-10">
+          <div class="flex items-center gap-2">
+            <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <span class="text-sm font-medium">현재 위치</span>
+          </div>
+        </div>
+        <div class="absolute top-4 right-4 bg-white rounded-lg px-3 py-1 shadow-sm z-10">
+          <span class="text-sm font-medium text-primary">6개 관광지</span>
+        </div>
+        <div class="absolute bottom-4 left-4 right-4 flex justify-center z-10">
+          <button
+            class="bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 flex items-center gap-2 shadow-lg cursor-pointer"
+            id="routeBtn">
+            <i class="ri-route-line text-primary"></i>
+            <span class="text-sm font-medium">전체 경로 보기</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="px-4 py-4">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-medium">ENFP 맞춤 추천 코스</h2>
+        <div class="flex items-center gap-2">
+          <div class="bg-secondary text-white px-2 py-1 rounded-full text-xs font-medium mbti-tag">ENFP</div>
+          <span class="text-sm text-gray-600">총 6개</span>
+        </div>
+      </div>
+      <div class="flex gap-2 mb-4 overflow-x-auto pb-2">
+        <button data-category="all"
+          class="flex items-center gap-2 px-3 py-2 bg-primary text-white rounded-full text-sm font-medium whitespace-nowrap cursor-pointer filter-active">
+          <i class="ri-filter-3-line"></i>
+          <span>전체</span>
+        </button>
+        <button data-category="관광명소"
+          class="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-full text-sm font-medium whitespace-nowrap cursor-pointer">
+          <i class="ri-camera-line"></i>
+          <span>관광명소</span>
+        </button>
+        <button data-category="맛집"
+          class="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-full text-sm font-medium whitespace-nowrap cursor-pointer">
+          <i class="ri-restaurant-line"></i>
+          <span>맛집</span>
+        </button>
+        <button data-category="카페"
+          class="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-full text-sm font-medium whitespace-nowrap cursor-pointer">
+          <i class="ri-cup-line"></i>
+          <span>카페</span>
+        </button>
+        <button data-category="자연"
+          class="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-full text-sm font-medium whitespace-nowrap cursor-pointer">
+          <i class="ri-time-line"></i>
+          <span>자연</span>
+        </button>
+        <button data-category="문화"
+          class="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-full text-sm font-medium whitespace-nowrap cursor-pointer">
+          <i class="ri-time-line"></i>
+          <span>문화</span>
+        </button>
+      </div>
+      <div class="flex gap-3 overflow-x-auto pb-4 attraction-scroll" id="attractionList">
+        <div class="flex-shrink-0 w-72 bg-white rounded-xl shadow-sm overflow-hidden attraction-card"
+          data-category="관광명소">
+          <div class="relative">
+            <img
+              src="https://readdy.ai/api/search-image?query=Beautiful%20Korean%20traditional%20temple%20with%20colorful%20roof%20tiles%20and%20mountain%20backdrop%2C%20serene%20atmosphere%2C%20cultural%20heritage%20site%2C%20professional%20photography%2C%20golden%20hour%20lighting&width=288&height=160&seq=101&orientation=landscape"
+              class="w-full h-40 object-cover object-top" alt="남한산성">
+            <div
+              class="absolute top-3 left-3 bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">
+              1</div>
+            <div class="absolute top-3 right-3 bg-black/50 text-white rounded-full px-2 py-1 text-xs">2.3km</div>
+            <button
+              class="absolute bottom-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center cursor-pointer wishlist-btn">
+              <i class="ri-heart-line text-gray-600"></i>
+            </button>
+          </div>
+          <div class="p-4">
+            <div class="flex items-start justify-between mb-2">
+              <h3 class="font-medium text-base">남한산성</h3>
+              <div class="flex items-center gap-1">
+                <i class="ri-star-fill text-yellow-400 text-sm"></i>
+                <span class="text-sm font-medium">4.6</span>
+              </div>
+            </div>
+            <p class="text-sm text-gray-600 mb-3">조선시대 산성과 아름다운 자연경관</p>
+            <div class="flex items-center gap-2 mb-3">
+              <div class="bg-secondary/10 text-secondary px-2 py-1 rounded-full text-xs font-medium">ENFP 추천</div>
+              <span class="text-xs text-gray-500">역사 탐방</span>
+            </div>
+            <div class="flex items-center justify-between text-sm">
+              <div class="flex items-center gap-2 text-gray-500">
+                <i class="ri-time-line"></i>
+                <span>90분 소요</span>
+              </div>
+              <div class="flex items-center gap-2 text-gray-500">
+                <i class="ri-car-line"></i>
+                <span>15분 이동</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex-shrink-0 w-72 bg-white rounded-xl shadow-sm overflow-hidden attraction-card"
+          data-category="맛집">
+          <div class="relative">
+            <img
+              src="https://readdy.ai/api/search-image?query=Korean%20traditional%20market%20with%20colorful%20food%20stalls%2C%20bustling%20atmosphere%2C%20local%20street%20food%20vendors%2C%20authentic%20Korean%20cuisine%2C%20vibrant%20market%20scene&width=288&height=160&seq=102&orientation=landscape"
+              class="w-full h-40 object-cover object-top" alt="광주 남한산성 맛집거리">
+            <div
+              class="absolute top-3 left-3 bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">
+              2</div>
+            <div class="absolute top-3 right-3 bg-black/50 text-white rounded-full px-2 py-1 text-xs">2.8km</div>
+            <button
+              class="absolute bottom-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center cursor-pointer wishlist-btn">
+              <i class="ri-heart-line text-gray-600"></i>
+            </button>
+          </div>
+          <div class="p-4">
+            <div class="flex items-start justify-between mb-2">
+              <h3 class="font-medium text-base">광주 남한산성 맛집거리</h3>
+              <div class="flex items-center gap-1">
+                <i class="ri-star-fill text-yellow-400 text-sm"></i>
+                <span class="text-sm font-medium">4.4</span>
+              </div>
+            </div>
+            <p class="text-sm text-gray-600 mb-3">전통 한식과 지역 특산품 맛집</p>
+            <div class="flex items-center gap-2 mb-3">
+              <div class="bg-secondary/10 text-secondary px-2 py-1 rounded-full text-xs font-medium">ENFP 추천</div>
+              <span class="text-xs text-gray-500">맛집 탐방</span>
+            </div>
+            <div class="flex items-center justify-between text-sm">
+              <div class="flex items-center gap-2 text-gray-500">
+                <i class="ri-time-line"></i>
+                <span>60분 소요</span>
+              </div>
+              <div class="flex items-center gap-2 text-gray-500">
+                <i class="ri-car-line"></i>
+                <span>10분 이동</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex-shrink-0 w-72 bg-white rounded-xl shadow-sm overflow-hidden attraction-card"
+          data-category="자연">
+          <div class="relative">
+            <img
+              src="https://readdy.ai/api/search-image?query=Beautiful%20Korean%20garden%20with%20traditional%20pavilion%2C%20serene%20pond%20with%20lotus%20flowers%2C%20peaceful%20nature%20setting%2C%20cultural%20landscape%2C%20morning%20light&width=288&height=160&seq=103&orientation=landscape"
+              class="w-full h-40 object-cover object-top" alt="검단산 자연휴양림">
+            <div
+              class="absolute top-3 left-3 bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">
+              3</div>
+            <div class="absolute top-3 right-3 bg-black/50 text-white rounded-full px-2 py-1 text-xs">4.1km</div>
+            <button
+              class="absolute bottom-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center cursor-pointer wishlist-btn">
+              <i class="ri-heart-line text-gray-600"></i>
+            </button>
+          </div>
+          <div class="p-4">
+            <div class="flex items-start justify-between mb-2">
+              <h3 class="font-medium text-base">검단산 자연휴양림</h3>
+              <div class="flex items-center gap-1">
+                <i class="ri-star-fill text-yellow-400 text-sm"></i>
+                <span class="text-sm font-medium">4.7</span>
+              </div>
+            </div>
+            <p class="text-sm text-gray-600 mb-3">울창한 숲과 맑은 공기의 힐링 공간</p>
+            <div class="flex items-center gap-2 mb-3">
+              <div class="bg-secondary/10 text-secondary px-2 py-1 rounded-full text-xs font-medium">ENFP 추천</div>
+              <span class="text-xs text-gray-500">자연 힐링</span>
+            </div>
+            <div class="flex items-center justify-between text-sm">
+              <div class="flex items-center gap-2 text-gray-500">
+                <i class="ri-time-line"></i>
+                <span>120분 소요</span>
+              </div>
+              <div class="flex items-center gap-2 text-gray-500">
+                <i class="ri-car-line"></i>
+                <span>20분 이동</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex-shrink-0 w-72 bg-white rounded-xl shadow-sm overflow-hidden attraction-card"
+          data-category="카페">
+          <div class="relative">
+            <img
+              src="https://readdy.ai/api/search-image?query=Cozy%20Korean%20coffee%20shop%20interior%20with%20warm%20lighting%2C%20wooden%20furniture%2C%20artisanal%20coffee%20setup%2C%20comfortable%20atmosphere%2C%20modern%20cafe%20design&width=288&height=160&seq=104&orientation=landscape"
+              class="w-full h-40 object-cover object-top" alt="하남 카페거리">
+            <div
+              class="absolute top-3 left-3 bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">
+              4</div>
+            <div class="absolute top-3 right-3 bg-black/50 text-white rounded-full px-2 py-1 text-xs">3.5km</div>
+            <button
+              class="absolute bottom-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center cursor-pointer wishlist-btn">
+              <i class="ri-heart-line text-gray-600"></i>
+            </button>
+          </div>
+          <div class="p-4">
+            <div class="flex items-start justify-between mb-2">
+              <h3 class="font-medium text-base">하남 카페거리</h3>
+              <div class="flex items-center gap-1">
+                <i class="ri-star-fill text-yellow-400 text-sm"></i>
+                <span class="text-sm font-medium">4.5</span>
+              </div>
+            </div>
+            <p class="text-sm text-gray-600 mb-3">감성 카페와 디저트 맛집이 모인 거리</p>
+            <div class="flex items-center gap-2 mb-3">
+              <div class="bg-secondary/10 text-secondary px-2 py-1 rounded-full text-xs font-medium">ENFP 추천</div>
+              <span class="text-xs text-gray-500">카페 투어</span>
+            </div>
+            <div class="flex items-center justify-between text-sm">
+              <div class="flex items-center gap-2 text-gray-500">
+                <i class="ri-time-line"></i>
+                <span>45분 소요</span>
+              </div>
+              <div class="flex items-center gap-2 text-gray-500">
+                <i class="ri-car-line"></i>
+                <span>12분 이동</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex-shrink-0 w-72 bg-white rounded-xl shadow-sm overflow-hidden attraction-card"
+          data-category="문화">
+          <div class="relative">
+            <img
+              src="https://readdy.ai/api/search-image?query=Korean%20cultural%20center%20with%20modern%20architecture%2C%20art%20exhibitions%2C%20creative%20spaces%2C%20contemporary%20design%2C%20cultural%20activities&width=288&height=160&seq=105&orientation=landscape"
+              class="w-full h-40 object-cover object-top" alt="성남아트센터">
+            <div
+              class="absolute top-3 left-3 bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">
+              5</div>
+            <div class="absolute top-3 right-3 bg-black/50 text-white rounded-full px-2 py-1 text-xs">5.2km</div>
+            <button
+              class="absolute bottom-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center cursor-pointer wishlist-btn">
+              <i class="ri-heart-line text-gray-600"></i>
+            </button>
+          </div>
+          <div class="p-4">
+            <div class="flex items-start justify-between mb-2">
+              <h3 class="font-medium text-base">성남아트센터</h3>
+              <div class="flex items-center gap-1">
+                <i class="ri-star-fill text-yellow-400 text-sm"></i>
+                <span class="text-sm font-medium">4.3</span>
+              </div>
+            </div>
+            <p class="text-sm text-gray-600 mb-3">다양한 문화 공연과 전시가 열리는 공간</p>
+            <div class="flex items-center gap-2 mb-3">
+              <div class="bg-secondary/10 text-secondary px-2 py-1 rounded-full text-xs font-medium">ENFP 추천</div>
+              <span class="text-xs text-gray-500">문화 체험</span>
+            </div>
+            <div class="flex items-center justify-between text-sm">
+              <div class="flex items-center gap-2 text-gray-500">
+                <i class="ri-time-line"></i>
+                <span>90분 소요</span>
+              </div>
+              <div class="flex items-center gap-2 text-gray-500">
+                <i class="ri-car-line"></i>
+                <span>18분 이동</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex-shrink-0 w-72 bg-white rounded-xl shadow-sm overflow-hidden attraction-card"
+          data-category="맛집">
+          <div class="relative">
+            <img
+              src="https://readdy.ai/api/search-image?query=Korean%20traditional%20market%20with%20fresh%20produce%2C%20local%20vendors%2C%20authentic%20atmosphere%2C%20colorful%20vegetables%20and%20fruits%2C%20bustling%20market%20life&width=288&height=160&seq=106&orientation=landscape"
+              class="w-full h-40 object-cover object-top" alt="모란민속5일장">
+            <div
+              class="absolute top-3 left-3 bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">
+              6</div>
+            <div class="absolute top-3 right-3 bg-black/50 text-white rounded-full px-2 py-1 text-xs">6.8km</div>
+            <button
+              class="absolute bottom-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center cursor-pointer wishlist-btn">
+              <i class="ri-heart-line text-gray-600"></i>
+            </button>
+          </div>
+          <div class="p-4">
+            <div class="flex items-start justify-between mb-2">
+              <h3 class="font-medium text-base">모란민속5일장</h3>
+              <div class="flex items-center gap-1">
+                <i class="ri-star-fill text-yellow-400 text-sm"></i>
+                <span class="text-sm font-medium">4.2</span>
+              </div>
+            </div>
+            <p class="text-sm text-gray-600 mb-3">전통 5일장의 정취와 다양한 먹거리</p>
+            <div class="flex items-center gap-2 mb-3">
+              <div class="bg-secondary/10 text-secondary px-2 py-1 rounded-full text-xs font-medium">ENFP 추천</div>
+              <span class="text-xs text-gray-500">전통 체험</span>
+            </div>
+            <div class="flex items-center justify-between text-sm">
+              <div class="flex items-center gap-2 text-gray-500">
+                <i class="ri-time-line"></i>
+                <span>75분 소요</span>
+              </div>
+              <div class="flex items-center gap-2 text-gray-500">
+                <i class="ri-car-line"></i>
+                <span>25분 이동</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-6 bg-white rounded-xl p-4 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-medium">코스 요약</h3>
+          <button class="text-primary text-sm font-medium cursor-pointer" id="editCourseBtn">
+            <i class="ri-edit-line mr-1"></i>순서 편집
+          </button>
+        </div>
+        <div class="space-y-3">
+          <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+            <div class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm font-bold">총
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center justify-between">
+                <span class="font-medium">전체 소요 시간</span>
+                <span class="text-primary font-bold" id="summaryTotalDuration">0시간 0분</span>
+              </div>
+              <div class="flex items-center justify-between text-sm text-gray-600 mt-1">
+                <span>이동 시간</span>
+                <span id="summaryTravelTime">0시간 0분</span>
+              </div>
+            </div>
+          </div>
+          <div class="grid grid-cols-3 gap-3 text-sm">
+            <div class="text-center p-2 bg-blue-50 rounded-lg">
+              <div class="text-blue-600 font-bold" id="summaryCount">0개</div>
+              <div class="text-gray-600">관광지</div>
+            </div>
+            <div class="text-center p-2 bg-green-50 rounded-lg">
+              <div class="text-green-600 font-bold" id="summaryDistance">0km</div>
+              <div class="text-gray-600">총 거리</div>
+            </div>
+            <div class="text-center p-2 bg-orange-50 rounded-lg">
+              <div class="text-orange-600 font-bold" id="summarySatisfaction">0%</div>
+              <div class="text-gray-600">만족도</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <div class="fixed bottom-0 left-0 right-0 bg-white border-t px-4 py-3 z-40">
+    <div class="flex gap-3">
+      <button
+        class="flex-1 bg-white border-2 border-primary text-primary py-3 !rounded-button font-medium cursor-pointer flex items-center justify-center gap-2"
+        id="shareBtn">
+        <i class="ri-share-line"></i>
+        <span>공유하기</span>
+      </button>
+      <button
+        class="flex-1 bg-primary text-white py-3 !rounded-button font-medium cursor-pointer flex items-center justify-center gap-2"
+        id="startNavBtn">
+        <i class="ri-navigation-line"></i>
+        <span>T맵 내비 시작</span>
+      </button>
+    </div>
+  </div>
+  <div id="fullMapModal" class="fixed inset-0 bg-black/50 z-50 hidden">
+    <div class="w-full h-full bg-white flex flex-col">
+      <div class="flex items-center justify-between p-4 border-b">
+        <h2 class="text-lg font-medium">전체 관광 코스</h2>
+        <button id="closeFullMapBtn" class="w-8 h-8 flex items-center justify-center">
+          <i class="ri-close-line text-xl"></i>
+        </button>
+      </div>
+      <div class="w-full h-full relative">
+        <div id="fullMap" class="absolute inset-0"></div>
+        <div class="absolute bottom-8 left-8 right-8 bg-white/90 backdrop-blur-sm rounded-lg p-4 z-10">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="font-medium">ENFP 맞춤 관광 코스</div>
+              <div class="text-sm text-gray-600">총 6개 관광지 • 8시간 30분</div>
+            </div>
+            <button class="bg-primary text-white px-4 py-2 !rounded-button cursor-pointer" id="startTmapBtn">
+              시작하기
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="fixed inset-0 bg-black/50 z-50 hidden" id="attractionDetailModal">
+    <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-xl max-h-[80vh] overflow-y-auto">
+      <div class="p-4 border-b flex items-center justify-between">
+        <h2 class="text-lg font-medium" id="modalTitle">관광지 상세정보</h2>
+        <button class="w-8 h-8 flex items-center justify-center cursor-pointer" id="closeDetailBtn">
+          <i class="ri-close-line text-xl"></i>
+        </button>
+      </div>
+      <div class="p-4" id="modalContent">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-xl font-medium" id="modalName"></h3>
+          <div class="flex items-center gap-1">
+            <i class="ri-star-fill text-yellow-400"></i>
+            <span class="font-medium" id="modalRating"></span>
+          </div>
+        </div>
+        <p class="text-gray-600 mb-4" id="modalDescription"></p>
+        <div class="grid grid-cols-2 gap-4 mb-4">
+          <div class="bg-gray-50 rounded-lg p-3">
+            <div class="text-sm text-gray-600">소요 시간</div>
+            <div class="font-medium" id="modalDuration"></div>
+          </div>
+          <div class="bg-gray-50 rounded-lg p-3">
+            <div class="text-sm text-gray-600">이동 시간</div>
+            <div class="font-medium" id="modalTravelTime"></div>
+          </div>
+        </div>
+        <div class="flex gap-3">
+          <button class="flex-1 bg-white border border-gray-200 text-gray-700 py-3 !rounded-button cursor-pointer">
+            길찾기
+          </button>
+          <button class="flex-1 bg-primary text-white py-3 !rounded-button cursor-pointer">
+            즐겨찾기
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script id="mapToggleScript">
+    document.addEventListener('DOMContentLoaded', function () {
+      const mapToggleBtn = document.getElementById('mapToggleBtn');
+      const fullMapModal = document.getElementById('fullMapModal');
+      const closeFullMapBtn = document.getElementById('closeFullMapBtn');
+      const routeBtn = document.getElementById('routeBtn');
+      const startTmapBtn = document.getElementById('startTmapBtn');
+
+      mapToggleBtn.addEventListener('click', function () {
+        fullMapModal.classList.remove('hidden');
+      });
+
+      closeFullMapBtn.addEventListener('click', function () {
+        fullMapModal.classList.add('hidden');
+      });
+
+      routeBtn.addEventListener('click', function () {
+        fullMapModal.classList.remove('hidden');
+      });
+
+      startTmapBtn.addEventListener('click', function () {
+        const confirmDialog = document.createElement('div');
+        confirmDialog.className = 'fixed inset-0 bg-black/50 z-[60] flex items-center justify-center';
+        confirmDialog.innerHTML = `
+<div class="bg-white rounded-xl p-6 mx-4 max-w-sm w-full">
+<div class="text-center mb-4">
+<i class="ri-navigation-line text-4xl text-primary mb-2"></i>
+<h3 class="text-lg font-medium mb-2">T맵 내비게이션 연동</h3>
+<p class="text-sm text-gray-600">T맵 내비게이션으로 이동하시겠습니까?</p>
+</div>
+<div class="flex gap-3">
+<button class="flex-1 bg-gray-100 text-gray-700 py-2 !rounded-button cursor-pointer" onclick="this.closest('.fixed').remove()">취소</button>
+<button class="flex-1 bg-primary text-white py-2 !rounded-button cursor-pointer" onclick="window.location.href='tmap://'; this.closest('.fixed').remove()">확인</button>
+</div>
+</div>
+`;
+        document.body.appendChild(confirmDialog);
+      });
+
+      fullMapModal.addEventListener('click', function (e) {
+        if (e.target === fullMapModal) {
+          fullMapModal.classList.add('hidden');
+        }
+      });
+    });
+  </script>
+  <script id="attractionDetailScript">
+    document.addEventListener('DOMContentLoaded', function () {
+      const attractionCards = document.querySelectorAll('.attraction-card');
+      const detailModal = document.getElementById('attractionDetailModal');
+      const closeDetailBtn = document.getElementById('closeDetailBtn');
+      const attractionData = [
+        {
+          name: '남한산성',
+          rating: '4.6',
+          description: '조선시대 산성으로 유네스코 세계문화유산에 등재된 역사적 명소입니다. 아름다운 자연경관과 함께 역사를 체험할 수 있습니다.',
+          duration: '90분 소요',
+          travelTime: '15분 이동',
+          image: 'https://readdy.ai/api/search-image?query=Beautiful%20Korean%20traditional%20temple%20with%20colorful%20roof%20tiles%20and%20mountain%20backdrop%2C%20serene%20atmosphere%2C%20cultural%20heritage%20site%2C%20professional%20photography%2C%20golden%20hour%20lighting&width=375&height=200&seq=201&orientation=landscape'
+        },
+        {
+          name: '광주 남한산성 맛집거리',
+          rating: '4.4',
+          description: '남한산성 인근의 전통 한식 맛집들이 모여있는 거리로, 지역 특산품과 전통 음식을 맛볼 수 있습니다.',
+          duration: '60분 소요',
+          travelTime: '10분 이동',
+          image: 'https://readdy.ai/api/search-image?query=Korean%20traditional%20market%20with%20colorful%20food%20stalls%2C%20bustling%20atmosphere%2C%20local%20street%20food%20vendors%2C%20authentic%20Korean%20cuisine%2C%20vibrant%20market%20scene&width=375&height=200&seq=202&orientation=landscape'
+        },
+        {
+          name: '검단산 자연휴양림',
+          rating: '4.7',
+          description: '울창한 숲과 맑은 공기로 유명한 자연휴양림입니다. 산책로와 휴식 공간이 잘 조성되어 있어 힐링하기 좋습니다.',
+          duration: '120분 소요',
+          travelTime: '20분 이동',
+          image: 'https://readdy.ai/api/search-image?query=Beautiful%20Korean%20garden%20with%20traditional%20pavilion%2C%20serene%20pond%20with%20lotus%20flowers%2C%20peaceful%20nature%20setting%2C%20cultural%20landscape%2C%20morning%20light&width=375&height=200&seq=203&orientation=landscape'
+        },
+        {
+          name: '하남 카페거리',
+          rating: '4.5',
+          description: '감성적인 카페들이 모여있는 거리로, 다양한 디저트와 음료를 즐길 수 있습니다. 인스타그램 핫플레이스로도 유명합니다.',
+          duration: '45분 소요',
+          travelTime: '12분 이동',
+          image: 'https://readdy.ai/api/search-image?query=Cozy%20Korean%20coffee%20shop%20interior%20with%20warm%20lighting%2C%20wooden%20furniture%2C%20artisanal%20coffee%20setup%2C%20comfortable%20atmosphere%2C%20modern%20cafe%20design&width=375&height=200&seq=204&orientation=landscape'
+        },
+        {
+          name: '성남아트센터',
+          rating: '4.3',
+          description: '다양한 문화 공연과 전시가 열리는 복합 문화 공간입니다. 현대적인 건축물과 함께 예술 작품을 감상할 수 있습니다.',
+          duration: '90분 소요',
+          travelTime: '18분 이동',
+          image: 'https://readdy.ai/api/search-image?query=Korean%20cultural%20center%20with%20modern%20architecture%2C%20art%20exhibitions%2C%20creative%20spaces%2C%20contemporary%20design%2C%20cultural%20activities&width=375&height=200&seq=205&orientation=landscape'
+        },
+        {
+          name: '모란민속5일장',
+          rating: '4.2',
+          description: '전통 5일장의 정취를 느낄 수 있는 곳으로, 다양한 먹거리와 전통 상품들을 구경하고 구매할 수 있습니다.',
+          duration: '75분 소요',
+          travelTime: '25분 이동',
+          image: 'https://readdy.ai/api/search-image?query=Korean%20traditional%20market%20with%20fresh%20produce%2C%20local%20vendors%2C%20authentic%20atmosphere%2C%20colorful%20vegetables%20and%20fruits%2C%20bustling%20market%20life&width=375&height=200&seq=206&orientation=landscape'
+        }
+      ];
+      attractionCards.forEach((card, index) => {
+        card.addEventListener('click', function () {
+          const data = attractionData[index];
+          document.getElementById('modalTitle').textContent = data.name;
+          document.getElementById('modalName').textContent = data.name;
+          document.getElementById('modalRating').textContent = data.rating;
+          document.getElementById('modalDescription').textContent = data.description;
+          document.getElementById('modalDuration').textContent = data.duration;
+          document.getElementById('modalTravelTime').textContent = data.travelTime;
+          document.getElementById('modalImage').src = data.image;
+          detailModal.classList.remove('hidden');
+        });
+      });
+      closeDetailBtn.addEventListener('click', function () {
+        detailModal.classList.add('hidden');
+      });
+      detailModal.addEventListener('click', function (e) {
+        if (e.target === detailModal) {
+          detailModal.classList.add('hidden');
+        }
+      });
+    });
+  </script>
+  <script id="filterScript">
+    document.addEventListener('DOMContentLoaded', function () {
+      const filterButtons = document.querySelectorAll('.flex.gap-2.mb-4.overflow-x-auto button');
+      filterButtons.forEach(button => {
+        button.addEventListener('click', function () {
+          filterButtons.forEach(btn => {
+            btn.classList.remove('filter-active', 'bg-primary', 'text-white');
+            btn.classList.add('bg-white', 'border', 'border-gray-200');
+          });
+          this.classList.add('filter-active', 'bg-primary', 'text-white');
+          this.classList.remove('bg-white', 'border', 'border-gray-200');
+        });
+      });
+    });
+  </script>
+  <script id="navigationScript">
+    document.addEventListener('DOMContentLoaded', function () {
+      const startNavBtn = document.getElementById('startNavBtn');
+      const shareBtn = document.getElementById('shareBtn');
+      startNavBtn.addEventListener('click', function () {
+        const modal = document.createElement('div');
+        modal.className = 'fixed inset-0 bg-black/50 z-50 flex items-center justify-center';
+        modal.innerHTML = `
+<div class="bg-white rounded-xl p-6 mx-4 max-w-sm">
+<div class="text-center mb-4">
+<i class="ri-navigation-line text-4xl text-primary mb-2"></i>
+<h3 class="text-lg font-medium mb-2">T맵 내비게이션 연동</h3>
+<p class="text-sm text-gray-600">T맵 앱으로 이동하여 관광 코스 내비게이션을 시작하시겠습니까?</p>
+</div>
+<div class="flex gap-3">
+<button class="flex-1 bg-gray-100 text-gray-700 py-2 !rounded-button cursor-pointer" onclick="this.closest('.fixed').remove()">취소</button>
+<button class="flex-1 bg-primary text-white py-2 !rounded-button cursor-pointer" onclick="this.closest('.fixed').remove()">T맵 열기</button>
+</div>
+</div>
+`;
+        document.body.appendChild(modal);
+      });
+      shareBtn.addEventListener('click', function () {
+        const modal = document.createElement('div');
+        modal.className = 'fixed inset-0 bg-black/50 z-50 flex items-center justify-center';
+        modal.innerHTML = `
+<div class="bg-white rounded-xl p-6 mx-4 max-w-sm">
+<div class="text-center mb-4">
+<i class="ri-share-line text-4xl text-primary mb-2"></i>
+<h3 class="text-lg font-medium mb-2">관광 코스 공유</h3>
+<p class="text-sm text-gray-600">ENFP 맞춤 관광 코스를 친구들과 공유해보세요!</p>
+</div>
+<div class="grid grid-cols-3 gap-3 mb-4">
+<button class="flex flex-col items-center gap-2 p-3 bg-gray-50 rounded-lg cursor-pointer">
+<i class="ri-kakao-talk-fill text-2xl text-yellow-500"></i>
+<span class="text-xs">카카오톡</span>
+</button>
+<button class="flex flex-col items-center gap-2 p-3 bg-gray-50 rounded-lg cursor-pointer">
+<i class="ri-links-line text-2xl text-gray-600"></i>
+<span class="text-xs">링크 복사</span>
+</button>
+<button class="flex flex-col items-center gap-2 p-3 bg-gray-50 rounded-lg cursor-pointer">
+<i class="ri-more-line text-2xl text-gray-600"></i>
+<span class="text-xs">더보기</span>
+</button>
+</div>
+<button class="w-full bg-gray-100 text-gray-700 py-2 !rounded-button cursor-pointer" onclick="this.closest('.fixed').remove()">닫기</button>
+</div>
+`;
+        document.body.appendChild(modal);
+      });
+    });
+  </script>
+  <script id="wishlistScript">
+    // 통일된 위시리스트 토글 기능
+    document.addEventListener('click', function (e) {
+      if (e.target.closest('.wishlist-btn')) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const button = e.target.closest('.wishlist-btn');
+        const icon = button.querySelector('i');
+
+        // 토글 애니메이션
+        button.style.transform = 'scale(0.8)';
+
+        setTimeout(() => {
+          if (icon.classList.contains('ri-heart-line')) {
+            // 빈 하트 → 채워진 하트
+            icon.classList.remove('ri-heart-line');
+            icon.classList.add('ri-heart-fill');
+            button.classList.add('active');
+            icon.style.color = '#ef4444';
+          } else {
+            // 채워진 하트 → 빈 하트
+            icon.classList.remove('ri-heart-fill');
+            icon.classList.add('ri-heart-line');
+            button.classList.remove('active');
+            icon.style.color = '';
+          }
+
+          button.style.transform = 'scale(1)';
+        }, 100);
+      }
+    });
+
+    // 기존 하트 버튼 토글 기능 (하위 호환성을 위해 유지)
+    document.addEventListener('DOMContentLoaded', function () {
+      function setupHeartButtons() {
+        // 모든 종류의 하트 버튼 선택 (ri-heart-line, ri-heart-3-line 등)
+        const heartButtons = document.querySelectorAll('button i[class*="ri-heart"]');
+
+        heartButtons.forEach(button => {
+          button.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            // 현재 상태 확인 (빈 하트인지 채워진 하트인지)
+            const isEmptyHeart = button.classList.contains('ri-heart-line') ||
+              button.classList.contains('ri-heart-3-line');
+
+            // 애니메이션을 위한 스케일 효과
+            button.style.transform = 'scale(0.8)';
+
+            setTimeout(() => {
+              if (isEmptyHeart) {
+                // 빈 하트를 채워진 하트로 변경
+                button.classList.remove('ri-heart-line', 'ri-heart-3-line');
+                button.classList.add('ri-heart-fill');
+
+                // 색상을 빨간색으로 변경
+                button.style.color = '#ef4444';
+
+                // 부모 버튼에 활성 상태 표시
+                const parentButton = button.closest('button');
+                if (parentButton) {
+                  parentButton.classList.add('active');
+                }
+              } else {
+                // 채워진 하트를 빈 하트로 변경
+                button.classList.remove('ri-heart-fill');
+                if (button.classList.contains('ri-heart-3-fill')) {
+                  button.classList.remove('ri-heart-3-fill');
+                  button.classList.add('ri-heart-3-line');
+                } else {
+                  button.classList.add('ri-heart-line');
+                }
+
+                // 색상을 원래대로 복원
+                button.style.color = '';
+
+                // 부모 버튼에서 활성 상태 제거
+                const parentButton = button.closest('button');
+                if (parentButton) {
+                  parentButton.classList.remove('active');
+                }
+              }
+
+              // 스케일 효과 복원
+              button.style.transform = 'scale(1)';
+            }, 100);
+          });
+        });
+
+        // 동적으로 추가된 버튼들을 위한 이벤트 위임
+        document.addEventListener('click', function (e) {
+          if (e.target.classList.contains('ri-heart-line') ||
+            e.target.classList.contains('ri-heart-3-line') ||
+            e.target.classList.contains('ri-heart-fill') ||
+            e.target.classList.contains('ri-heart-3-fill')) {
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            const button = e.target;
+
+            // 현재 상태 확인
+            const isEmptyHeart = button.classList.contains('ri-heart-line') ||
+              button.classList.contains('ri-heart-3-line');
+
+            // 애니메이션
+            button.style.transform = 'scale(0.8)';
+
+            setTimeout(() => {
+              if (isEmptyHeart) {
+                // 빈 하트를 채워진 하트로 변경
+                button.classList.remove('ri-heart-line', 'ri-heart-3-line');
+                button.classList.add('ri-heart-fill');
+                button.style.color = '#ef4444';
+
+                const parentButton = button.closest('button');
+                if (parentButton) {
+                  parentButton.classList.add('active');
+                }
+              } else {
+                // 채워진 하트를 빈 하트로 변경
+                button.classList.remove('ri-heart-fill');
+                if (button.classList.contains('ri-heart-3-fill')) {
+                  button.classList.remove('ri-heart-3-fill');
+                  button.classList.add('ri-heart-3-line');
+                } else {
+                  button.classList.add('ri-heart-line');
+                }
+                button.style.color = '';
+
+                const parentButton = button.closest('button');
+                if (parentButton) {
+                  parentButton.classList.remove('active');
+                }
+              }
+
+              button.style.transform = 'scale(1)';
+            }, 100);
+          }
+        });
+      }
+
+      // 초기 설정
+      setupHeartButtons();
+    });
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // 관광지 데이터 정의 (위경도는 나중에 initMap()에서 덮어씁니다)
+      const attractionsData = [
+        {
+          id: 1,
+          name: '남한산성',
+          categories: ['관광명소', '문화'],
+          rating: 4.6,
+          description: '조선시대 산성과 아름다운 자연경관',
+          duration: '90분 소요',
+          travelTime: '15분 이동',
+          distance: '2.3km',
+          image: 'https://readdy.ai/api/search-image?query=Beautiful%20Korean%20traditional%20temple%20with%20colorful%20roof%20tiles%20and%20mountain%20backdrop%2C%20serene%20atmosphere%2C%20cultural%20heritage%20site%2C%20professional%20photography%2C%20golden%20hour%20lighting&width=288&height=160&seq=101&orientation=landscape',
+          lat: 37.8315,
+          lng: 127.5109
+        },
+        {
+          id: 2,
+          name: '광주 남한산성 맛집거리',
+          categories: ['맛집', '문화'],
+          rating: 4.4,
+          description: '전통 한식과 지역 특산품 맛집',
+          duration: '60분 소요',
+          travelTime: '10분 이동',
+          distance: '2.8km',
+          image: 'https://readdy.ai/api/search-image?query=Korean%20traditional%20market%20with%20colorful%20food%20stalls%2C%20bustling%20atmosphere%2C%20local%20street%20food%20vendors%2C%20authentic%20Korean%20cuisine%2C%20vibrant%20market%20scene&width=288&height=160&seq=102&orientation=landscape',
+          lat: 37.8415,
+          lng: 127.5209
+        },
+        {
+          id: 3,
+          name: '검단산 자연휴양림',
+          categories: ['자연', '관광명소'],
+          rating: 4.7,
+          description: '울창한 숲과 맑은 공기의 힐링 공간',
+          duration: '120분 소요',
+          travelTime: '20분 이동',
+          distance: '4.1km',
+          image: 'https://readdy.ai/api/search-image?query=Beautiful%20Korean%20garden%20with%20traditional%20pavilion%2C%20serene%20pond%20with%20lotus%20flowers%2C%20peaceful%20nature%20setting%2C%20cultural%20landscape%2C%20morning%20light&width=288&height=160&seq=103&orientation=landscape',
+          lat: 37.8515,
+          lng: 127.5309
+        },
+        {
+          id: 4,
+          name: '하남 카페거리',
+          categories: ['카페', '맛집'],
+          rating: 4.5,
+          description: '감성 카페와 디저트 맛집이 모인 거리',
+          duration: '45분 소요',
+          travelTime: '12분 이동',
+          distance: '3.5km',
+          image: 'https://readdy.ai/api/search-image?query=Cozy%20Korean%20coffee%20shop%20interior%20with%20warm%20lighting%2C%20wooden%20furniture%2C%20artisanal%20coffee%20setup%2C%20comfortable%20atmosphere%2C%20modern%20cafe%20design&width=288&height=160&seq=104&orientation=landscape',
+          lat: 37.8615,
+          lng: 127.5409
+        },
+        {
+          id: 5,
+          name: '성남아트센터',
+          categories: ['문화', '관광명소'],
+          rating: 4.3,
+          description: '다양한 문화 공연과 전시가 열리는 공간',
+          duration: '90분 소요',
+          travelTime: '18분 이동',
+          distance: '5.2km',
+          image: 'https://readdy.ai/api/search-image?query=Korean%20cultural%20center%20with%20modern%20architecture%2C%20art%20exhibitions%2C%20creative%20spaces%2C%20contemporary%20design%2C%20cultural%20activities&width=288&height=160&seq=105&orientation=landscape',
+          lat: 37.8715,
+          lng: 127.5509
+        },
+        {
+          id: 6,
+          name: '모란민속5일장',
+          categories: ['맛집', '문화'],
+          rating: 4.2,
+          description: '전통 5일장의 정취와 다양한 먹거리',
+          duration: '75분 소요',
+          travelTime: '25분 이동',
+          distance: '6.8km',
+          image: 'https://readdy.ai/api/search-image?query=Korean%20traditional%20market%20with%20fresh%20produce%2C%20local%20vendors%2C%20authentic%20atmosphere%2C%20colorful%20vegetables%20and%20fruits%2C%20bustling%20market%20life&width=288&height=160&seq=106&orientation=landscape',
+          lat: 37.8815,
+          lng: 127.5609
+        }
+      ];
+
+      let currentFilter = '전체';
+      let mainMap, modalMap;
+      let mapMarkers = [], mapPolylines = [], modalMapInitialized = false;
+
+      // ① 카카오맵 초기화
+      function initMap() {
+        kakao.maps.load(function () {
+          // — 메인 맵 생성
+          mainMap = new kakao.maps.Map(
+            document.getElementById('map'),
+            { center: new kakao.maps.LatLng(37.8315, 127.5109), level: 7 }
+          );
+
+          // — bounds 획득
+          const bounds = mainMap.getBounds();
+          const sw = bounds.getSouthWest(), ne = bounds.getNorthEast();
+
+          // — attractionsData 각 항목에 랜덤 위경도 할당
+          attractionsData.forEach(attraction => {
+            attraction.lat = sw.getLat() + Math.random() * (ne.getLat() - sw.getLat());
+            attraction.lng = sw.getLng() + Math.random() * (ne.getLng() - sw.getLng());
+          });
+
+          // — 초깃값으로 맵/리스트 그리기
+          const initialData = getFilteredData();
+          drawMapElements(mainMap, initialData);
+          renderAttractionCards(initialData);
+          updateCourseSummary(initialData); // 초기 코스 요약 업데이트 추가
+
+          // — 필터 버튼 세팅
+          setupFilterButtons();
+        });
+      }
+
+      // ② 지도 요소 그리기
+      function drawMapElements(map, data) {
+        // 기존 마커/폴리라인 제거
+        mapMarkers.forEach(m => m.setMap(null));
+        mapPolylines.forEach(pl => pl.setMap(null));
+        mapMarkers = []; mapPolylines = [];
+
+        // 마커 찍기
+        data.forEach((item, i) => {
+          const marker = new kakao.maps.CustomOverlay({
+            position: new kakao.maps.LatLng(item.lat, item.lng),
+            content: `<div class="map-marker w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg">${i + 1}</div>`,
+            yAnchor: 0.5
+          });
+          marker.setMap(map);
+          mapMarkers.push(marker);
+        });
+
+        // 경로
+        if (data.length > 1) {
+          const path = data.map(i => new kakao.maps.LatLng(i.lat, i.lng));
+          const line = new kakao.maps.Polyline({
+            map, path, strokeWeight: 3, strokeColor: '#FF7A45', strokeOpacity: 0.7, strokeStyle: 'dash'
+          });
+          mapPolylines.push(line);
+        }
+
+        // 현재 위치 녹색 점
+        const greenDot = new kakao.maps.CustomOverlay({
+          position: new kakao.maps.LatLng(37.8315, 127.5109),
+          content: `<div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>`,
+          yAnchor: 0.5
+        });
+        greenDot.setMap(map);
+        mapMarkers.push(greenDot);
+      }
+
+      // ③ 필터링된 데이터 반환
+      function getFilteredData() {
+        if (currentFilter === '전체') return attractionsData;
+        return attractionsData.filter(a => a.categories.includes(currentFilter));
+      }
+
+      // ④ 카드 렌더링
+      function renderAttractionCards(data) {
+        const container = document.getElementById('attractionList');
+        container.innerHTML = '';
+        data.forEach((item, i) => {
+          const card = document.createElement('div');
+          card.className = 'flex-shrink-0 w-72 bg-white rounded-xl shadow-sm attraction-card overflow-hidden';
+          card.setAttribute('data-category', item.categories[0]);
+          card.innerHTML = `
+        <div class="relative">
+          <img src="${item.image}" class="w-full h-40 object-cover" alt="${item.name}">
+          <div class="absolute top-3 left-3 bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">${i + 1}</div>
+          <div class="absolute top-3 right-3 bg-black/50 text-white rounded-full px-2 py-1 text-xs">${item.distance}</div>
+          <button class="absolute bottom-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full wishlist-btn">
+            <i class="ri-heart-line text-gray-600"></i>
+          </button>
+        </div>
+        <div class="p-4">
+          <div class="flex justify-between mb-2">
+            <h3 class="font-medium">${item.name}</h3>
+            <div class="flex items-center gap-1">
+              <i class="ri-star-fill text-yellow-400 text-sm"></i>
+              <span class="text-sm font-medium">${item.rating}</span>
+            </div>
+          </div>
+          <p class="text-sm text-gray-600 mb-3">${item.description}</p>
+          <div class="flex items-center gap-2 mb-3">
+            <div class="bg-secondary/10 text-secondary px-2 py-1 rounded-full text-xs">ENFP 추천</div>
+            <span class="text-xs text-gray-500">${getCategoryLabel(item.categories[0])}</span>
+          </div>
+          <div class="flex justify-between text-sm text-gray-500">
+            <div class="flex items-center gap-1"><i class="ri-time-line"></i><span>${item.duration}</span></div>
+            <div class="flex items-center gap-1"><i class="ri-car-line"></i><span>${item.travelTime}</span></div>
+          </div>
+        </div>
+      `;
+          container.appendChild(card);
+        });
+        updateCount(data.length);
+      }
+
+      // ⑤ 카테고리 라벨
+      function getCategoryLabel(cat) {
+        return { '관광명소': '관광 탐방', '맛집': '맛집 탐방', '카페': '카페 투어', '자연': '자연 힐링', '문화': '문화 체험' }[cat];
+      }
+
+      // ⑥ 개수 업데이트
+      function updateCount(n) {
+        const totalEl = document.querySelector('.text-sm.text-gray-600');
+        if (totalEl) totalEl.textContent = `총 ${n}개`;
+        const mapEl = document.querySelector('.top-4.right-4 span');
+        if (mapEl) mapEl.textContent = `${n}개 관광지`;
+      }
+
+      // ⑥-1 코스 요약 업데이트
+      function updateCourseSummary(data) {
+        // 총 소요시간 계산 (분 단위로 변환 후 계산)
+        const totalMinutes = data.reduce((total, item) => {
+          const duration = parseInt(item.duration.match(/\d+/)[0]);
+          return total + duration;
+        }, 0);
+
+        const totalHours = Math.floor(totalMinutes / 60);
+        const remainingMinutes = totalMinutes % 60;
+        const totalDurationText = `${totalHours}시간 ${remainingMinutes}분`;
+
+        // 이동시간 계산
+        const travelMinutes = data.reduce((total, item) => {
+          const travelTime = parseInt(item.travelTime.match(/\d+/)[0]);
+          return total + travelTime;
+        }, 0);
+
+        const travelHours = Math.floor(travelMinutes / 60);
+        const travelRemainingMinutes = travelMinutes % 60;
+        const travelTimeText = travelHours > 0 ? `${travelHours}시간 ${travelRemainingMinutes}분` : `${travelRemainingMinutes}분`;
+
+        // 총 거리 계산
+        const totalDistance = data.reduce((total, item) => {
+          const distance = parseFloat(item.distance.replace('km', ''));
+          return total + distance;
+        }, 0);
+
+        // 평균 만족도 계산
+        const avgRating = data.reduce((total, item) => total + item.rating, 0) / data.length;
+        const satisfaction = Math.round(avgRating * 20); // 5점 만점을 100점 만점으로 변환
+
+        // DOM 업데이트
+        document.getElementById('summaryTotalDuration').textContent = totalDurationText;
+        document.getElementById('summaryTravelTime').textContent = travelTimeText;
+        document.getElementById('summaryCount').textContent = `${data.length}개`;
+        document.getElementById('summaryDistance').textContent = `${totalDistance.toFixed(1)}km`;
+        document.getElementById('summarySatisfaction').textContent = `${satisfaction}%`;
+      }
+
+      // ⑦ 필터 버튼 세팅
+      function setupFilterButtons() {
+        const buttons = document.querySelectorAll('.flex.gap-2.mb-4.overflow-x-auto button');
+        buttons.forEach(btn => {
+          btn.addEventListener('click', function () {
+            buttons.forEach(b => b.classList.remove('filter-active', 'bg-primary', 'text-white'));
+            this.classList.add('filter-active', 'bg-primary', 'text-white');
+            currentFilter = this.querySelector('span').textContent;
+            const filtered = getFilteredData();
+            renderAttractionCards(filtered);
+            drawMapElements(mainMap, filtered);
+            updateCourseSummary(filtered); // 코스 요약 업데이트 추가
+          });
+        });
+      }
+
+      // ⑧ 모달 맵 열기
+      function openFullMapModal() {
+        document.getElementById('fullMapModal').classList.remove('hidden');
+        if (!modalMapInitialized) {
+          modalMap = new kakao.maps.Map(
+            document.getElementById('fullMap'),
+            { center: new kakao.maps.LatLng(37.8315, 127.5109), level: 7 }
+          );
+          drawMapElements(modalMap, getFilteredData());
+          modalMapInitialized = true;
+        } else {
+          kakao.maps.event.trigger(modalMap, 'resize');
+          drawMapElements(modalMap, getFilteredData());
+        }
+      }
+      document.getElementById('routeBtn').addEventListener('click', openFullMapModal);
+      document.getElementById('mapToggleBtn').addEventListener('click', openFullMapModal);
+      document.getElementById('closeFullMapBtn').addEventListener('click', () => document.getElementById('fullMapModal').classList.add('hidden'));
+      document.getElementById('fullMapModal').addEventListener('click', e => { if (e.target.id === 'fullMapModal') e.currentTarget.classList.add('hidden'); });
+
+      // ⑨ 초기 실행
+      initMap();
+    });
+  </script>
+</body>
+
+</html>

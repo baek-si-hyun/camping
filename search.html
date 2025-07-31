@@ -48,34 +48,115 @@
       background: #E5E7EB;
       border-radius: 9999px;
       background-image: linear-gradient(#7C3AED, #7C3AED);
-      background-size: 70% 100%;
+      background-size: 0% 100%;
       background-repeat: no-repeat;
+      transition: background-size 0.3s ease;
     }
 
     input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none;
-      width: 20px;
-      height: 20px;
+      height: 24px;
+      width: 24px;
       border-radius: 50%;
       background: #7C3AED;
       cursor: pointer;
-      border: 4px solid #fff;
-      box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+      box-shadow: 0 4px 8px rgba(124, 58, 237, 0.4);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      height: 24px;
+      width: 24px;
+      border-radius: 50%;
+      background: #7C3AED;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    input[type="range"]::-moz-range-thumb:hover {
+      transform: scale(1.2);
+      box-shadow: 0 4px 8px rgba(124, 58, 237, 0.4);
+    }
+
+    /* 위시리스트 버튼 애니메이션 */
+    .wishlist-btn {
+      transition: all 0.3s ease;
+    }
+
+    .wishlist-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .wishlist-btn.active {
+      color: #ef4444 !important;
+      transform: scale(1.2);
+    }
+
+    .wishlist-btn i {
+      transition: all 0.2s ease;
     }
 
     /* 스크롤바 숨김 */
     ::-webkit-scrollbar {
       display: none;
     }
-    
+
     * {
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
+
+    /* 캘린더 스타일 */
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+    }
+
+    .calendar-day {
+      aspect-ratio: 1/1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      margin: 1px;
+      transition: all 0.2s;
+    }
+
+    .calendar-day:hover {
+      background-color: rgba(124, 58, 237, 0.1);
+    }
+
+    .calendar-day.selected {
+      background-color: #7C3AED;
+      color: white;
+    }
+
+    .calendar-day.in-range {
+      background-color: rgba(124, 58, 237, 0.1);
+    }
+
+    .calendar-day.disabled {
+      color: #D1D5DB;
+      pointer-events: none;
+      cursor: not-allowed;
+    }
+
+    /* 캘린더 모달 마진 제거 */
+    #calendarModal {
+      margin: 0 !important;
+      padding: 0 !important;
+    }
   </style>
 </head>
 
-<body class="bg-[#F8F7FF]   min-h-[762px]">
+<body class="bg-[#F8F7FF] min-h-[762px]">
   <nav class="fixed top-0 left-0 right-0 bg-white z-50 shadow-sm">
     <div class="flex items-center px-4 h-16">
       <a href="#" onclick="event.preventDefault(); history.back();" data-readdy="true"
@@ -94,7 +175,7 @@
     </div>
   </nav>
   <main class="pt-20 pb-20 px-4">
-    <div class="space-y-5">
+    <div class="space-y-5 pb-7">
       <div class="relative">
         <div class="absolute inset-y-0 left-3 flex items-center">
           <img
@@ -118,6 +199,10 @@
                 <span class="text-xs text-gray-400 line-through">₩220,000</span>
               </div>
             </div>
+            <button
+              class="absolute top-3 right-3 w-10 h-10 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center wishlist-btn">
+              <i class="ri-heart-line text-xl text-gray-500"></i>
+            </button>
           </div>
         </div>
         <div class="bg-white rounded-xl p-4 shadow-sm">
@@ -133,6 +218,10 @@
                 <span class="text-xs text-gray-400 line-through">₩200,000</span>
               </div>
             </div>
+            <button
+              class="absolute top-3 right-3 w-10 h-10 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center wishlist-btn">
+              <i class="ri-heart-line text-xl text-gray-500"></i>
+            </button>
           </div>
         </div>
       </div>
@@ -163,7 +252,7 @@
           <button class="w-full py-3 bg-primary text-white rounded-lg font-medium">회원가입하고 혜택받기</button>
         </a>
       </div>
-      <div class="bg-white p-6 rounded-xl shadow-sm space-y-4">
+      <div class="bg-white p-6 rounded-xl shadow-sm space-y-4 price-slider-container">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
             <img
@@ -178,7 +267,7 @@
             class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" id="price-range">
         </div>
       </div>
-      <div class="relative">
+      <div class="relative hidden">
         <div class="absolute inset-y-0 left-3 flex items-center">
           <img
             src="https://readdy.ai/api/search-image?query=3D%20icon%20of%20a%20calendar%2C%20modern%20design%2C%20soft%20gradients%2C%20centered%20composition%2C%20isolated%20on%20transparent%20background%2C%20smooth%20shading&width=32&height=32&seq=3&orientation=squarish"
@@ -187,26 +276,192 @@
         <input type="text" value="07.07 월 - 07.08 화, 1박"
           class="w-full h-14 pl-12 pr-4 rounded-xl bg-white shadow-sm focus:shadow-md transition-shadow duration-300 focus:outline-none">
       </div>
-      <div class="flex gap-3 overflow-x-auto py-2 no-scrollbar">
-        <button
-          class="px-5 py-2.5 rounded-full bg-white shadow-sm hover:shadow-md transition-shadow duration-300 whitespace-nowrap text-gray-600">전체</button>
-        <button
-          class="px-5 py-2.5 rounded-full bg-white shadow-sm hover:shadow-md transition-shadow duration-300 whitespace-nowrap text-gray-600">오토캠핑</button>
-        <button id="glamping-btn"
-          class="px-5 py-2.5 rounded-full bg-white shadow-sm hover:shadow-md transition-shadow duration-300 whitespace-nowrap text-gray-600">글램핑</button>
-        <button id="caravan-btn"
-          class="px-5 py-2.5 rounded-full bg-primary text-white shadow-md whitespace-nowrap">카라반</button>
-        <button
-          class="px-5 py-2.5 rounded-full bg-white shadow-sm hover:shadow-md transition-shadow duration-300 whitespace-nowrap text-gray-600">펜션</button>
-      </div>
+
+      <!-- 날짜 선택 UI -->
       <div class="relative">
         <div class="absolute inset-y-0 left-3 flex items-center">
           <img
+            src="https://readdy.ai/api/search-image?query=3D%20icon%20of%20a%20calendar%2C%20modern%20design%2C%20soft%20gradients%2C%20centered%20composition%2C%20isolated%20on%20transparent%20background%2C%20smooth%20shading&width=32&height=32&seq=3&orientation=squarish"
+            class="w-6 h-6" alt="calendar">
+        </div>
+        <button type="button" id="dateSelector"
+          class="w-full h-14 pl-12 pr-4 rounded-xl bg-white shadow-sm hover:shadow-md transition-shadow duration-300 focus:outline-none text-left flex items-center justify-between">
+          <span id="selectedDateText">체크인 - 체크아웃 날짜를 선택하세요</span>
+          <i class="ri-arrow-down-s-line text-gray-400"></i>
+        </button>
+      </div>
+
+      <!-- 캘린더 모달 (shop_detail.html 스타일) -->
+      <div id="calendarModal" class="fixed inset-0 bg-black/50 z-50 hidden">
+        <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl p-6 max-h-[80vh] overflow-y-auto">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-lg font-medium">날짜 선택</h3>
+            <button type="button" id="closeCalendarModal"
+              class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100">
+              <i class="ri-close-line text-xl"></i>
+            </button>
+          </div>
+
+          <!-- 체크인/체크아웃 표시 -->
+          <div class="flex justify-between mb-4">
+            <div class="w-[48%] p-3 border border-gray-200 rounded-lg">
+              <p class="text-sm text-gray-500">체크인</p>
+              <p class="text-lg font-medium" id="check-in-date">날짜 선택</p>
+            </div>
+            <div class="w-[48%] p-3 border border-gray-200 rounded-lg">
+              <p class="text-sm text-gray-500">체크아웃</p>
+              <p class="text-lg font-medium" id="check-out-date">날짜 선택</p>
+            </div>
+          </div>
+          <div class="mb-4 text-center">
+            <p class="text-gray-500" id="nights-count">0박</p>
+          </div>
+
+          <!-- 달력 -->
+          <div class="calendar-container mb-5">
+            <div class="flex justify-between items-center mb-4">
+              <button id="prev-month" class="w-10 h-10 flex items-center justify-center cursor-pointer">
+                <i class="ri-arrow-left-s-line ri-lg"></i>
+              </button>
+              <h3 class="text-lg font-medium" id="current-month">2025년 7월</h3>
+              <button id="next-month" class="w-10 h-10 flex items-center justify-center cursor-pointer">
+                <i class="ri-arrow-right-s-line ri-lg"></i>
+              </button>
+            </div>
+            <div class="calendar-weekdays grid grid-cols-7 text-center mb-2">
+              <div class="text-sm text-red-500 font-medium">일</div>
+              <div class="text-sm text-gray-500 font-medium">월</div>
+              <div class="text-sm text-gray-500 font-medium">화</div>
+              <div class="text-sm text-gray-500 font-medium">수</div>
+              <div class="text-sm text-gray-500 font-medium">목</div>
+              <div class="text-sm text-gray-500 font-medium">금</div>
+              <div class="text-sm text-blue-500 font-medium">토</div>
+            </div>
+            <div class="calendar-grid" id="calendar-days">
+              <!-- 달력 날짜는 JavaScript로 동적 생성 -->
+            </div>
+          </div>
+
+          <!-- 확인 버튼 -->
+          <button type="button" id="confirmCalendarSelection"
+            class="w-full py-3 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-colors">
+            날짜 선택 완료
+          </button>
+        </div>
+      </div>
+      <div class="flex gap-3 overflow-x-auto py-2 no-scrollbar">
+        <div class="flex gap-3 min-w-max pb-2" id="campingTypeFilter">
+          <button class="flex flex-col items-center gap-1 px-3 py-2 bg-primary/10 shadow-md rounded-xl cursor-pointer"
+            data-type="normal">
+            <div
+              class="w-12 h-12 flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5 rounded-xl">
+              <i class="ri-home-8-line text-xl text-primary hover:rotate-6"></i>
+            </div>
+            <span class="text-xs whitespace-nowrap text-primary font-medium">일반캠핑</span>
+          </button>
+          <button
+            class="flex flex-col items-center gap-1 px-3 py-2 bg-white shadow-sm hover:shadow-md rounded-xl cursor-pointer"
+            data-type="glamping">
+            <div class="w-10 h-10 flex items-center justify-center rounded-xl">
+              <i class="ri-hotel-line text-xl text-gray-500"></i>
+            </div>
+            <span class="text-xs whitespace-nowrap">글램핑</span>
+          </button>
+          <button
+            class="flex flex-col items-center gap-1 px-3 py-2 bg-white shadow-sm hover:shadow-md rounded-xl cursor-pointer"
+            data-type="caravan">
+            <div class="w-10 h-10 flex items-center justify-center rounded-xl">
+              <i class="ri-truck-line text-xl text-gray-500"></i>
+            </div>
+            <span class="text-xs whitespace-nowrap">카라반</span>
+          </button>
+          <button
+            class="flex flex-col items-center gap-1 px-3 py-2 bg-white shadow-sm hover:shadow-md rounded-xl cursor-pointer"
+            data-type="pension">
+            <div class="w-10 h-10 flex items-center justify-center rounded-xl">
+              <i class="ri-building-line text-xl text-gray-500"></i>
+            </div>
+            <span class="text-xs whitespace-nowrap">펜션</span>
+          </button>
+          <button
+            class="flex flex-col items-center gap-1 px-3 py-2 bg-white shadow-sm hover:shadow-md rounded-xl cursor-pointer"
+            data-type="hotel">
+            <div class="w-10 h-10 flex items-center justify-center rounded-xl">
+              <i class="ri-hotel-line text-xl text-gray-500"></i>
+            </div>
+            <span class="text-xs whitespace-nowrap">호텔</span>
+          </button>
+          <button
+            class="flex flex-col items-center gap-1 px-3 py-2 bg-white shadow-sm hover:shadow-md rounded-xl cursor-pointer"
+            data-type="pet">
+            <div class="w-10 h-10 flex items-center justify-center rounded-xl">
+              <i class="ri-heart-line text-xl text-gray-500"></i>
+            </div>
+            <span class="text-xs whitespace-nowrap">반려동물</span>
+          </button>
+          <button
+            class="flex flex-col items-center gap-1 px-3 py-2 bg-white shadow-sm hover:shadow-md rounded-xl cursor-pointer"
+            data-type="sharing">
+            <div class="w-10 h-10 flex items-center justify-center rounded-xl">
+              <i class="ri-home-4-line text-xl text-gray-500"></i>
+            </div>
+            <span class="text-xs whitespace-nowrap">공유숙박</span>
+          </button>
+          <button
+            class="flex flex-col items-center gap-1 px-3 py-2 bg-white shadow-sm hover:shadow-md rounded-xl cursor-pointer"
+            data-type="hotspring">
+            <div class="w-10 h-10 flex items-center justify-center rounded-xl">
+              <i class="ri-water-flash-line text-xl text-gray-500"></i>
+            </div>
+            <span class="text-xs whitespace-nowrap">온천</span>
+          </button>
+          <button
+            class="flex flex-col items-center gap-1 px-3 py-2 bg-white shadow-sm hover:shadow-md rounded-xl cursor-pointer"
+            data-type="resort">
+            <div class="w-10 h-10 flex items-center justify-center rounded-xl">
+              <i class="ri-hotel-line text-xl text-gray-500"></i>
+            </div>
+            <span class="text-xs whitespace-nowrap">리조트</span>
+          </button>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl p-4 shadow-sm">
+        <div class="flex items-center gap-3 mb-4">
+          <img
             src="https://readdy.ai/api/search-image?query=3D%20icon%20of%20a%20person%2C%20modern%20design%2C%20soft%20gradients%2C%20centered%20composition%2C%20isolated%20on%20transparent%20background%2C%20smooth%20shading&width=32&height=32&seq=4&orientation=squarish"
             class="w-6 h-6" alt="user">
+          <span class="font-medium">인원 선택</span>
         </div>
-        <input type="text" value="성인 0, 소인 0"
-          class="w-full h-14 pl-12 pr-4 rounded-xl bg-white shadow-sm focus:shadow-md transition-shadow duration-300 focus:outline-none">
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-sm">성인</span>
+            <div class="flex items-center gap-3">
+              <button type="button" id="adult-minus"
+                class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50">
+                <i class="ri-subtract-line text-sm"></i>
+              </button>
+              <span id="adult-count" class="w-8 text-center font-medium">0</span>
+              <button type="button" id="adult-plus"
+                class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50">
+                <i class="ri-add-line text-sm"></i>
+              </button>
+            </div>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-sm">소인</span>
+            <div class="flex items-center gap-3">
+              <button type="button" id="child-minus"
+                class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50">
+                <i class="ri-subtract-line text-sm"></i>
+              </button>
+              <span id="child-count" class="w-8 text-center font-medium">0</span>
+              <button type="button" id="child-plus"
+                class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50">
+                <i class="ri-add-line text-sm"></i>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="bg-white rounded-xl p-5 space-y-4 shadow-sm">
         <div class="flex justify-between items-center">
@@ -239,6 +494,13 @@
       const searchButton = document.querySelector('.fixed.bottom-0 button');
       const priceRange = document.getElementById('price-range');
       const priceDisplay = document.getElementById('price-display');
+      const adultCount = document.getElementById('adult-count');
+      const adultMinus = document.getElementById('adult-minus');
+      const adultPlus = document.getElementById('adult-plus');
+      const childCount = document.getElementById('child-count');
+      const childMinus = document.getElementById('child-minus');
+      const childPlus = document.getElementById('child-plus');
+
       function updatePriceDisplay() {
         const value = parseInt(priceRange.value).toLocaleString();
         priceDisplay.textContent = `₩${value}`;
@@ -256,30 +518,407 @@
       });
       updatePriceDisplay();
       updateSliderBackground(priceRange);
-      buttons.forEach(button => {
-        button.addEventListener('click', function () {
-          buttons.forEach(btn => {
-            btn.classList.remove('bg-primary', 'text-white', 'shadow-md');
-            btn.classList.add('bg-white', 'text-gray-600', 'shadow-sm', 'hover:shadow-md', 'transition-shadow', 'duration-300');
-          });
-          this.classList.remove('bg-white', 'text-gray-600', 'shadow-sm', 'hover:shadow-md', 'transition-shadow', 'duration-300');
-          this.classList.add('bg-primary', 'text-white', 'shadow-md');
-        });
-      });
-      locationSearch.addEventListener('input', function () {
-        if (this.value.length > 0) {
-          searchResults.classList.remove('hidden');
-          searchResults.classList.add('animate-fade-in');
-        } else {
-          searchResults.classList.add('hidden');
+
+      let adultNumber = 0;
+      let childNumber = 0;
+
+      function updatePersonCount() {
+        adultCount.textContent = adultNumber;
+        childCount.textContent = childNumber;
+      }
+
+      adultMinus.addEventListener('click', function () {
+        if (adultNumber > 0) {
+          adultNumber--;
+          updatePersonCount();
         }
       });
-      searchButton.addEventListener('click', function () {
-        membershipBenefits.classList.remove('hidden');
-        membershipBenefits.classList.add('animate-slide-up');
-        setTimeout(() => {
-          searchResults.scrollIntoView({ behavior: 'smooth' });
-        }, 500);
+      adultPlus.addEventListener('click', function () {
+        adultNumber++;
+        updatePersonCount();
+      });
+      childMinus.addEventListener('click', function () {
+        if (childNumber > 0) {
+          childNumber--;
+          updatePersonCount();
+        }
+      });
+      childPlus.addEventListener('click', function () {
+        childNumber++;
+        updatePersonCount();
+      });
+
+      // 캠핑 타입 필터 버튼 이벤트
+      const campingTypeButtons = document.querySelectorAll('#campingTypeFilter button');
+
+      // 초기 상태 설정 - 일반캠핑이 이미 HTML에서 활성화되어 있음
+
+      campingTypeButtons.forEach(button => {
+        button.addEventListener('click', function () {
+          // 모든 버튼 비활성화
+          campingTypeButtons.forEach((btn) => {
+            btn.classList.remove('bg-primary/10', 'shadow-md');
+            btn.classList.add('bg-white', 'shadow-sm', 'hover:shadow-md');
+
+            // 아이콘 색상 초기화
+            const icon = btn.querySelector('i');
+            const span = btn.querySelector('span');
+            if (icon) {
+              icon.classList.remove('text-primary');
+              icon.classList.add('text-gray-500');
+            }
+            if (span) {
+              span.classList.remove('text-primary', 'font-medium');
+            }
+
+            // 아이콘 컨테이너 초기화
+            const iconContainer = btn.querySelector('div');
+            if (iconContainer) {
+              iconContainer.classList.remove('bg-gradient-to-br', 'from-primary/10', 'to-primary/5', 'w-12', 'h-12');
+              iconContainer.classList.add('w-10', 'h-10');
+            }
+          });
+
+          // 클릭된 버튼 활성화
+          this.classList.remove('bg-white', 'shadow-sm', 'hover:shadow-md');
+          this.classList.add('bg-primary/10', 'shadow-md');
+
+          // 아이콘과 텍스트 색상 변경
+          const icon = this.querySelector('i');
+          const span = this.querySelector('span');
+          if (icon) {
+            icon.classList.remove('text-gray-500');
+            icon.classList.add('text-primary');
+          }
+          if (span) {
+            span.classList.add('text-primary', 'font-medium');
+          }
+
+          // 선택된 버튼의 아이콘 컨테이너 스타일
+          const iconContainer = this.querySelector('div');
+          if (iconContainer) {
+            iconContainer.classList.add('bg-gradient-to-br', 'from-primary/10', 'to-primary/5', 'w-12', 'h-12');
+            iconContainer.classList.remove('w-10', 'h-10');
+          }
+        });
+      });
+
+      // 가격 슬라이더 터치 이벤트 처리 (페이지 스크롤만 방지)
+      let isSliderActive = false;
+
+      priceRange.addEventListener('touchstart', function (e) {
+        isSliderActive = true;
+        document.body.style.overflow = 'hidden'; // 페이지 스크롤 차단
+        e.stopPropagation();
+      }, { passive: true });
+
+      priceRange.addEventListener('touchend', function (e) {
+        isSliderActive = false;
+        document.body.style.overflow = 'auto'; // 페이지 스크롤 복원
+        e.stopPropagation();
+      }, { passive: true });
+
+      // 페이지 레벨에서 터치 이벤트 제어
+      document.addEventListener('touchmove', function (e) {
+        if (isSliderActive) {
+          e.stopPropagation();
+        }
+      }, { passive: true });
+
+      // 날짜 선택 기능
+      const dateSelectorBtn = document.getElementById('dateSelector');
+      const calendarModal = document.getElementById('calendarModal');
+      const closeCalendarModalBtn = document.getElementById('closeCalendarModal');
+      const selectedDateTextEl = document.getElementById('selectedDateText');
+      const calendarDaysEl = document.getElementById('calendar-days');
+      const currentMonthText = document.getElementById('current-month');
+      const prevMonthButton = document.getElementById('prev-month');
+      const nextMonthButton = document.getElementById('next-month');
+      const checkInDateText = document.getElementById('check-in-date');
+      const checkOutDateText = document.getElementById('check-out-date');
+      const nightsCountText = document.getElementById('nights-count');
+      const confirmCalendarBtn = document.getElementById('confirmCalendarSelection');
+
+      let currentCalendarDate = new Date();
+      let selectedStartCalendarDate = null;
+      let selectedEndCalendarDate = null;
+
+      // 날짜 포맷팅 함수
+      function formatCalendarDate(date) {
+        if (!date) return '';
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+        return `${year}.${month < 10 ? '0' + month : month}.${day < 10 ? '0' + day : day}`;
+      }
+
+      function formatCalendarDateRange(checkin, checkout) {
+        if (!checkin || !checkout) return '체크인 - 체크아웃 날짜를 선택하세요';
+
+        const nights = Math.ceil((checkout - checkin) / (1000 * 60 * 60 * 24));
+        const options = { month: '2-digit', day: '2-digit', weekday: 'short' };
+        const checkinStr = checkin.toLocaleDateString('ko-KR', options);
+        const checkoutStr = checkout.toLocaleDateString('ko-KR', options);
+        return `${checkinStr} - ${checkoutStr}, ${nights}박${nights + 1}일`;
+      }
+
+      // 달력 생성 함수
+      function renderCalendarView() {
+        calendarDaysEl.innerHTML = '';
+        const year = currentCalendarDate.getFullYear();
+        const month = currentCalendarDate.getMonth();
+        currentMonthText.textContent = `${year}년 ${month + 1}월`;
+
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        const startingDayOfWeek = firstDay.getDay();
+        const daysInMonth = lastDay.getDate();
+
+        // 이전 달의 날짜 채우기
+        for (let i = 0; i < startingDayOfWeek; i++) {
+          const dayEl = document.createElement('div');
+          dayEl.classList.add('calendar-day', 'disabled');
+          calendarDaysEl.appendChild(dayEl);
+        }
+
+        // 현재 달의 날짜 채우기
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        for (let i = 1; i <= daysInMonth; i++) {
+          const dayEl = document.createElement('div');
+          dayEl.classList.add('calendar-day');
+          dayEl.textContent = i;
+
+          const currentDateObj = new Date(year, month, i);
+
+          // 오늘 이전 날짜는 비활성화
+          if (currentDateObj < today) {
+            dayEl.classList.add('disabled');
+          } else {
+            // 선택된 시작 날짜
+            if (selectedStartCalendarDate && currentDateObj.getTime() === selectedStartCalendarDate.getTime()) {
+              dayEl.classList.add('selected');
+            }
+            // 선택된 종료 날짜
+            if (selectedEndCalendarDate && currentDateObj.getTime() === selectedEndCalendarDate.getTime()) {
+              dayEl.classList.add('selected');
+            }
+            // 선택 범위 내 날짜
+            if (selectedStartCalendarDate && selectedEndCalendarDate &&
+              currentDateObj > selectedStartCalendarDate &&
+              currentDateObj < selectedEndCalendarDate) {
+              dayEl.classList.add('in-range');
+            }
+
+            // 날짜 클릭 이벤트
+            dayEl.addEventListener('click', () => {
+              if (!selectedStartCalendarDate || (selectedStartCalendarDate && selectedEndCalendarDate)) {
+                // 새로운 선택 시작
+                selectedStartCalendarDate = currentDateObj;
+                selectedEndCalendarDate = null;
+                checkInDateText.textContent = formatCalendarDate(selectedStartCalendarDate);
+                checkOutDateText.textContent = '날짜 선택';
+                nightsCountText.textContent = '0박';
+              } else {
+                // 이미 시작 날짜가 선택된 경우
+                if (currentDateObj < selectedStartCalendarDate) {
+                  // 선택된 날짜가 시작 날짜보다 이전인 경우
+                  selectedEndCalendarDate = selectedStartCalendarDate;
+                  selectedStartCalendarDate = currentDateObj;
+                } else {
+                  // 종료 날짜 선택
+                  selectedEndCalendarDate = currentDateObj;
+                }
+                checkInDateText.textContent = formatCalendarDate(selectedStartCalendarDate);
+                checkOutDateText.textContent = formatCalendarDate(selectedEndCalendarDate);
+                // 숙박 일수 계산
+                const nights = Math.round((selectedEndCalendarDate - selectedStartCalendarDate) / (1000 * 60 * 60 * 24));
+                nightsCountText.textContent = `${nights}박`;
+              }
+              renderCalendarView();
+            });
+          }
+
+          calendarDaysEl.appendChild(dayEl);
+        }
+      }
+
+      // 모달 열기/닫기
+      dateSelectorBtn.addEventListener('click', function () {
+        calendarModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        renderCalendarView();
+      });
+
+      closeCalendarModalBtn.addEventListener('click', function () {
+        calendarModal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+      });
+
+      // 모달 배경 클릭 시 닫기
+      calendarModal.addEventListener('click', function (e) {
+        if (e.target === calendarModal) {
+          calendarModal.classList.add('hidden');
+          document.body.style.overflow = 'auto';
+        }
+      });
+
+      // 이전/다음 달 버튼
+      prevMonthButton.addEventListener('click', () => {
+        currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+        renderCalendarView();
+      });
+
+      nextMonthButton.addEventListener('click', () => {
+        currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+        renderCalendarView();
+      });
+
+      // 날짜 선택 완료
+      confirmCalendarBtn.addEventListener('click', function () {
+        if (selectedStartCalendarDate && selectedEndCalendarDate) {
+          if (selectedEndCalendarDate <= selectedStartCalendarDate) {
+            alert('체크아웃 날짜는 체크인 날짜보다 늦어야 합니다.');
+            return;
+          }
+
+          const displayText = formatCalendarDateRange(selectedStartCalendarDate, selectedEndCalendarDate);
+          selectedDateTextEl.textContent = displayText;
+
+          calendarModal.classList.add('hidden');
+          document.body.style.overflow = 'auto';
+        } else {
+          alert('체크인과 체크아웃 날짜를 모두 선택해주세요.');
+        }
+      });
+
+      // 검색 버튼 클릭 처리
+      const mainSearchButton = document.getElementById('searchButton');
+      const locationSearchInput = document.getElementById('location-search');
+
+      mainSearchButton.addEventListener('click', function () {
+
+        // 모든 검색 정보 수집
+        const searchData = collectSearchData();
+
+        // 검색어가 없으면 알림
+        if (!searchData.location && !searchData.selectedType) {
+          alert('지역을 입력하거나 캠핑 타입을 선택해주세요.');
+          return;
+        }
+
+        // URL 파라미터 생성
+        const params = new URLSearchParams();
+
+        // 지역 + 타입으로 검색어 조합
+        let query = '';
+        if (searchData.location) {
+          query += searchData.location;
+        }
+        if (searchData.selectedType && searchData.selectedType !== 'normal') {
+          if (query) query += ' ';
+          query += getTypeDisplayName(searchData.selectedType);
+        }
+
+        if (query) {
+          params.set('query', query);
+        }
+
+        if (searchData.location) {
+          params.set('location', searchData.location);
+        }
+
+        if (searchData.selectedType) {
+          params.set('type', searchData.selectedType);
+        }
+
+        // 날짜 정보
+        if (selectedStartCalendarDate && selectedEndCalendarDate) {
+          params.set('checkin', formatCalendarDate(selectedStartCalendarDate));
+          params.set('checkout', formatCalendarDate(selectedEndCalendarDate));
+          const nights = Math.round((selectedEndCalendarDate - selectedStartCalendarDate) / (1000 * 60 * 60 * 24));
+          params.set('nights', nights.toString());
+        }
+
+        // 가격 범위
+        const priceValue = document.getElementById('price-range').value;
+        params.set('maxPrice', priceValue);
+
+        // 인원 수
+        params.set('adults', adultNumber.toString());
+        params.set('children', childNumber.toString());
+
+        // search_result.html로 이동
+        window.location.href = `./search_result.html?${params.toString()}`;
+      });
+
+      // 검색 정보 수집 함수
+      function collectSearchData() {
+        const location = locationSearchInput.value.trim();
+        const selectedTypeButton = document.querySelector('#campingTypeFilter button.bg-primary\\/10');
+        const selectedType = selectedTypeButton ? selectedTypeButton.dataset.type : null;
+
+        return {
+          location,
+          selectedType,
+          checkinDate: selectedStartCalendarDate,
+          checkoutDate: selectedEndCalendarDate,
+          maxPrice: document.getElementById('price-range').value,
+          adults: adultNumber,
+          children: childNumber
+        };
+      }
+
+      // 타입 표시명 변환 함수
+      function getTypeDisplayName(type) {
+        const typeNames = {
+          'normal': '일반캠핑',
+          'glamping': '글램핑',
+          'caravan': '카라반',
+          'pension': '펜션',
+          'hotel': '호텔',
+          'pet': '반려동물',
+          'sharing': '공유숙박',
+          'hotspring': '온천',
+          'resort': '리조트'
+        };
+        return typeNames[type] || type;
+      }
+    });
+
+    // 위시리스트 토글 기능
+    document.addEventListener('DOMContentLoaded', function () {
+      // 위시리스트 버튼들에 클릭 이벤트 추가
+      document.addEventListener('click', function (e) {
+        if (e.target.closest('.wishlist-btn')) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          const button = e.target.closest('.wishlist-btn');
+          const icon = button.querySelector('i');
+
+          // 토글 애니메이션
+          button.style.transform = 'scale(0.8)';
+
+          setTimeout(() => {
+            if (icon.classList.contains('ri-heart-line')) {
+              // 빈 하트 → 채워진 하트
+              icon.classList.remove('ri-heart-line');
+              icon.classList.add('ri-heart-fill');
+              button.classList.add('active');
+              icon.style.color = '#ef4444';
+            } else {
+              // 채워진 하트 → 빈 하트
+              icon.classList.remove('ri-heart-fill');
+              icon.classList.add('ri-heart-line');
+              button.classList.remove('active');
+              icon.style.color = '';
+            }
+
+            button.style.transform = 'scale(1)';
+          }, 100);
+        }
       });
     });
   </script>
@@ -317,13 +956,10 @@
     }
   </style>
   <div class="fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur-md border-t border-gray-100">
-    <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/9d547ff9-b1fa-441c-b56d-f253fb36c45b"
-      data-readdy="true" class="block w-full">
-      <button
-        class="w-full h-14 bg-primary text-white font-medium rounded-xl shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-shadow duration-300">
-        검색
-      </button>
-    </a>
+    <button id="searchButton"
+      class="w-full h-14 bg-primary text-white font-medium rounded-xl shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-shadow duration-300">
+      검색
+    </button>
   </div>
 </body>
 

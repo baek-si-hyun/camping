@@ -48,7 +48,7 @@
     ::-webkit-scrollbar {
       display: none;
     }
-    
+
     * {
       -ms-overflow-style: none;
       scrollbar-width: none;
@@ -63,8 +63,8 @@
         class="w-8 h-8 flex items-center justify-center cursor-pointer">
         <i class="ri-arrow-left-line text-xl"></i>
       </a>
-      <h1 class="text-lg font-medium">날씨 예측</h1>
-      <button class="w-8 h-8 flex items-center justify-center cursor-pointer">
+      <h1 class="text-lg font-medium absolute left-1/2 transform -translate-x-1/2">날씨 예측</h1>
+      <button class="w-8 h-8 flex items-center justify-center cursor-pointer" id="shareBtn">
         <i class="ri-share-line text-xl"></i>
       </button>
     </div>
@@ -432,7 +432,7 @@
       </div>
     </div>
   </main>
-  <a href="https://readdy.ai/home/0086bfe3-a951-4d32-95bd-f87c4fe866e1/11376e19-f449-4769-be4a-e89f78077e2d"
+  <a href="#"
     data-readdy="true">
     <button id="fabBtn"
       class="fixed bottom-24 right-4 w-14 h-14 bg-primary text-white !rounded-full shadow-lg flex items-center justify-center cursor-pointer">
@@ -511,18 +511,76 @@
       });
       locationSearch.addEventListener('input', function () {
         if (this.value.length > 0) {
-          console.log('검색:', this.value);
         }
       });
     });
   </script>
+  <script id="shareScript">
+    document.addEventListener('DOMContentLoaded', function () {
+      // 공유 버튼 클릭 이벤트
+      document.addEventListener('click', function (event) {
+        if (event.target.closest('button') && event.target.closest('button').querySelector('.ri-share-line')) {
+          event.preventDefault();
+
+          const currentUrl = window.location.href;
+
+          // 클립보드에 링크 복사
+          navigator.clipboard.writeText(currentUrl).then(() => {
+            showToast('링크가 복사되었습니다!');
+          }).catch(() => {
+            // 클립보드 API가 지원되지 않는 경우 대체 방법
+            const textArea = document.createElement('textarea');
+            textArea.value = currentUrl;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            showToast('링크가 복사되었습니다!');
+          });
+        }
+      });
+    });
+
+    // 토스트 팝업 표시 함수
+    function showToast(message) {
+      // 기존 토스트 제거
+      const existingToast = document.querySelector('.toast-popup');
+      if (existingToast) {
+        existingToast.remove();
+      }
+
+      // 토스트 팝업 생성
+      const toast = document.createElement('div');
+      toast.className = 'toast-popup fixed top-20 left-0 right-0 mx-auto w-max bg-black/80 text-white px-4 py-3 rounded-lg z-50 animate-fadeIn';
+
+      toast.innerHTML = `
+        <div class="flex items-center gap-2 whitespace-nowrap">
+          <i class="ri-information-line text-lg"></i>
+          <span class="text-sm">${message}</span>
+        </div>
+      `;
+
+      document.body.appendChild(toast);
+
+      // 3초 후 자동 제거
+      setTimeout(() => {
+        if (toast.parentElement) {
+          toast.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+          setTimeout(() => {
+            if (toast.parentElement) {
+              toast.remove();
+            }
+          }, 300);
+        }
+      }, 3000);
+    }
+  </script>
   <nav class="fixed bottom-0 left-0 right-0 bg-white border-t">
     <div class="grid grid-cols-6 py-1">
-      <a href="search_map.html"
-        data-readdy="true" class="flex flex-col items-center gap-1 group">
+      <a href="search_map.html?from=nearby" data-readdy="true" class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-map-pin-2-fill text-lg group-hover:text-primary"></i>
+          <i class="ri-map-pin-2-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
         </div>
         <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">내주변</span>
       </a>
@@ -530,7 +588,7 @@
       <a href="./index.html" class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-home-5-fill text-lg group-hover:text-primary"></i>
+          <i class="ri-home-5-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
         </div>
         <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">홈</span>
       </a>
@@ -538,7 +596,7 @@
       <a href="wishlist.html" data-readdy="true" class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-heart-3-fill text-lg group-hover:text-primary"></i>
+          <i class="ri-heart-3-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
         </div>
         <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">찜</span>
       </a>
@@ -546,7 +604,7 @@
       <a href="mypage.html" data-readdy="true" class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-user-3-fill text-lg group-hover:text-primary"></i>
+          <i class="ri-user-3-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
         </div>
         <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">마이</span>
       </a>
@@ -554,14 +612,15 @@
       <button class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-wallet-3-fill text-lg group-hover:text-primary"></i>
+          <i class="ri-wallet-3-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
         </div>
         <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">페이</span>
       </button>
-      <button class="flex flex-col items-center gap-1 group">
+
+      <button id="bottomMenuButton" class="flex flex-col items-center gap-1 group">
         <div
           class="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-          <i class="ri-menu-fill text-lg group-hover:text-primary"></i>
+          <i class="ri-menu-fill text-lg group-hover:text-primary transition-colors duration-300"></i>
         </div>
         <span class="text-[10px] transition-colors duration-300 group-hover:text-primary">전체</span>
       </button>
@@ -607,11 +666,11 @@
           <i class="ri-building-line text-xl text-gray-600"></i>
           <span>호텔</span>
         </a>
-        <a href="#" class="flex items-center gap-3">
+        <a href="event.html" class="flex items-center gap-3">
           <i class="ri-gift-line text-xl text-gray-600"></i>
           <span>이벤트</span>
         </a>
-        <a href="#" class="flex items-center gap-3">
+        <a href="customer_service.html" class="flex items-center gap-3">
           <i class="ri-customer-service-line text-xl text-gray-600"></i>
           <span>고객센터</span>
         </a>
@@ -623,19 +682,19 @@
       const menuButton = document.querySelector('button:has(i.ri-menu-fill)');
       const closeMenu = document.getElementById('closeMenu');
       const sideMenu = document.getElementById('sideMenu');
-      
+
       if (menuButton) {
         menuButton.addEventListener('click', function () {
           sideMenu.classList.remove('translate-x-full');
         });
       }
-      
+
       if (closeMenu) {
         closeMenu.addEventListener('click', function () {
           sideMenu.classList.add('translate-x-full');
         });
       }
-      
+
       document.addEventListener('click', function (event) {
         if (sideMenu && !sideMenu.contains(event.target) && !menuButton?.contains(event.target)) {
           sideMenu.classList.add('translate-x-full');

@@ -12,6 +12,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+  <!-- 카카오 지도 API -->
+  <script type="text/javascript"
+    src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7c64a249ef8e3b9b648f20a50c07b249&libraries=services">
+    </script>
   <style>
     :where([class^="ri-"])::before {
       content: "\f3c2";
@@ -50,7 +54,7 @@
       transition: transform 0.3s ease;
     }
 
-    #media-slider > div {
+    #media-slider>div {
       flex-shrink: 0;
       width: 100%;
       height: 100%;
@@ -100,10 +104,28 @@
     ::-webkit-scrollbar {
       display: none;
     }
-    
+
     * {
       -ms-overflow-style: none;
       scrollbar-width: none;
+    }
+
+    /* 위시리스트 버튼 애니메이션 */
+    .wishlist-btn {
+      transition: all 0.3s ease;
+    }
+
+    .wishlist-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .wishlist-btn.active {
+      color: #ef4444 !important;
+      transform: scale(1.2);
+    }
+
+    .wishlist-btn i {
+      transition: all 0.2s ease;
     }
   </style>
 </head>
@@ -115,10 +137,10 @@
       <button type="button" class="w-10 h-10 flex items-center justify-center cursor-pointer" id="backButton">
         <i class="ri-arrow-left-line ri-lg"></i>
       </button>
-      <h1 class="text-lg font-medium ml-2">숙소 상세</h1>
     </div>
+    <h1 class="text-lg font-medium absolute left-1/2 transform -translate-x-1/2">숙소 상세</h1>
     <div class="flex items-center">
-      <button class="w-10 h-10 flex items-center justify-center cursor-pointer">
+      <button class="w-10 h-10 flex items-center justify-center cursor-pointer" id="shareBtn">
         <i class="ri-share-line ri-lg"></i>
       </button>
     </div>
@@ -128,14 +150,6 @@
     <!-- 비디오 섹션 -->
     <section id="main-media-container" class="relative h-[300px] overflow-hidden">
       <div id="media-slider" class="flex w-full h-full transition-transform duration-300">
-        <!-- <div id="video-wrapper" class="flex-shrink-0 w-full h-full relative">
-          <video class="w-full h-full object-cover" autoplay muted loop playsinline>
-            <source src="https://public.readdy.ai/gen_page/sample_glamping.mp4" type="video/mp4">
-          </video>
-          <div class="absolute bottom-4 left-4 bg-black/60 text-white px-3 py-1 rounded-full text-xs">
-            동영상
-          </div>
-        </div> -->
       </div>
       <div class="absolute bottom-4 right-4 bg-black/60 text-white px-3 py-1 rounded-full text-xs">
         <span id="media-counter">1/1</span>
@@ -195,15 +209,15 @@
       <!-- seq=5 -->
       <div data-index="6" class="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden cursor-pointer">
         <img
-          src="https://readdy.ai/api/search-image?query=glamping%20site%20dining%20area%20with%20beautiful%20view&width=64&height=64&seq=5&orientation=squarish"
-          data-full-image="https://readdy.ai/api/search-image?query=glamping%20site%20dining%20area%20with%20beautiful%20view&width=800&height=600&seq=5&orientation=landscape"
+          src="https://videos.openai.com/vg-assets/assets%2Ftask_01k19rzqbjeh2v9c8wjsf1f1hs%2F1753748680_img_0.webp?st=2025-07-28T22%3A30%3A43Z&se=2025-08-03T23%3A30%3A43Z&sks=b&skt=2025-07-28T22%3A30%3A43Z&ske=2025-08-03T23%3A30%3A43Z&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&skv=2019-02-02&sv=2018-11-09&sr=b&sp=r&spr=https%2Chttp&sig=Ohb0caM5fKyAbD4H1EEklAdYKuImivIn8v9UTi0AIt8%3D&az=oaivgprodscus"
+          data-full-image="https://videos.openai.com/vg-assets/assets%2Ftask_01k19rzqbjeh2v9c8wjsf1f1hs%2F1753748680_img_0.webp?st=2025-07-28T22%3A30%3A43Z&se=2025-08-03T23%3A30%3A43Z&sks=b&skt=2025-07-28T22%3A30%3A43Z&ske=2025-08-03T23%3A30%3A43Z&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&skv=2019-02-02&sv=2018-11-09&sr=b&sp=r&spr=https%2Chttp&sig=Ohb0caM5fKyAbD4H1EEklAdYKuImivIn8v9UTi0AIt8%3D&az=oaivgprodscus"
           alt="숙소 이미지" class="w-full h-full object-cover">
       </div>
       <!-- seq=6 -->
       <div data-index="7" class="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden cursor-pointer">
         <img
-          src="https://readdy.ai/api/search-image?query=glamping%20site%20at%20night%20with%20starry%20sky%20and%20ambient%20lighting&width=64&height=64&seq=6&orientation=squarish"
-          data-full-image="https://readdy.ai/api/search-image?query=glamping%20site%20at%20night%20with%20starry%20sky%20and%20ambient%20lighting&width=800&height=600&seq=6&orientation=landscape"
+          src="https://videos.openai.com/vg-assets/assets%2Ftask_01k19s44wefycb9h6pyvdsnpcb%2F1753748832_img_0.webp?st=2025-07-28T23%3A26%3A40Z&se=2025-08-04T00%3A26%3A40Z&sks=b&skt=2025-07-28T23%3A26%3A40Z&ske=2025-08-04T00%3A26%3A40Z&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&skv=2019-02-02&sv=2018-11-09&sr=b&sp=r&spr=https%2Chttp&sig=3YKDLCYjzoQxGhL3qjO2MKF1oVSCLOsQKpQELD%2FED%2Fk%3D&az=oaivgprodscus"
+          data-full-image="https://videos.openai.com/vg-assets/assets%2Ftask_01k19s44wefycb9h6pyvdsnpcb%2F1753748832_img_0.webp?st=2025-07-28T23%3A26%3A40Z&se=2025-08-04T00%3A26%3A40Z&sks=b&skt=2025-07-28T23%3A26%3A40Z&ske=2025-08-04T00%3A26%3A40Z&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&skv=2019-02-02&sv=2018-11-09&sr=b&sp=r&spr=https%2Chttp&sig=3YKDLCYjzoQxGhL3qjO2MKF1oVSCLOsQKpQELD%2FED%2Fk%3D&az=oaivgprodscus"
           alt="숙소 이미지" class="w-full h-full object-cover">
       </div>
     </section>
@@ -264,10 +278,8 @@
           </div>
           <div>
             <h3 class="text-lg font-medium mb-3">위치 정보</h3>
-            <div class="rounded-lg overflow-hidden h-48 bg-cover bg-center"
-              style="background-image: url('https://public.readdy.ai/gen_page/map_placeholder_1280x720.png')">
-            </div>
-            <p class="mt-2 text-gray-600">강원도 홍천군 서면 모곡리 283-1</p>
+            <div id="map" class="rounded-lg overflow-hidden h-48 w-full"></div>
+            <p class="mt-2 text-gray-600" id="address-display">주소 정보</p>
           </div>
           <div>
             <h3 class="text-lg font-medium mb-3">주변 명소</h3>
@@ -658,7 +670,7 @@
       </div>
     </section>
     <!-- 방문 후기 섹션 -->
-    <section class="px-4 py-5 border-t border-gray-200">
+    <section class="px-4 py-5 border-t border-gray-200 pb-32">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-xl font-bold">방문 후기</h2>
         <a href="#" class="text-primary text-sm font-medium cursor-pointer">전체보기</a>
@@ -742,18 +754,18 @@
         </div>
       </div>
       <button id="load-more-reviews"
-        class="w-full mt-4 py-3 text-primary border border-primary rounded-button font-medium cursor-pointer">리뷰
+        class="w-full mt-6 mb-6 py-4 text-primary border-2 border-primary rounded-button font-medium cursor-pointer bg-white relative z-10 hover:bg-primary hover:text-white transition-all duration-200">리뷰
         더보기</button>
     </section>
   </main>
   <!-- 하단 고정 메뉴 -->
   <div
-    class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 px-4 py-3 flex items-center justify-between">
+    class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 px-4 py-3 flex items-center justify-between z-10">
     <div class="flex items-center">
-      <button id="favorite-btn" class="w-12 h-12 flex items-center justify-center cursor-pointer">
+      <button id="favoriteBtn" class="w-12 h-12 bg-white flex items-center justify-center  wishlist-btn">
         <i class="ri-heart-line ri-xl"></i>
       </button>
-      <button class="w-12 h-12 flex items-center justify-center cursor-pointer">
+      <button class="w-12 h-12 flex items-center justify-center cursor-pointer" id="shareBtn">
         <i class="ri-share-line ri-xl"></i>
       </button>
     </div>
@@ -1028,11 +1040,16 @@
   <script id="media-slider-handler">
     document.addEventListener('DOMContentLoaded', () => {
       const params = new URLSearchParams(location.search);
-      const firstImg = params.get('image') ? decodeURIComponent(params.get('image')) : null;  // 'img'에서 'image'로 변경
-      
+      const firstImg = params.get('image') || ''; // 일반적인 방식으로 처리
+
       // 디버깅용 로그
-      console.log('URL 파라미터:', params.toString());
-      console.log('전달받은 이미지 URL:', firstImg);
+
+      // 이미지 URL이 유효한지 확인
+      if (firstImg) {
+        const testImg = new Image();
+        testImg.src = firstImg;
+      }
+
       const mediaSlider = document.getElementById('media-slider');
       const thumbSection = document.getElementById('media-thumbnails');
       const mediaCounter = document.getElementById('media-counter');
@@ -1056,13 +1073,27 @@
         `https://readdy.ai/api/search-image?query=${encodeURIComponent(text)}&width=800&height=600&seq=${seq}&orientation=landscape`
       );
 
-      // — 3) firstImg가 있으면 앞에, 없으면 그냥 페일백 8개
+      // — 3) firstImg가 있으면 앞에, 없으면 그냥 페일백 7개 (마지막 아이템 제거)
       let images = firstImg
-        ? [firstImg, ...fallbackImgs.slice(0, 7)]  // 총 1 + 7 = 8장
-        : fallbackImgs;                           // 총 8장
-      
+        ? [firstImg, ...fallbackImgs.slice(0, 6)]  // 총 1 + 6 = 7장
+        : fallbackImgs.slice(0, 7);                // 총 7장
+
+      // 두 번째 슬라이드를 동영상으로 변경 (인덱스 1)
+      const videoUrl = 'https://videos.openai.com/vg-assets/assets%2Ftask_01k1ab3e94evpv28qa3qqxqd6f%2Ftask_01k1ab3e94evpv28qa3qqxqd6f_genid_ab50ede3-1706-4900-a021-3293a0a11c04_25_07_29_05_40_956939%2Fvideos%2F00000_676772675%2Fsource.mp4?st=2025-07-29T04%3A27%3A15Z&se=2025-08-04T05%3A27%3A15Z&sks=b&skt=2025-07-29T04%3A27%3A15Z&ske=2025-08-04T05%3A27%3A15Z&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&skv=2019-02-02&sv=2018-11-09&sr=b&sp=r&spr=https%2Chttp&sig=y9%2BNt7mYVnjvtsF5ePgR4lKVwzvf4JswIpJAeHulueI%3D&az=oaivgprodscus';
+      images[1] = videoUrl;
+
+      // 6번째와 7번째 이미지를 새로운 URL로 교체 (인덱스 5, 6)
+      if (firstImg) {
+        // firstImg가 있는 경우: [firstImg, fallbackImgs[0-5]] -> 인덱스 5, 6이 6번째, 7번째
+        images[5] = 'https://videos.openai.com/vg-assets/assets%2Ftask_01k19rzqbjeh2v9c8wjsf1f1hs%2F1753748680_img_0.webp?st=2025-07-28T22%3A30%3A43Z&se=2025-08-03T23%3A30%3A43Z&sks=b&skt=2025-07-28T22%3A30%3A43Z&ske=2025-08-03T23%3A30%3A43Z&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&skv=2019-02-02&sv=2018-11-09&sr=b&sp=r&spr=https%2Chttp&sig=Ohb0caM5fKyAbD4H1EEklAdYKuImivIn8v9UTi0AIt8%3D&az=oaivgprodscus';
+        images[6] = 'https://videos.openai.com/vg-assets/assets%2Ftask_01k19s44wefycb9h6pyvdsnpcb%2F1753748832_img_0.webp?st=2025-07-28T23%3A26%3A40Z&se=2025-08-04T00%3A26%3A40Z&sks=b&skt=2025-07-28T23%3A26%3A40Z&ske=2025-08-04T00%3A26%3A40Z&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&skv=2019-02-02&sv=2018-11-09&sr=b&sp=r&spr=https%2Chttp&sig=3YKDLCYjzoQxGhL3qjO2MKF1oVSCLOsQKpQELD%2FED%2Fk%3D&az=oaivgprodscus';
+      } else {
+        // firstImg가 없는 경우: fallbackImgs[0-6] -> 인덱스 5, 6이 6번째, 7번째
+        images[5] = 'https://videos.openai.com/vg-assets/assets%2Ftask_01k19rzqbjeh2v9c8wjsf1f1hs%2F1753748680_img_0.webp?st=2025-07-28T22%3A30%3A43Z&se=2025-08-03T23%3A30%3A43Z&sks=b&skt=2025-07-28T22%3A30%3A43Z&ske=2025-08-03T23%3A30%3A43Z&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&skv=2019-02-02&sv=2018-11-09&sr=b&sp=r&spr=https%2Chttp&sig=Ohb0caM5fKyAbD4H1EEklAdYKuImivIn8v9UTi0AIt8%3D&az=oaivgprodscus';
+        images[6] = 'https://videos.openai.com/vg-assets/assets%2Ftask_01k19s44wefycb9h6pyvdsnpcb%2F1753748832_img_0.webp?st=2025-07-28T23%3A26%3A40Z&se=2025-08-04T00%3A26%3A40Z&sks=b&skt=2025-07-28T23%3A26%3A40Z&ske=2025-08-04T00%3A26%3A40Z&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&skv=2019-02-02&sv=2018-11-09&sr=b&sp=r&spr=https%2Chttp&sig=3YKDLCYjzoQxGhL3qjO2MKF1oVSCLOsQKpQELD%2FED%2Fk%3D&az=oaivgprodscus';
+      }
+
       // 디버깅용 로그
-      console.log('최종 이미지 배열:', images);
 
       // — 4) 컨테이너 초기화
       mediaSlider.innerHTML = '';
@@ -1073,14 +1104,38 @@
         // 메인 슬라이드
         const slide = document.createElement('div');
         slide.className = 'flex-shrink-0 w-full h-full relative';
-        slide.innerHTML = `<img src="${url}" alt="슬라이드 ${idx + 1}" class="w-full h-full object-cover">`;
+
+        // 두 번째 슬라이드(인덱스 1)는 동영상으로 생성
+        if (idx === 1) {
+          slide.innerHTML = `
+            <video class="w-full h-full object-cover" autoplay muted loop playsinline>
+              <source src="${url}" type="video/mp4">
+            </video>
+            <div class="absolute bottom-4 left-4 bg-black/60 text-white px-3 py-1 rounded-full text-xs">
+              동영상
+            </div>
+          `;
+        } else {
+          slide.innerHTML = `<img src="${url}" alt="슬라이드 ${idx + 1}" class="w-full h-full object-cover">`;
+        }
         mediaSlider.appendChild(slide);
 
         // 썸네일
         const thumb = document.createElement('div');
         thumb.className = 'flex-shrink-0 w-16 h-16 rounded-md overflow-hidden cursor-pointer';
         thumb.dataset.index = idx;
-        thumb.innerHTML = `<img src="${url}" alt="썸네일 ${idx + 1}" class="w-full h-full object-cover">`;
+
+        // 썸네일도 동영상인 경우 첫 프레임을 보여주기 위해 video 요소 사용
+        if (idx === 1) {
+          thumb.innerHTML = `
+            <video class="w-full h-full object-cover" muted loop playsinline>
+              <source src="${url}" type="video/mp4">
+            </video>
+          `;
+        } else {
+          thumb.innerHTML = `<img src="${url}" alt="썸네일 ${idx + 1}" class="w-full h-full object-cover">`;
+        }
+
         thumb.addEventListener('click', () => { currentIndex = idx; update(); });
         thumbSection.appendChild(thumb);
       });
@@ -1124,7 +1179,7 @@
   </script>
   <script id="favorite-handler">
     document.addEventListener('DOMContentLoaded', function () {
-      const favoriteBtn = document.getElementById('favorite-btn');
+      const favoriteBtn = document.getElementById('favoriteBtn');
       let isFavorite = false;
       favoriteBtn.addEventListener('click', () => {
         isFavorite = !isFavorite;
@@ -1205,7 +1260,7 @@
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const params = new URLSearchParams(window.location.search);
-      
+
       // 숙소 정보
       const title = params.get('title') || '숙소명이 없습니다';
       const region = params.get('region') || '';
@@ -1214,9 +1269,9 @@
       const description = params.get('description') || '';
       const distance = params.get('distance') || '';
       const facilities = params.get('facilities') || '';
-      const image = params.get('image') || '';
+      const image = params.get('image') || ''; // 일반적인 방식으로 처리
       const badge = params.get('badge') || '';
-      
+
       // 설문 데이터
       const surveyPeople = params.get('survey_people') || '';
       const surveyStyle = params.get('survey_style') || '';
@@ -1233,7 +1288,7 @@
       document.getElementById('detail-title').textContent = title;
       document.getElementById('detail-region').textContent = region;
       document.getElementById('detail-price').textContent = price;
-      
+
       // 평점 표시
       if (rating) {
         const ratingElement = document.querySelector('.rating-display');
@@ -1244,7 +1299,7 @@
           `;
         }
       }
-      
+
       // 설명 표시
       if (description) {
         const descElement = document.querySelector('.description-display');
@@ -1252,7 +1307,7 @@
           descElement.textContent = description;
         }
       }
-      
+
       // 거리 정보 표시
       if (distance) {
         const distanceElement = document.querySelector('.distance-display');
@@ -1263,18 +1318,18 @@
           `;
         }
       }
-      
+
       // 시설 정보 표시
       if (facilities) {
         const facilitiesArray = facilities.split(',');
         const facilitiesContainer = document.querySelector('.facilities-display');
         if (facilitiesContainer) {
-          facilitiesContainer.innerHTML = facilitiesArray.map(facility => 
+          facilitiesContainer.innerHTML = facilitiesArray.map(facility =>
             `<span class="px-2 py-1 bg-blue-50 text-blue-600 rounded text-xs mr-2">${facility}</span>`
           ).join('');
         }
       }
-      
+
       // 배지 표시
       if (badge) {
         const badgeElement = document.querySelector('.badge-display');
@@ -1286,17 +1341,58 @@
           `;
         }
       }
-      
-      // 설문 데이터를 콘솔에 출력 (디버깅용)
-      console.log('전달받은 숙소 정보:', {
-        title, region, price, rating, description, distance, facilities, image, badge
-      });
-      
-      console.log('전달받은 설문 데이터:', {
-        surveyPeople, surveyStyle, surveyBudget, surveyRegions, 
-        surveyPet, surveyFacilities, surveyMbti
-      });
+    });
+  </script>
+  <script id="kakao-map-handler">
+    // DOMContentLoaded 불필요, load 콜백 안에서 충분히 처리됩니다
+    kakao.maps.load(function () {
+      // URLSearchParams.get() 이 자동으로 디코딩해 주므로 바로 사용
+      const params = new URLSearchParams(window.location.search);
+      const region = params.get('region') || '';
 
+      // 기본 좌표 (서울시청)
+      const defaultLat = 37.5665, defaultLng = 126.9780;
+
+      // 지도 컨테이너와 옵션
+      const container = document.getElementById('map');
+      const options = {
+        center: new kakao.maps.LatLng(defaultLat, defaultLng),
+        level: 3,
+        draggable: false,
+        zoomable: false,
+        scrollwheel: false
+      };
+
+      const map = new kakao.maps.Map(container, options);
+      const geocoder = new kakao.maps.services.Geocoder();
+
+      if (region) {
+        console.log('[KakaoMap] 주소 검색 시작:', region);
+        geocoder.addressSearch(region, function (result, status) {
+          console.log('[KakaoMap] addressSearch 결과:', status, result);
+          if (status === kakao.maps.services.Status.OK) {
+            const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+            map.setCenter(coords);
+            new kakao.maps.Marker({ position: coords, map: map });
+
+            // 인포윈도우
+            const infowindow = new kakao.maps.InfoWindow({
+              content: `<div style="padding:5px;font-size:12px;">${region}</div>`
+            });
+            kakao.maps.event.addListener(map, 'click', () => infowindow.open(map));
+          } else {
+            console.warn('[KakaoMap] 주소 검색 실패, 기본 좌표에 마커 표시');
+            new kakao.maps.Marker({ position: new kakao.maps.LatLng(defaultLat, defaultLng), map: map });
+          }
+        });
+      } else {
+        console.warn('[KakaoMap] region 파라미터가 없습니다.');
+        new kakao.maps.Marker({ position: new kakao.maps.LatLng(defaultLat, defaultLng), map: map });
+      }
+
+      // 화면상의 주소 텍스트 업데이트
+      const addressEl = document.getElementById('address-display');
+      if (addressEl) addressEl.textContent = region || '위치 정보 없음';
     });
   </script>
   <script>
@@ -1356,6 +1452,66 @@
         btn.remove();  // 한 번만 로드하고 버튼은 숨김
       });
     });
+  </script>
+  <script id="shareScript">
+    document.addEventListener('DOMContentLoaded', function () {
+      // 공유 버튼 클릭 이벤트
+      document.addEventListener('click', function (event) {
+        if (event.target.closest('button') && event.target.closest('button').querySelector('.ri-share-line')) {
+          event.preventDefault();
+
+          const currentUrl = window.location.href;
+
+          // 클립보드에 링크 복사
+          navigator.clipboard.writeText(currentUrl).then(() => {
+            showToast('링크가 복사되었습니다!');
+          }).catch(() => {
+            // 클립보드 API가 지원되지 않는 경우 대체 방법
+            const textArea = document.createElement('textarea');
+            textArea.value = currentUrl;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            showToast('링크가 복사되었습니다!');
+          });
+        }
+      });
+    });
+
+    // 토스트 팝업 표시 함수
+    function showToast(message) {
+      // 기존 토스트 제거
+      const existingToast = document.querySelector('.toast-popup');
+      if (existingToast) {
+        existingToast.remove();
+      }
+
+      // 토스트 팝업 생성
+      const toast = document.createElement('div');
+      toast.className = 'toast-popup fixed top-20 left-0 right-0 mx-auto w-max bg-black/80 text-white px-4 py-3 rounded-lg z-50 animate-fadeIn';
+
+      toast.innerHTML = `
+        <div class="flex items-center gap-2 whitespace-nowrap">
+          <i class="ri-information-line text-lg"></i>
+          <span class="text-sm">${message}</span>
+        </div>
+      `;
+
+      document.body.appendChild(toast);
+
+      // 3초 후 자동 제거
+      setTimeout(() => {
+        if (toast.parentElement) {
+          toast.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+          setTimeout(() => {
+            if (toast.parentElement) {
+              toast.remove();
+            }
+          }, 300);
+        }
+      }, 3000);
+    }
   </script>
 </body>
 
