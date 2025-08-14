@@ -1079,18 +1079,18 @@
         : fallbackImgs.slice(0, 7);                // 총 7장
 
       // 두 번째 슬라이드를 동영상으로 변경 (인덱스 1)
-      const videoUrl = 'https://videos.openai.com/vg-assets/assets%2Ftask_01k1ab3e94evpv28qa3qqxqd6f%2Ftask_01k1ab3e94evpv28qa3qqxqd6f_genid_ab50ede3-1706-4900-a021-3293a0a11c04_25_07_29_05_40_956939%2Fvideos%2F00000_676772675%2Fsource.mp4?st=2025-07-29T04%3A27%3A15Z&se=2025-08-04T05%3A27%3A15Z&sks=b&skt=2025-07-29T04%3A27%3A15Z&ske=2025-08-04T05%3A27%3A15Z&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&skv=2019-02-02&sv=2018-11-09&sr=b&sp=r&spr=https%2Chttp&sig=y9%2BNt7mYVnjvtsF5ePgR4lKVwzvf4JswIpJAeHulueI%3D&az=oaivgprodscus';
+      const videoUrl = './assets/camping_video.mp4';
       images[1] = videoUrl;
 
       // 6번째와 7번째 이미지를 새로운 URL로 교체 (인덱스 5, 6)
       if (firstImg) {
         // firstImg가 있는 경우: [firstImg, fallbackImgs[0-5]] -> 인덱스 5, 6이 6번째, 7번째
-        images[5] = 'https://videos.openai.com/vg-assets/assets%2Ftask_01k19rzqbjeh2v9c8wjsf1f1hs%2F1753748680_img_0.webp?st=2025-07-28T22%3A30%3A43Z&se=2025-08-03T23%3A30%3A43Z&sks=b&skt=2025-07-28T22%3A30%3A43Z&ske=2025-08-03T23%3A30%3A43Z&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&skv=2019-02-02&sv=2018-11-09&sr=b&sp=r&spr=https%2Chttp&sig=Ohb0caM5fKyAbD4H1EEklAdYKuImivIn8v9UTi0AIt8%3D&az=oaivgprodscus';
-        images[6] = 'https://videos.openai.com/vg-assets/assets%2Ftask_01k19s44wefycb9h6pyvdsnpcb%2F1753748832_img_0.webp?st=2025-07-28T23%3A26%3A40Z&se=2025-08-04T00%3A26%3A40Z&sks=b&skt=2025-07-28T23%3A26%3A40Z&ske=2025-08-04T00%3A26%3A40Z&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&skv=2019-02-02&sv=2018-11-09&sr=b&sp=r&spr=https%2Chttp&sig=3YKDLCYjzoQxGhL3qjO2MKF1oVSCLOsQKpQELD%2FED%2Fk%3D&az=oaivgprodscus';
+        images[5] = './assets/detail_img1.png';
+        images[6] = './assets/detail_img2.png';
       } else {
         // firstImg가 없는 경우: fallbackImgs[0-6] -> 인덱스 5, 6이 6번째, 7번째
-        images[5] = 'https://videos.openai.com/vg-assets/assets%2Ftask_01k19rzqbjeh2v9c8wjsf1f1hs%2F1753748680_img_0.webp?st=2025-07-28T22%3A30%3A43Z&se=2025-08-03T23%3A30%3A43Z&sks=b&skt=2025-07-28T22%3A30%3A43Z&ske=2025-08-03T23%3A30%3A43Z&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&skv=2019-02-02&sv=2018-11-09&sr=b&sp=r&spr=https%2Chttp&sig=Ohb0caM5fKyAbD4H1EEklAdYKuImivIn8v9UTi0AIt8%3D&az=oaivgprodscus';
-        images[6] = 'https://videos.openai.com/vg-assets/assets%2Ftask_01k19s44wefycb9h6pyvdsnpcb%2F1753748832_img_0.webp?st=2025-07-28T23%3A26%3A40Z&se=2025-08-04T00%3A26%3A40Z&sks=b&skt=2025-07-28T23%3A26%3A40Z&ske=2025-08-04T00%3A26%3A40Z&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&skv=2019-02-02&sv=2018-11-09&sr=b&sp=r&spr=https%2Chttp&sig=3YKDLCYjzoQxGhL3qjO2MKF1oVSCLOsQKpQELD%2FED%2Fk%3D&az=oaivgprodscus';
+        images[5] = './assets/detail_img1.png';
+        images[6] = './assets/detail_img2.png';
       }
 
       // 디버깅용 로그

@@ -191,7 +191,7 @@
         </button>
         <button class="flex flex-col items-center gap-1 px-3 py-2 bg-gray-50 rounded-xl cursor-pointer" data-type="pet">
           <div class="w-10 h-10 flex items-center justify-center">
-            <i class="ri-heart-line text-xl text-gray-500"></i>
+            <i class="ri-heart-3-line text-xl text-gray-500"></i>
           </div>
           <span class="text-xs whitespace-nowrap">반려동물</span>
         </button>
@@ -1071,120 +1071,6 @@
       }
     });
 
-    // 기존 하트 버튼 토글 기능 (하위 호환성을 위해 유지)
-    document.addEventListener('DOMContentLoaded', function () {
-      function setupHeartButtons() {
-        // 모든 종류의 하트 버튼 선택 (ri-heart-line, ri-heart-3-line 등)
-        const heartButtons = document.querySelectorAll('button i[class*="ri-heart"]');
-
-        heartButtons.forEach(button => {
-          button.addEventListener('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            // 현재 상태 확인 (빈 하트인지 채워진 하트인지)
-            const isEmptyHeart = button.classList.contains('ri-heart-line') ||
-              button.classList.contains('ri-heart-3-line');
-
-            // 애니메이션을 위한 스케일 효과
-            button.style.transform = 'scale(0.8)';
-
-            setTimeout(() => {
-              if (isEmptyHeart) {
-                // 빈 하트를 채워진 하트로 변경
-                button.classList.remove('ri-heart-line', 'ri-heart-3-line');
-                button.classList.add('ri-heart-fill');
-
-                // 색상을 빨간색으로 변경
-                button.style.color = '#ef4444';
-
-                // 부모 버튼에 활성 상태 표시
-                const parentButton = button.closest('button');
-                if (parentButton) {
-                  parentButton.classList.add('active');
-                }
-              } else {
-                // 채워진 하트를 빈 하트로 변경
-                button.classList.remove('ri-heart-fill');
-                if (button.classList.contains('ri-heart-3-fill')) {
-                  button.classList.remove('ri-heart-3-fill');
-                  button.classList.add('ri-heart-3-line');
-                } else {
-                  button.classList.add('ri-heart-line');
-                }
-
-                // 색상을 원래대로 복원
-                button.style.color = '';
-
-                // 부모 버튼에서 활성 상태 제거
-                const parentButton = button.closest('button');
-                if (parentButton) {
-                  parentButton.classList.remove('active');
-                }
-              }
-
-              // 스케일 효과 복원
-              button.style.transform = 'scale(1)';
-            }, 100);
-          });
-        });
-
-        // 동적으로 추가된 버튼들을 위한 이벤트 위임
-        document.addEventListener('click', function (e) {
-          if (e.target.classList.contains('ri-heart-line') ||
-            e.target.classList.contains('ri-heart-3-line') ||
-            e.target.classList.contains('ri-heart-fill') ||
-            e.target.classList.contains('ri-heart-3-fill')) {
-
-            e.preventDefault();
-            e.stopPropagation();
-
-            const button = e.target;
-
-            // 현재 상태 확인
-            const isEmptyHeart = button.classList.contains('ri-heart-line') ||
-              button.classList.contains('ri-heart-3-line');
-
-            // 애니메이션
-            button.style.transform = 'scale(0.8)';
-
-            setTimeout(() => {
-              if (isEmptyHeart) {
-                // 빈 하트를 채워진 하트로 변경
-                button.classList.remove('ri-heart-line', 'ri-heart-3-line');
-                button.classList.add('ri-heart-fill');
-                button.style.color = '#ef4444';
-
-                const parentButton = button.closest('button');
-                if (parentButton) {
-                  parentButton.classList.add('active');
-                }
-              } else {
-                // 채워진 하트를 빈 하트로 변경
-                button.classList.remove('ri-heart-fill');
-                if (button.classList.contains('ri-heart-3-fill')) {
-                  button.classList.remove('ri-heart-3-fill');
-                  button.classList.add('ri-heart-3-line');
-                } else {
-                  button.classList.add('ri-heart-line');
-                }
-                button.style.color = '';
-
-                const parentButton = button.closest('button');
-                if (parentButton) {
-                  parentButton.classList.remove('active');
-                }
-              }
-
-              button.style.transform = 'scale(1)';
-            }, 100);
-          }
-        });
-      }
-
-      // 초기 설정
-      setupHeartButtons();
-    });
   </script>
 </body>
 
