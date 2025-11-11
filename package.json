@@ -8,8 +8,7 @@
     "test": "react-scripts test",
     "lint": "eslint --max-warnings=0 \"src/**/*.{js,jsx}\"",
     "prepare": "husky install",
-    "eject": "react-scripts eject",
-    "generate:pages": "node scripts/generateReactPages.mjs"
+    "eject": "react-scripts eject"
   },
   "repository": {
     "type": "git",
@@ -30,9 +29,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.21",
-    "cheerio": "^1.1.2",
     "eslint": "^8.57.1",
-    "htmltojsx": "^0.3.0",
     "husky": "^8.0.3",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.14"
