@@ -14,15 +14,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/return-plus/camping.git"
+    "url": "git+https://github.com/baek-si-hyun/camping.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/return-plus/camping/issues"
+    "url": "https://github.com/baek-si-hyun/camping/issues"
   },
-  "homepage": "https://return-plus.github.io/camping",
+  "homepage": "https://baek-si-hyun.github.io/camping",
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

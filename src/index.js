@@ -9,7 +9,7 @@ const root = ReactDOM.createRoot(rootElement);
 
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename="/camping">
       <App />
     </BrowserRouter>
   </React.StrictMode>,
