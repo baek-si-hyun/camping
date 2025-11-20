@@ -1,5 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import PageHeader from '../../components/PageHeader.jsx';
+import WishlistButton from '../../components/WishlistButton.jsx';
 import { CATEGORIES, ATTRACTIONS_DATA, getCategoryLabel } from '../../constants/recomendCourseTmap.js';
 
 export default function RecomendCourseTmapPage() {
@@ -218,19 +220,6 @@ export default function RecomendCourseTmapPage() {
   return (
     <div className="min-h-[762px] bg-gray-50">
       <style>{`
-        :where([class^="ri-"])::before {
-          content: "\\f3c2";
-        }
-        .search-input::-webkit-search-cancel-button {
-          display: none;
-        }
-        ::-webkit-scrollbar {
-          display: none;
-        }
-        * {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
         .map-marker {
           animation: bounce 2s infinite;
         }
@@ -251,59 +240,26 @@ export default function RecomendCourseTmapPage() {
         .attraction-scroll {
           scroll-snap-type: x mandatory;
         }
-        .route-line {
-          stroke-dasharray: 5, 5;
-          animation: dash 1s linear infinite;
-        }
-        @keyframes dash {
-          to {
-            stroke-dashoffset: -10;
-          }
-        }
         .filter-active {
           background: linear-gradient(135deg, #FF7A45 0%, #FF6B35 100%);
-        }
-        .wishlist-btn {
-          transition: all 0.3s ease;
-        }
-        .wishlist-btn:hover {
-          transform: scale(1.1);
-        }
-        .wishlist-btn.active {
-          color: #ef4444 !important;
-          transform: scale(1.2);
-        }
-        .wishlist-btn i {
-          transition: all 0.2s ease;
-        }
-        button i[class*="ri-heart"] {
-          transition: all 0.2s ease;
-        }
-        button:has(i[class*="ri-heart"]):hover {
-          transform: scale(1.05);
         }
         .mbti-tag {
           background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
         }
       `}</style>
 
-  <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
-    <div className="flex items-center justify-between px-4 py-3">
-          <button
-            className="w-8 h-8 flex items-center justify-center cursor-pointer"
-            onClick={() => navigate(-1)}
-          >
-        <i className="ri-arrow-left-line text-xl" />
-          </button>
-      <h1 className="text-lg font-medium">T맵 연동 관광 코스</h1>
+      <PageHeader
+        title="T맵 연동 관광 코스"
+        onBack={() => navigate(-1)}
+        rightContent={
           <button
             className="w-8 h-8 flex items-center justify-center cursor-pointer"
             onClick={() => setShowFullMapModal(true)}
           >
-        <i className="ri-fullscreen-line text-xl" />
-      </button>
-    </div>
-  </header>
+            <i className="ri-fullscreen-line text-xl" />
+          </button>
+        }
+      />
 
       <main className="pt-14 pb-20 min-h-screen">
         <div className="relative">
@@ -350,7 +306,7 @@ export default function RecomendCourseTmapPage() {
               >
                 <i className={category.icon} />
                 <span>{category.name}</span>
-            </button>
+              </button>
             ))}
           </div>
           <div className="flex gap-3 overflow-x-auto pb-4 attraction-scroll">
@@ -360,54 +316,47 @@ export default function RecomendCourseTmapPage() {
                 className="flex-shrink-0 w-72 bg-white rounded-xl shadow-sm overflow-hidden attraction-card cursor-pointer"
                 onClick={() => handleAttractionClick(attraction)}
               >
-              <div className="relative">
+                <div className="relative">
                   <img src={attraction.image} className="w-full h-40 object-cover object-top" alt={attraction.name} />
-                <div className="absolute top-3 left-3 bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">
+                  <div className="absolute top-3 left-3 bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">
                     {index + 1}
                   </div>
                   <div className="absolute top-3 right-3 bg-black/50 text-white rounded-full px-2 py-1 text-xs">
                     {attraction.distance}
                   </div>
-                  <button
-                    className={`absolute bottom-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center cursor-pointer wishlist-btn ${
-                      wishlistRef.current.has(attraction.id) ? 'active' : ''
-                    }`}
+                  <WishlistButton
+                    className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm"
+                    isWishlisted={wishlistRef.current.has(attraction.id)}
                     onClick={(e) => {
                       e.stopPropagation();
                       toggleWishlist(attraction.id);
                     }}
-                  >
-                    <i
-                      className={`${
-                        wishlistRef.current.has(attraction.id) ? 'ri-heart-fill' : 'ri-heart-line'
-                      } ${wishlistRef.current.has(attraction.id) ? 'text-red-500' : 'text-gray-600'}`}
-                    />
-                </button>
-              </div>
-              <div className="p-4">
-                <div className="flex items-start justify-between mb-2">
-                    <h3 className="font-medium text-base">{attraction.name}</h3>
-                  <div className="flex items-center gap-1">
-                    <i className="ri-star-fill text-yellow-400 text-sm" />
-                      <span className="text-sm font-medium">{attraction.rating}</span>
+                  />
                 </div>
+                <div className="p-4">
+                  <div className="flex items-start justify-between mb-2">
+                    <h3 className="font-medium text-base">{attraction.name}</h3>
+                    <div className="flex items-center gap-1">
+                      <i className="ri-star-fill text-yellow-400 text-sm" />
+                      <span className="text-sm font-medium">{attraction.rating}</span>
+                    </div>
                   </div>
                   <p className="text-sm text-gray-600 mb-3">{attraction.description}</p>
-                <div className="flex items-center gap-2 mb-3">
+                  <div className="flex items-center gap-2 mb-3">
                     <div className="bg-secondary/10 text-secondary px-2 py-1 rounded-full text-xs font-medium">
                       ENFP 추천
-                </div>
+                    </div>
                     <span className="text-xs text-gray-500">{getCategoryLabel(attraction.categories[0])}</span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2 text-gray-500">
-                    <i className="ri-time-line" />
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <div className="flex items-center gap-2 text-gray-500">
+                      <i className="ri-time-line" />
                       <span>{attraction.duration}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-gray-500">
-                    <i className="ri-car-line" />
+                    </div>
+                    <div className="flex items-center gap-2 text-gray-500">
+                      <i className="ri-car-line" />
                       <span>{attraction.travelTime}</span>
-                  </div>
+                    </div>
                   </div>
                 </div>
               </div>

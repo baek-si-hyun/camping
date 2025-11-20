@@ -286,96 +286,6 @@ export default function ShopDetailPage() {
 
   return (
     <div className="bg-white text-gray-800">
-      <style>{`
-        :where([class^="ri-"])::before {
-          content: "\\f3c2";
-        }
-        body {
-          font-family: 'Noto Sans KR', sans-serif;
-        }
-        .video-container {
-          position: relative;
-          padding-bottom: 56.25%;
-          height: 0;
-          overflow: hidden;
-        }
-        .video-container video {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-        .thumbnail-slider {
-          scrollbar-width: none;
-        }
-        .thumbnail-slider::-webkit-scrollbar {
-          display: none;
-        }
-        #media-slider {
-          display: flex;
-          transition: transform 0.3s ease;
-        }
-        #media-slider>div {
-          flex-shrink: 0;
-          width: 100%;
-          height: 100%;
-        }
-        #media-slider img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-        .tab-content {
-          display: none;
-        }
-        .tab-content.active {
-          display: block;
-        }
-        .calendar-grid {
-          display: grid;
-          grid-template-columns: repeat(7, 1fr);
-        }
-        .calendar-day {
-          aspect-ratio: 1/1;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        .calendar-day.selected {
-          background-color: #4F46E5;
-          color: white;
-        }
-        .calendar-day.in-range {
-          background-color: rgba(79, 70, 229, 0.1);
-        }
-        .calendar-day.disabled {
-          color: #D1D5DB;
-          pointer-events: none;
-        }
-        ::-webkit-scrollbar {
-          display: none;
-        }
-        * {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-        .wishlist-btn {
-          transition: all 0.3s ease;
-        }
-        .wishlist-btn:hover {
-          transform: scale(1.1);
-        }
-        .wishlist-btn.active {
-          color: #ef4444 !important;
-          transform: scale(1.2);
-        }
-        .wishlist-btn i {
-          transition: all 0.2s ease;
-        }
-      `}</style>
-
       <nav className="fixed w-full top-0 bg-white shadow-sm z-50 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center">
           <button
@@ -439,7 +349,7 @@ export default function ShopDetailPage() {
           </button>
         </section>
 
-        <section className="thumbnail-slider flex overflow-x-auto py-3 px-4 gap-2">
+        <section className="flex overflow-x-auto py-3 px-4 gap-2">
           {mediaItems.map((url, idx) => (
             <div
               key={idx}
@@ -500,7 +410,7 @@ export default function ShopDetailPage() {
         </section>
 
         <section className="border-t border-b border-gray-200">
-          <div className="thumbnail-slider flex overflow-x-auto">
+          <div className="flex overflow-x-auto">
             {[
               { id: 'basic-info', label: '기본정보' },
               { id: 'policy', label: '운영정책' },
@@ -510,7 +420,7 @@ export default function ShopDetailPage() {
             ].map((tab) => (
               <button
                 key={tab.id}
-                className={`tab-button flex-shrink-0 px-4 py-3 font-medium ${
+                className={`flex-shrink-0 px-4 py-3 font-medium ${
                   currentTab === tab.id
                     ? 'text-primary border-b-2 border-primary'
                     : 'text-gray-500'
@@ -524,7 +434,7 @@ export default function ShopDetailPage() {
         </section>
 
         <section className="px-4 py-5">
-          <div id="basic-info" className={`tab-content ${currentTab === 'basic-info' ? 'active' : ''}`}>
+          <div id="basic-info" className={currentTab === 'basic-info' ? 'block' : 'hidden'}>
             <div className="space-y-5">
               <div>
                 <h3 className="text-lg font-medium mb-3">숙소 소개</h3>
@@ -550,7 +460,7 @@ export default function ShopDetailPage() {
             </div>
           </div>
 
-          <div id="policy" className={`tab-content ${currentTab === 'policy' ? 'active' : ''}`}>
+          <div id="policy" className={currentTab === 'policy' ? 'block' : 'hidden'}>
             <div className="space-y-5">
               <div>
                 <h3 className="text-lg font-medium mb-3">입/퇴실 안내</h3>
@@ -590,7 +500,7 @@ export default function ShopDetailPage() {
             </div>
           </div>
 
-          <div id="facilities" className={`tab-content ${currentTab === 'facilities' ? 'active' : ''}`}>
+          <div id="facilities" className={currentTab === 'facilities' ? 'block' : 'hidden'}>
             <div className="space-y-5">
               <div>
                 <h3 className="text-lg font-medium mb-3">객실 시설</h3>
@@ -635,7 +545,7 @@ export default function ShopDetailPage() {
             </div>
           </div>
 
-          <div id="layout" className={`tab-content ${currentTab === 'layout' ? 'active' : ''}`}>
+          <div id="layout" className={currentTab === 'layout' ? 'block' : 'hidden'}>
             <div className="space-y-5">
               <div>
                 <h3 className="text-lg font-medium mb-3">글램핑장 배치도</h3>
@@ -663,7 +573,7 @@ export default function ShopDetailPage() {
             </div>
           </div>
 
-          <div id="reservation-info" className={`tab-content ${currentTab === 'reservation-info' ? 'active' : ''}`}>
+          <div id="reservation-info" className={currentTab === 'reservation-info' ? 'block' : 'hidden'}>
             <div className="space-y-5">
               <div>
                 <h3 className="text-lg font-medium mb-3">예약 방법</h3>
@@ -741,19 +651,19 @@ export default function ShopDetailPage() {
                 </div>
               ))}
             </div>
-            <div className="calendar-grid">
+            <div className="grid grid-cols-7 gap-1">
               {calendarDays.map((dayData, index) => (
                 <div
                   key={index}
-                  className={`calendar-day cursor-pointer ${
+                  className={`flex items-center justify-center aspect-square text-sm rounded ${
                     dayData.disabled
-                      ? 'disabled'
+                      ? 'text-gray-300 pointer-events-none'
                       : dayData.selected
-                      ? 'selected'
+                      ? 'bg-indigo-600 text-white'
                       : dayData.inRange
-                      ? 'in-range'
-                      : ''
-                  }`}
+                      ? 'bg-indigo-600/10'
+                      : 'hover:bg-indigo-600/10'
+                  } ${dayData.disabled ? '' : 'cursor-pointer'}`}
                   onClick={() => !dayData.disabled && handleDateClick(dayData.day)}
                 >
                   {dayData.day}

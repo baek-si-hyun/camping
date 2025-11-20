@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { CAMPING_TYPES, TYPE_DISPLAY_NAMES } from '../../constants/search.js';
+import Toast from '../../components/Toast.jsx';
 
 export default function SearchMapPage() {
   const navigate = useNavigate();
@@ -500,7 +501,6 @@ export default function SearchMapPage() {
 
   const showToast = (message, type = 'info') => {
     setToastMessage({ message, type });
-    setTimeout(() => setToastMessage(null), 3000);
   };
 
   const handleSearch = () => {
@@ -550,34 +550,6 @@ export default function SearchMapPage() {
   return (
     <div className="bg-[#F8F7FF] min-h-[762px]">
       <style>{`
-        :where([class^="ri-"])::before {
-          content: "\\f3c2";
-        }
-        input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button {
-          -webkit-appearance: none;
-          margin: 0;
-        }
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-fadeIn {
-          animation: fadeIn 0.5s ease-out forwards;
-        }
-        ::-webkit-scrollbar {
-          display: none;
-        }
-        * {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
         .calendar-grid {
           display: grid;
           grid-template-columns: repeat(7, 1fr);
@@ -605,20 +577,6 @@ export default function SearchMapPage() {
           color: #D1D5DB;
           pointer-events: none;
           cursor: not-allowed;
-        }
-        .wishlist-btn {
-          transition: all 0.3s ease;
-        }
-        .wishlist-btn:hover {
-          transform: scale(1.1);
-        }
-        .wishlist-btn.active {
-          color: #ef4444 !important;
-          transform: scale(1.2);
-        }
-        .toast {
-          z-index: 9999;
-          transition: all 0.3s ease;
         }
       `}</style>
 
@@ -927,14 +885,11 @@ export default function SearchMapPage() {
         </button>
       </div>
 
-      {toastMessage && (
-        <div className="toast-popup fixed top-20 left-0 right-0 mx-auto w-max bg-black/80 text-white px-4 py-3 rounded-lg z-50 animate-fadeIn">
-          <div className="flex items-center gap-2 whitespace-nowrap">
-            <i className="ri-information-line text-lg" />
-            <span className="text-sm">{toastMessage.message}</span>
-          </div>
-        </div>
-      )}
+      <Toast
+        message={toastMessage?.message}
+        type={toastMessage?.type}
+        onClose={() => setToastMessage(null)}
+      />
     </div>
   );
 }
