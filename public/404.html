@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ThankQ Camping</title>
+    <script>
+      // GitHub Pages에서 SPA 라우팅을 위한 리다이렉트
+      // basename "/camping"을 고려한 리다이렉트
+      var pathSegmentsToKeep = 1; // "/camping" 경로 유지
+      var l = window.location;
+      var basename = '/camping';
+      
+      // 현재 경로가 basename으로 시작하지 않으면 basename을 추가
+      if (!l.pathname.startsWith(basename)) {
+        var newPath = basename + l.pathname;
+        if (l.pathname !== '/') {
+          newPath = basename + l.pathname;
+        } else {
+          newPath = basename + '/';
+        }
+        l.replace(
+          l.protocol +
+          '//' +
+          l.hostname +
+          (l.port ? ':' + l.port : '') +
+          newPath +
+          (l.search ? l.search : '') +
+          (l.hash ? l.hash : '')
+        );
+      } else {
+        // basename이 이미 있으면 index.html로 리다이렉트
+        var path = l.pathname.slice(basename.length) || '/';
+        l.replace(
+          l.protocol +
+          '//' +
+          l.hostname +
+          (l.port ? ':' + l.port : '') +
+          basename +
+          '/?/' +
+          path.slice(1).replace(/&/g, '~and~') +
+          (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+          l.hash
+        );
+      }
+    </script>
+  </head>
+  <body>
+    <noscript>이 앱을 사용하려면 JavaScript를 활성화해야 합니다.</noscript>
+    <div id="root"></div>
+  </body>
+</html>
