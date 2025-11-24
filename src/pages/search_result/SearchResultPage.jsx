@@ -1,10 +1,10 @@
 import { useEffect, useState, useMemo } from 'react';
-import { useNavigate, Link, useSearchParams } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { ACCOMMODATIONS } from '../../constants/searchResult.js';
 
 export default function SearchResultPage() {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const { state: locationState } = useLocation();
   const [sortType, setSortType] = useState('추천순');
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [wishlistItems, setWishlistItems] = useState(new Set());
@@ -15,14 +15,34 @@ export default function SearchResultPage() {
     facilities: [],
     rating: '전체'
   });
+  const [searchState, setSearchState] = useState(() => ({
+    query: locationState?.query || '가평 글램핑',
+    checkin: locationState?.checkin || null,
+    checkout: locationState?.checkout || null,
+    nights: locationState?.nights ?? null,
+    maxPrice: locationState?.maxPrice ?? null,
+    adults: locationState?.adults ?? null,
+    children: locationState?.children ?? null,
+    type: locationState?.type,
+    location: locationState?.location
+  }));
 
-  const query = searchParams.get('query') || '가평 글램핑';
-  const checkin = searchParams.get('checkin');
-  const checkout = searchParams.get('checkout');
-  const nights = searchParams.get('nights');
-  const maxPrice = searchParams.get('maxPrice');
-  const adults = searchParams.get('adults');
-  const children = searchParams.get('children');
+  useEffect(() => {
+    if (locationState) {
+      setSearchState((prev) => ({
+        ...prev,
+        ...locationState
+      }));
+    }
+  }, [locationState]);
+
+  const query = searchState.query || '가평 글램핑';
+  const checkin = searchState.checkin;
+  const checkout = searchState.checkout;
+  const nights = searchState.nights;
+  const maxPrice = searchState.maxPrice;
+  const adults = searchState.adults;
+  const children = searchState.children;
 
   useEffect(() => {
     document.title = '숙소 검색 결과';
@@ -104,29 +124,27 @@ export default function SearchResultPage() {
   };
 
   const removeFilterTag = (tag) => {
-    const newParams = new URLSearchParams(searchParams);
-    
-    if (tag.type === 'date') {
-      newParams.delete('checkin');
-      newParams.delete('checkout');
-      newParams.delete('nights');
-    } else if (tag.type === 'people') {
-      newParams.delete('adults');
-      newParams.delete('children');
-    } else if (tag.type === 'price') {
-      newParams.delete('maxPrice');
-    } else if (tag.type === 'search') {
-      const remainingTerms = filterTags
-        .filter(t => t.type === 'search' && t.value !== tag.value)
-        .map(t => t.value);
-      if (remainingTerms.length > 0) {
-        newParams.set('query', remainingTerms.join(' '));
-      } else {
-        newParams.delete('query');
+    setSearchState((prev) => {
+      const updated = { ...prev };
+
+      if (tag.type === 'date') {
+        updated.checkin = null;
+        updated.checkout = null;
+        updated.nights = null;
+      } else if (tag.type === 'people') {
+        updated.adults = null;
+        updated.children = null;
+      } else if (tag.type === 'price') {
+        updated.maxPrice = null;
+      } else if (tag.type === 'search') {
+        const remainingTerms = filterTags
+          .filter((t) => t.type === 'search' && t.value !== tag.value)
+          .map((t) => t.value);
+        updated.query = remainingTerms.join(' ');
       }
-    }
-    
-    navigate(`/search_result?${newParams.toString()}`);
+
+      return updated;
+    });
   };
 
   const handleApplyFilters = () => {
@@ -331,7 +349,19 @@ export default function SearchResultPage() {
                       </p>
                     </div>
                     <Link
-                      to={`/shop_detail?title=${encodeURIComponent(item.name)}&region=${encodeURIComponent(item.region)}&price=${item.price}&rating=${item.rating}&reviews=${item.reviews}&description=${encodeURIComponent(item.description)}&distance=${encodeURIComponent(item.distance)}&facilities=${item.facilities.join(',')}&image=${encodeURIComponent(item.image)}&badge=${encodeURIComponent(item.badge)}`}
+                      to="/shop_detail"
+                      state={{
+                        title: item.name,
+                        region: item.region,
+                        price: item.price,
+                        rating: item.rating,
+                        reviews: item.reviews,
+                        description: item.description,
+                        distance: item.distance,
+                        facilities: item.facilities.join(','),
+                        image: item.image,
+                        badge: item.badge
+                      }}
                       className={`${
                         item.badge
                           ? 'px-4 py-2 bg-primary text-white text-sm font-bold rounded-full !rounded-button shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 transition-shadow duration-300'
@@ -352,6 +382,7 @@ export default function SearchResultPage() {
         <div className="text-sm font-medium">총 {sortedAccommodations.length}개의 숙소</div>
         <Link
           to="/search_map"
+          state={searchState}
           className="px-4 py-2 bg-primary text-white rounded-full !rounded-button flex items-center gap-1 shadow-md shadow-primary/20"
         >
           <i className="ri-map-pin-line" />

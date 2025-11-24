@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import StarRating from './StarRating.jsx';
 import WishlistButton from './WishlistButton.jsx';
+import SafeImage from './SafeImage.jsx';
 
 export default function AccommodationCard({ 
   item, 
@@ -20,20 +21,17 @@ export default function AccommodationCard({
     }
   };
 
-  const getDetailUrl = () => {
-    const params = new URLSearchParams({
-      title: item.name || item.title,
-      region: item.region,
-      price: item.price,
-      rating: item.rating || '4.8',
-      reviews: item.reviews || '0',
-      description: item.description || '',
-      distance: item.distance || '',
-      facilities: Array.isArray(item.facilities) ? item.facilities.join(',') : item.facilities || '',
-      image: item.image || '',
-      badge: item.badge || ''
-    });
-    return `/shop_detail?${params.toString()}`;
+  const detailState = {
+    title: item.name || item.title,
+    region: item.region,
+    price: item.price,
+    rating: item.rating || '4.8',
+    reviews: item.reviews || '0',
+    description: item.description || '',
+    distance: item.distance || '',
+    facilities: Array.isArray(item.facilities) ? item.facilities.join(',') : item.facilities || '',
+    image: item.image || '',
+    badge: item.badge || ''
   };
 
   return (
@@ -44,10 +42,11 @@ export default function AccommodationCard({
       onClick={handleCardClick}
     >
       <div className="relative">
-        <img 
+        <SafeImage 
           src={item.image} 
           className={`w-full object-cover ${variant === 'compact' ? 'h-32' : 'h-48'}`} 
-          alt={item.name || item.title} 
+          alt={item.name || item.title}
+          fallbackSrc="https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?w=600&h=400&fit=crop&auto=format"
         />
         {item.badge && (
           <div className="absolute top-3 left-3 z-10">
@@ -134,7 +133,8 @@ export default function AccommodationCard({
           </div>
           {!onCardClick && (
             <Link
-              to={getDetailUrl()}
+              to="/shop_detail"
+              state={detailState}
               className={`${
                 variant === 'featured' && item.badge
                   ? 'px-4 py-2 bg-primary text-white text-sm font-bold !rounded-button shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 transition-shadow duration-300'
@@ -149,4 +149,3 @@ export default function AccommodationCard({
     </div>
   );
 }
-

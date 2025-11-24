@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
+import { useEffect } from 'react';
 import CommonStyles from './components/CommonStyles.jsx';
 import AdminPage from './pages/admin/AdminPage.jsx';
 import CustomerServicePage from './pages/customer_service/CustomerServicePage.jsx';
@@ -23,6 +24,27 @@ import WeatherPage from './pages/weather/WeatherPage.jsx';
 import WishlistPage from './pages/wishlist/WishlistPage.jsx';
 
 export default function App() {
+  // 전역 이미지 에러 핸들러
+  useEffect(() => {
+    const handleImageError = (e) => {
+      if (e.target.tagName === 'IMG' && !e.target.dataset.fallbackApplied) {
+        e.target.dataset.fallbackApplied = 'true';
+        const fallbackImages = [
+          'https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?w=800&h=600&fit=crop&auto=format',
+          'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=800&h=600&fit=crop&auto=format',
+          'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&h=600&fit=crop&auto=format',
+        ];
+        const randomFallback = fallbackImages[Math.floor(Math.random() * fallbackImages.length)];
+        e.target.src = randomFallback;
+      }
+    };
+
+    document.addEventListener('error', handleImageError, true);
+    return () => {
+      document.removeEventListener('error', handleImageError, true);
+    };
+  }, []);
+
   return (
     <>
       <CommonStyles />

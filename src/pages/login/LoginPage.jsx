@@ -196,7 +196,7 @@ export default function LoginPage() {
         <div className="w-full max-w-sm space-y-8 relative -mt-32" style={{ animation: 'fadeIn 1s ease-out' }}>
           <div className="text-center space-y-6 mb-24">
             <img
-              src="https://videos.openai.com/vg-assets/assets%2Ftask_01k184cdfde1ktv4sp1zmr92mx%2F1753693555_img_1.webp?st=2025-07-28T07%3A58%3A29Z&se=2025-08-03T08%3A58%3A29Z&sks=b&skt=2025-07-28T07%3A58%3A29Z&ske=2025-08-03T08%3A58%3A29Z&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&skv=2019-02-02&sv=2018-11-09&sr=b&sp=r&spr=https%2Chttp&sig=xsh89I6VLfvn5ESlrp1pB55W%2BnNemwVhYOdLvGHp3Hg%3D&az=oaivgprodscus"
+              src="https://readdy.ai/api/search-image?query=Travel%20and%20pet%20logo%20design%20with%20camping%20tent%20and%20dog%2C%20modern%20minimalist%20style&width=384&height=384&seq=1&orientation=squarish"
               alt="Travel&Pet Logo"
               className="mx-auto w-96 h-96 object-contain mb-[-10rem] relative z-10"
               style={{ animationDelay: '0.2s' }}

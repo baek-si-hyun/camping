@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
  */
 export default function BottomNav({ activePath = '/', onMenuClick }) {
   const navItems = [
-    { path: '/search_map?from=nearby', icon: 'ri-map-pin-2-fill', label: '내주변' },
+    { path: '/search_map', icon: 'ri-map-pin-2-fill', label: '내주변', state: { from: 'nearby' } },
     { path: '/', icon: 'ri-home-5-fill', label: '홈' },
     { path: '/wishlist', icon: 'ri-heart-3-fill', label: '찜' },
     { path: '/mypage', icon: 'ri-user-3-fill', label: '마이' },
@@ -19,7 +19,7 @@ export default function BottomNav({ activePath = '/', onMenuClick }) {
     if (path === '/') {
       return activePath === '/';
     }
-    return activePath.startsWith(path.split('?')[0]);
+    return activePath.startsWith(path);
   };
 
   return (
@@ -33,11 +33,11 @@ export default function BottomNav({ activePath = '/', onMenuClick }) {
                 id: item.id,
                 onClick: item.onClick || undefined
               }
-            : { to: item.path };
+            : { to: item.path, state: item.state };
 
           return (
             <Component
-              key={item.path}
+              key={`${item.path}-${item.label}`}
               {...props}
               className="flex flex-col items-center gap-1 group"
             >

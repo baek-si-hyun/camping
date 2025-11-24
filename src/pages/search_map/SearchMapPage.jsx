@@ -1,11 +1,11 @@
 import { useEffect, useState, useRef } from 'react';
-import { useNavigate, Link, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { CAMPING_TYPES, TYPE_DISPLAY_NAMES } from '../../constants/search.js';
 import Toast from '../../components/Toast.jsx';
 
 export default function SearchMapPage() {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const { state: locationState } = useLocation();
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
   const mapMarkersRef = useRef([]);
@@ -141,8 +141,7 @@ export default function SearchMapPage() {
     : 0;
 
   const isLocationBasedAccess = () => {
-    const fromNearby = searchParams.get('from') === 'nearby';
-    return fromNearby;
+    return locationState?.from === 'nearby' || locationState?.fromNearby;
   };
 
   const initMap = async () => {
@@ -275,7 +274,7 @@ export default function SearchMapPage() {
       price: '₩160,000',
       rating: '4.9',
       reviews: '리뷰 210개',
-      image: 'http://videos.openai.com/vg-assets/assets%2Ftask_01k1dd13kne4csgqz2n7wxnp4c%2F1753870383_img_1.webp?st=2025-07-30T23%3A04%3A56Z&se=2025-08-06T00%3A04%3A56Z&sks=b&skt=2025-07-30T23%3A04%3A56Z&ske=2025-08-06T00%3A04%3A56Z&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&skv=2019-02-02&sv=2018-11-09&sr=b&sp=r&spr=https%2Chttp&sig=K7MHZEBlWOtdQvNs90Xa5nen%2B5vG4vm2TQT9wDmSDS0%3D&az=oaivgprodscus'
+      image: 'https://readdy.ai/api/search-image?query=Luxury%20glamping%20tent%20with%20modern%20interior%20design%2C%20premium%20camping%20experience&width=560&height=300&seq=1&orientation=landscape'
     }
   ];
 
@@ -516,33 +515,35 @@ export default function SearchMapPage() {
       return;
     }
 
-    const params = new URLSearchParams();
     const selectedTypeName = TYPE_DISPLAY_NAMES[selectedType] || '글램핑';
-    params.set('query', `가평 ${selectedTypeName}`);
-    params.set('location', '가평');
-    params.set('type', selectedTypeName);
-    params.set('checkin', formatCalendarDate(checkInDate));
-    params.set('checkout', formatCalendarDate(checkOutDate));
-    params.set('nights', nights.toString());
-    params.set('maxPrice', '300000');
-    params.set('adults', adultCount.toString());
-    params.set('children', childCount.toString());
-
-    navigate(`/search_result?${params.toString()}`);
+    navigate('/search_result', {
+      state: {
+        query: `가평 ${selectedTypeName}`,
+        location: '가평',
+        type: selectedTypeName,
+        checkin: formatCalendarDate(checkInDate),
+        checkout: formatCalendarDate(checkOutDate),
+        nights,
+        maxPrice: 300000,
+        adults: adultCount,
+        children: childCount
+      }
+    });
   };
 
   const handlePopupDetail = () => {
     if (!selectedAccommodation) return;
     
-    const params = new URLSearchParams();
-    params.append('title', selectedAccommodation.title);
-    params.append('price', selectedAccommodation.price.replace(/[₩,]/g, ''));
-    params.append('rating', selectedAccommodation.rating);
-    params.append('image', selectedAccommodation.image);
-    params.append('type', selectedAccommodation.type);
-    params.append('region', selectedAccommodation.region);
-
-    navigate(`/shop_detail?${params.toString()}`);
+    navigate('/shop_detail', {
+      state: {
+        title: selectedAccommodation.title,
+        price: Number(selectedAccommodation.price.replace(/[₩,]/g, '')),
+        rating: selectedAccommodation.rating,
+        image: selectedAccommodation.image,
+        type: selectedAccommodation.type,
+        region: selectedAccommodation.region
+      }
+    });
   };
 
   const calendarDays = renderCalendar();

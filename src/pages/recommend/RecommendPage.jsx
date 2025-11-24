@@ -180,39 +180,44 @@ export default function RecommendPage() {
   };
 
   const handleResultCardClick = (card) => {
-    const params = new URLSearchParams();
-    params.append('title', card.title);
-    params.append('region', card.region);
-    params.append('price', card.price.toString());
-    params.append('rating', card.rating);
-    params.append('description', card.description);
-    params.append('distance', card.distance);
-    params.append('facilities', card.facilities);
-    params.append('image', card.image);
-    params.append('badge', card.badge);
+    const surveyState = {
+      people: surveyData.people || '2인',
+      style: surveyData.style || '글램핑',
+      budget: (surveyData.budget || 15).toString(),
+      regions: surveyData.regions.join(',') || '경기도',
+      pet: surveyData.pet ? 'true' : 'false',
+      facilities: surveyData.facilities.join(',') || '',
+      mbti: surveyData.mbti || ''
+    };
 
-    params.append('survey_people', surveyData.people || '2인');
-    params.append('survey_style', surveyData.style || '글램핑');
-    params.append('survey_budget', (surveyData.budget || 15).toString());
-    params.append('survey_regions', surveyData.regions.join(',') || '경기도');
-    params.append('survey_pet', surveyData.pet ? 'true' : 'false');
-    params.append('survey_facilities', surveyData.facilities.join(',') || '');
-    params.append('survey_mbti', surveyData.mbti || '');
-
-    navigate(`/shop_detail?${params.toString()}`);
+    navigate('/shop_detail', {
+      state: {
+        title: card.title,
+        region: card.region,
+        price: card.price,
+        rating: card.rating,
+        description: card.description,
+        distance: card.distance,
+        facilities: card.facilities,
+        image: card.image,
+        badge: card.badge,
+        survey: surveyState
+      }
+    });
   };
 
   const goToResultList = () => {
-    const params = new URLSearchParams();
-    params.append('people', surveyData.people || '2인');
-    params.append('style', surveyData.style || '글램핑');
-    params.append('budget', (surveyData.budget || 15).toString());
-    params.append('regions', surveyData.regions.join(',') || '경기도');
-    params.append('pet', surveyData.pet ? 'true' : 'false');
-    params.append('facilities', surveyData.facilities.join(',') || '');
-    params.append('mbti', surveyData.mbti || '');
-
-    navigate(`/recommend_result_list?${params.toString()}`);
+    navigate('/recommend_result_list', {
+      state: {
+        people: surveyData.people || '2인',
+        style: surveyData.style || '글램핑',
+        budget: (surveyData.budget || 15).toString(),
+        regions: surveyData.regions.join(',') || '경기도',
+        pet: surveyData.pet ? 'true' : 'false',
+        facilities: surveyData.facilities.join(',') || '',
+        mbti: surveyData.mbti || ''
+      }
+    });
   };
 
   const progressPercentage = updateProgress();

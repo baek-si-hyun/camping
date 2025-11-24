@@ -1,10 +1,11 @@
 import { useEffect, useState, useRef } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { ROOMS, INITIAL_REVIEWS, MORE_REVIEWS, QUERIES } from '../../constants/shopDetail.js';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { ROOMS, INITIAL_REVIEWS, MORE_REVIEWS, QUERIES, IMAGE_QUERIES } from '../../constants/shopDetail.js';
+import SafeImage from '../../components/SafeImage.jsx';
 
 export default function ShopDetailPage() {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const location = useLocation();
   const mapRef = useRef(null);
   const mediaSliderRef = useRef(null);
   
@@ -20,21 +21,38 @@ export default function ShopDetailPage() {
   const [showMoreReviews, setShowMoreReviews] = useState(true);
   const [mediaItems, setMediaItems] = useState([]);
 
-  const title = searchParams.get('title') || '숙소명이 없습니다';
-  const region = searchParams.get('region') || '';
-  const price = searchParams.get('price') ? `₩${Number(searchParams.get('price')).toLocaleString()}~` : '';
-  const rating = searchParams.get('rating') || '4.8';
-  const description = searchParams.get('description') || '';
-  const distance = searchParams.get('distance') || '';
-  const facilities = searchParams.get('facilities') || '';
-  const image = searchParams.get('image') || '';
-  const badge = searchParams.get('badge') || '';
+  // state가 없으면 이전 페이지로 리다이렉트
+  useEffect(() => {
+    if (!location.state) {
+      // 쿼리 파라미터가 있으면 제거하고 이전 페이지로 이동
+      if (window.location.search) {
+        navigate(-1);
+      }
+    }
+  }, [location.state, navigate]);
+
+  const detailState = location.state || {};
+  const title = detailState.title || '숙소명이 없습니다';
+  const region = detailState.region || '';
+  const rawPrice = detailState.price;
+  const numericPrice = rawPrice !== undefined && rawPrice !== null
+    ? Number(String(rawPrice).replace(/[^0-9]/g, ''))
+    : null;
+  const price = numericPrice ? `₩${numericPrice.toLocaleString()}~` : '';
+  const rating = detailState.rating || '4.8';
+  const description = detailState.description || '';
+  const distance = detailState.distance || '';
+  const facilities = Array.isArray(detailState.facilities)
+    ? detailState.facilities.join(',')
+    : detailState.facilities || '';
+  const image = detailState.image || '';
+  const badge = detailState.badge || '';
 
   useEffect(() => {
     document.title = '숙소 상세 정보';
 
     // 미디어 아이템 초기화
-    const fallbackImgs = QUERIES.map(({ seq, text }) =>
+    const fallbackImgs = IMAGE_QUERIES.map(({ seq, text }) =>
       `https://readdy.ai/api/search-image?query=${encodeURIComponent(text)}&width=800&height=600&seq=${seq}&orientation=landscape`
     );
 
@@ -202,18 +220,18 @@ export default function ShopDetailPage() {
   const handleConfirmReservation = () => {
     if (!selectedRoom || !checkInDate || !checkOutDate) return;
 
-    const params = new URLSearchParams({
-      checkIn: formatDate(checkInDate),
-      checkOut: formatDate(checkOutDate),
-      roomId: selectedRoom.id,
-      roomName: selectedRoom.name,
-      roomPrice: selectedRoom.price.toString(),
-      roomCapacity: selectedRoom.capacity,
-      roomArea: selectedRoom.area,
-      roomImg: selectedRoom.image
+    navigate('/reservation', {
+      state: {
+        checkIn: formatDate(checkInDate),
+        checkOut: formatDate(checkOutDate),
+        roomId: selectedRoom.id,
+        roomName: selectedRoom.name,
+        roomPrice: selectedRoom.price,
+        roomCapacity: selectedRoom.capacity,
+        roomArea: selectedRoom.area,
+        roomImg: selectedRoom.image
+      }
     });
-
-    navigate(`/reservation?${params.toString()}`);
   };
 
   const showToast = (message) => {
@@ -327,7 +345,14 @@ export default function ShopDetailPage() {
                     </div>
                   </>
                 ) : (
-                  <img src={url} alt={`슬라이드 ${idx + 1}`} className="w-full h-full object-cover" />
+                  <SafeImage 
+                    src={url} 
+                    alt={`슬라이드 ${idx + 1}`} 
+                    className="w-full h-full object-cover"
+                    imageIndex={idx}
+                    width={800}
+                    height={600}
+                  />
                 )}
               </div>
             ))}
@@ -361,7 +386,14 @@ export default function ShopDetailPage() {
                   <source src={url} type="video/mp4" />
                 </video>
               ) : (
-                <img src={url} alt={`썸네일 ${idx + 1}`} className="w-full h-full object-cover" />
+                <SafeImage 
+                  src={url} 
+                  alt={`썸네일 ${idx + 1}`} 
+                  className="w-full h-full object-cover"
+                  imageIndex={idx + 100} // 슬라이드와 다른 인덱스 사용
+                  width={200}
+                  height={200}
+                />
               )}
             </div>
           ))}
@@ -550,10 +582,13 @@ export default function ShopDetailPage() {
               <div>
                 <h3 className="text-lg font-medium mb-3">글램핑장 배치도</h3>
                 <div className="rounded-lg overflow-hidden">
-                  <img
+                  <SafeImage
                     src="https://readdy.ai/api/search-image?query=detailed%20campsite%20map%20layout%20with%20glamping%20tents%2C%20facilities%2C%20and%20natural%20features%2C%20top-down%20view%2C%20blueprint%20style&width=375&height=300&seq=10&orientation=landscape"
                     alt="글램핑장 배치도"
                     className="w-full h-auto"
+                    imageIndex={300}
+                    width={375}
+                    height={300}
                   />
                 </div>
                 <div className="mt-4 space-y-3">
@@ -676,9 +711,16 @@ export default function ShopDetailPage() {
         <section className="px-4 py-5 border-t border-gray-200">
           <h2 className="text-xl font-bold mb-4">객실 선택</h2>
           <div className="space-y-4">
-            {ROOMS.map((room) => (
+            {ROOMS.map((room, roomIdx) => (
               <div key={room.id} className="border border-gray-200 rounded-lg overflow-hidden">
-                <img src={room.image} alt={room.name} className="w-full h-48 object-cover" />
+                <SafeImage 
+                  src={room.image} 
+                  alt={room.name} 
+                  className="w-full h-48 object-cover"
+                  imageIndex={roomIdx + 200} // 객실 이미지는 다른 인덱스 범위 사용
+                  width={400}
+                  height={300}
+                />
                 <div className="p-4">
                   <h3 className="text-lg font-bold">{room.name}</h3>
                   <div className="flex items-center mt-1 text-sm text-gray-600">

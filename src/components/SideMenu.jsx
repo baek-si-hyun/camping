@@ -25,10 +25,10 @@ export default function SideMenu({ isOpen, onClose, menuButtonId = 'bottomMenuBu
   const menuItems = [
     { path: '/mypage', icon: 'ri-calendar-check-line', label: '예약 내역' },
     { path: '/search', icon: 'ri-search-line', label: '캠핑장 검색' },
-    { path: '/shop_list?type=glamping', icon: 'ri-home-smile-line', label: '글램핑' },
-    { path: '/shop_list?type=caravan', icon: 'ri-caravan-line', label: '카라반' },
-    { path: '/shop_list?type=pension', icon: 'ri-hotel-line', label: '펜션' },
-    { path: '/shop_list?type=hotel', icon: 'ri-building-line', label: '호텔' },
+    { path: '/shop_list', state: { type: 'glamping' }, icon: 'ri-home-smile-line', label: '글램핑' },
+    { path: '/shop_list', state: { type: 'caravan' }, icon: 'ri-caravan-line', label: '카라반' },
+    { path: '/shop_list', state: { type: 'pension' }, icon: 'ri-hotel-line', label: '펜션' },
+    { path: '/shop_list', state: { type: 'hotel' }, icon: 'ri-building-line', label: '호텔' },
     { path: '/equipment', icon: 'ri-tent-line', label: '캠핑 장비 렌탈' },
     { path: '/recomend_course_tmap', icon: 'ri-map-pin-line', label: 'T맵 연동 관광 코스' },
     { path: '/surroundings', icon: 'ri-restaurant-line', label: '주변 맛집' },
@@ -61,7 +61,7 @@ export default function SideMenu({ isOpen, onClose, menuButtonId = 'bottomMenuBu
         </div>
         <div className="p-4 space-y-4">
           {menuItems.map((item) => (
-            <Link key={item.path} to={item.path} className="flex items-center gap-3">
+            <Link key={`${item.path}-${item.label}`} to={item.path} state={item.state} className="flex items-center gap-3">
               <i className={`${item.icon} text-xl text-gray-600`} />
               <span>{item.label}</span>
             </Link>
@@ -71,4 +71,3 @@ export default function SideMenu({ isOpen, onClose, menuButtonId = 'bottomMenuBu
     </div>
   );
 }
-

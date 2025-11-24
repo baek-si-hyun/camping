@@ -1,10 +1,10 @@
 import { useEffect, useState, useRef } from 'react';
-import { useNavigate, useSearchParams, Link } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { ACCOMMODATIONS } from '../../constants/recommendResultList.js';
 
 export default function RecommendResultListPage() {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const { state: locationState } = useLocation();
   const mapRef = useRef(null);
   const bottomSheetRef = useRef(null);
   const bottomSheetListRef = useRef(null);
@@ -27,14 +27,14 @@ export default function RecommendResultListPage() {
   const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
   const [bottomSheetTransform, setBottomSheetTransform] = useState('translateY(80%)');
 
-  // URL 파라미터에서 설문 데이터 읽기
-  const people = searchParams.get('people') || '2인';
-  const style = searchParams.get('style') || '글램핑';
-  const budget = searchParams.get('budget') || '15';
-  const regions = searchParams.get('regions') || '경기도';
-  const pet = searchParams.get('pet') || 'false';
-  const facilities = searchParams.get('facilities') || '';
-  const mbti = searchParams.get('mbti') || '';
+  // 설문 데이터 상태
+  const people = locationState?.people || '2인';
+  const style = locationState?.style || '글램핑';
+  const budget = locationState?.budget || '15';
+  const regions = locationState?.regions || '경기도';
+  const pet = locationState?.pet || 'false';
+  const facilities = locationState?.facilities || '';
+  const mbti = locationState?.mbti || '';
 
   useEffect(() => {
     document.title = '추천 숙소 목록 - ThankQ Camping';
@@ -78,7 +78,7 @@ export default function RecommendResultListPage() {
 
   // 위치 기반 접근 여부 판단
   const isLocationBasedAccess = () => {
-    return searchParams.get('from') === 'nearby';
+    return locationState?.from === 'nearby';
   };
 
   // 사용자 주변 마커 재배치
@@ -286,27 +286,20 @@ export default function RecommendResultListPage() {
     e.preventDefault();
     e.stopPropagation();
 
-    const params = new URLSearchParams();
-    params.append('title', accommodation.title);
-    params.append('region', accommodation.region);
-    params.append('price', accommodation.price.toString());
-    params.append('rating', accommodation.rating);
-    params.append('description', accommodation.description);
-    params.append('distance', accommodation.distance);
-    params.append('facilities', accommodation.facilities);
-    params.append('image', accommodation.image);
-    params.append('badge', accommodation.badge || '');
-
-    // 설문 데이터도 함께 전달
-    params.append('survey_people', people);
-    params.append('survey_style', style);
-    params.append('survey_budget', budget);
-    params.append('survey_regions', regions);
-    params.append('survey_pet', pet);
-    params.append('survey_facilities', facilities);
-    params.append('survey_mbti', mbti);
-
-    navigate(`/shop_detail?${params.toString()}`);
+    navigate('/shop_detail', {
+      state: {
+        title: accommodation.title,
+        region: accommodation.region,
+        price: accommodation.price,
+        rating: accommodation.rating,
+        description: accommodation.description,
+        distance: accommodation.distance,
+        facilities: accommodation.facilities,
+        image: accommodation.image,
+        badge: accommodation.badge || '',
+        survey: { people, style, budget, regions, pet, facilities, mbti }
+      }
+    });
   };
 
   // 바텀시트 드래그 초기화
@@ -362,7 +355,7 @@ export default function RecommendResultListPage() {
       const card = document.createElement('div');
       card.className = 'flex items-center gap-3 cursor-pointer';
       card.innerHTML = `
-        <img src="${acc.image}" class="w-16 h-16 rounded-lg object-cover" alt="${acc.title}">
+        <img src="${acc.image}" class="w-16 h-16 rounded-lg object-cover" alt="${acc.title}" onError={(e) => { e.target.onerror = null; e.target.src = 'https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?w=800&h=600&fit=crop&auto=format'; }} />
         <div class="flex-1">
           <h3 class="font-medium">${acc.title}</h3>
           <p class="text-sm text-gray-600">${acc.region}</p>
@@ -421,7 +414,7 @@ const header = (
 const bottomNav = (
   <nav className="fixed bottom-0 left-0 right-0 bg-white border-t">
     <div className="grid grid-cols-6 py-1">
-        <Link to="/search_map?from=nearby" className="flex flex-col items-center gap-1 group">
+        <Link to="/search_map" state={{ from: 'nearby' }} className="flex flex-col items-center gap-1 group">
         <div className="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
           <i className="ri-map-pin-2-fill text-lg group-hover:text-primary transition-colors duration-300" />
         </div>
@@ -495,19 +488,19 @@ const sideMenu = (
           <i className="ri-search-line text-xl text-gray-600" />
           <span>캠핑장 검색</span>
           </Link>
-          <Link to="/shop_list?type=glamping" className="flex items-center gap-3">
+          <Link to="/shop_list" state={{ type: 'glamping' }} className="flex items-center gap-3">
           <i className="ri-home-smile-line text-xl text-gray-600" />
           <span>글램핑</span>
           </Link>
-          <Link to="/shop_list?type=caravan" className="flex items-center gap-3">
+          <Link to="/shop_list" state={{ type: 'caravan' }} className="flex items-center gap-3">
           <i className="ri-caravan-line text-xl text-gray-600" />
           <span>카라반</span>
           </Link>
-          <Link to="/shop_list?type=pension" className="flex items-center gap-3">
+          <Link to="/shop_list" state={{ type: 'pension' }} className="flex items-center gap-3">
           <i className="ri-hotel-line text-xl text-gray-600" />
           <span>펜션</span>
           </Link>
-          <Link to="/shop_list?type=hotel" className="flex items-center gap-3">
+          <Link to="/shop_list" state={{ type: 'hotel' }} className="flex items-center gap-3">
           <i className="ri-building-line text-xl text-gray-600" />
           <span>호텔</span>
           </Link>

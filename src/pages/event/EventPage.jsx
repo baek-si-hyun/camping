@@ -246,7 +246,7 @@ export default function EventPage() {
           </div>
           <div className="bg-white rounded-xl p-4 shadow-sm">
             <div className="flex items-center gap-3 mb-3">
-              <img src="/assets/deadline.png" className="w-12 h-12 rounded-lg object-cover" alt="마감임박" />
+              <img src="/assets/deadline.png" className="w-12 h-12 rounded-lg object-cover" alt="마감임박"  onError={(e) => { e.target.onerror = null; e.target.src = 'https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?w=800&h=600&fit=crop&auto=format'; }} />
               <div className="flex-1">
                 <h4 className="font-medium mb-1">여름 마지막 특가</h4>
                 <p className="text-sm text-gray-600">글램핑 30% 할인</p>
@@ -313,7 +313,7 @@ export default function EventPage() {
             ].map((event, idx) => (
               <div key={idx} className="bg-gray-100 rounded-xl p-4 opacity-60">
                 <div className="flex items-center gap-3">
-                  <img src="/assets/end.png" className="w-12 h-12 rounded-lg object-cover grayscale mt-3" alt="종료된 이벤트" />
+                  <img src="/assets/end.png" className="w-12 h-12 rounded-lg object-cover grayscale mt-3" alt="종료된 이벤트"  onError={(e) => { e.target.onerror = null; e.target.src = 'https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?w=800&h=600&fit=crop&auto=format'; }} />
                   <div className="flex-1">
                     <h4 className="font-medium mb-1 text-gray-600">{event.title}</h4>
                     <p className="text-sm text-gray-500">{event.period}</p>
@@ -345,10 +345,10 @@ export default function EventPage() {
 
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t">
         <div className="grid grid-cols-6 py-1">
-          <Link to="/search_map?from=nearby" className="flex flex-col items-center gap-1 group">
-            <div className="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
-              <i className="ri-map-pin-2-fill text-lg group-hover:text-primary transition-colors duration-300" />
-            </div>
+          <Link to="/search_map" state={{ from: 'nearby' }} className="flex flex-col items-center gap-1 group">
+          <div className="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+            <i className="ri-map-pin-2-fill text-lg group-hover:text-primary transition-colors duration-300" />
+          </div>
             <span className="text-[10px] transition-colors duration-300 group-hover:text-primary">내주변</span>
           </Link>
           <Link to="/" className="flex flex-col items-center gap-1 group">
@@ -421,19 +421,19 @@ export default function EventPage() {
                 <i className="ri-search-line text-xl text-gray-600" />
                 <span>캠핑장 검색</span>
               </Link>
-              <Link to="/shop_list?type=glamping" className="flex items-center gap-3">
+              <Link to="/shop_list" state={{ type: 'glamping' }} className="flex items-center gap-3">
                 <i className="ri-home-smile-line text-xl text-gray-600" />
                 <span>글램핑</span>
               </Link>
-              <Link to="/shop_list?type=caravan" className="flex items-center gap-3">
+              <Link to="/shop_list" state={{ type: 'caravan' }} className="flex items-center gap-3">
                 <i className="ri-caravan-line text-xl text-gray-600" />
                 <span>카라반</span>
               </Link>
-              <Link to="/shop_list?type=pension" className="flex items-center gap-3">
+              <Link to="/shop_list" state={{ type: 'pension' }} className="flex items-center gap-3">
                 <i className="ri-hotel-line text-xl text-gray-600" />
                 <span>펜션</span>
               </Link>
-              <Link to="/shop_list?type=hotel" className="flex items-center gap-3">
+              <Link to="/shop_list" state={{ type: 'hotel' }} className="flex items-center gap-3">
                 <i className="ri-building-line text-xl text-gray-600" />
                 <span>호텔</span>
               </Link>

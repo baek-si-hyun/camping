@@ -136,39 +136,31 @@ export default function SearchPage() {
       return;
     }
 
-    const params = new URLSearchParams();
-    let query = '';
-    
+    const queryParts = [];
     if (location) {
-      query += location;
+      queryParts.push(location);
     }
     if (selectedType && selectedType !== 'normal') {
-      if (query) query += ' ';
-      query += TYPE_DISPLAY_NAMES[selectedType];
+      queryParts.push(TYPE_DISPLAY_NAMES[selectedType]);
     }
 
-    if (query) {
-      params.set('query', query);
-    }
-    if (location) {
-      params.set('location', location);
-    }
-    if (selectedType) {
-      params.set('type', selectedType);
-    }
+    const queryText = queryParts.join(' ').trim();
+    const payload = {
+      query: queryText || undefined,
+      location: location || undefined,
+      type: selectedType,
+      maxPrice: price,
+      adults: adultCount,
+      children: childCount
+    };
 
     if (checkInDate && checkOutDate) {
-      params.set('checkin', formatCalendarDate(checkInDate));
-      params.set('checkout', formatCalendarDate(checkOutDate));
-      const nights = Math.round((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24));
-      params.set('nights', nights.toString());
+      payload.checkin = formatCalendarDate(checkInDate);
+      payload.checkout = formatCalendarDate(checkOutDate);
+      payload.nights = Math.round((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24));
     }
 
-    params.set('maxPrice', price.toString());
-    params.set('adults', adultCount.toString());
-    params.set('children', childCount.toString());
-
-    navigate(`/search_result?${params.toString()}`);
+    navigate('/search_result', { state: payload });
   };
 
   const toggleWishlist = (id) => {

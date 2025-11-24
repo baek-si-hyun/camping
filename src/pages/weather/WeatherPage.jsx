@@ -432,7 +432,7 @@ export default function WeatherPage() {
         </div>
       </main>
 
-      <Link to="/search_map?from=nearby">
+      <Link to="/search_map" state={{ from: 'nearby' }}>
         <button className="fixed bottom-24 right-4 w-14 h-14 bg-primary text-white !rounded-full shadow-lg flex items-center justify-center cursor-pointer">
           <i className="ri-map-pin-fill text-xl" />
         </button>
@@ -440,7 +440,7 @@ export default function WeatherPage() {
 
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t">
         <div className="grid grid-cols-6 py-1">
-          <Link to="/search_map?from=nearby" className="flex flex-col items-center gap-1 group">
+          <Link to="/search_map" state={{ from: 'nearby' }} className="flex flex-col items-center gap-1 group">
             <div className="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
               <i className="ri-map-pin-2-fill text-lg group-hover:text-primary transition-colors duration-300" />
             </div>
@@ -516,19 +516,19 @@ export default function WeatherPage() {
                 <i className="ri-search-line text-xl text-gray-600" />
                 <span>캠핑장 검색</span>
               </Link>
-              <Link to="/shop_list?type=glamping" className="flex items-center gap-3">
+              <Link to="/shop_list" state={{ type: 'glamping' }} className="flex items-center gap-3">
                 <i className="ri-home-smile-line text-xl text-gray-600" />
                 <span>글램핑</span>
               </Link>
-              <Link to="/shop_list?type=caravan" className="flex items-center gap-3">
+              <Link to="/shop_list" state={{ type: 'caravan' }} className="flex items-center gap-3">
                 <i className="ri-caravan-line text-xl text-gray-600" />
                 <span>카라반</span>
               </Link>
-              <Link to="/shop_list?type=pension" className="flex items-center gap-3">
+              <Link to="/shop_list" state={{ type: 'pension' }} className="flex items-center gap-3">
                 <i className="ri-hotel-line text-xl text-gray-600" />
                 <span>펜션</span>
               </Link>
-              <Link to="/shop_list?type=hotel" className="flex items-center gap-3">
+              <Link to="/shop_list" state={{ type: 'hotel' }} className="flex items-center gap-3">
                 <i className="ri-building-line text-xl text-gray-600" />
                 <span>호텔</span>
               </Link>

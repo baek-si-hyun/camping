@@ -47,11 +47,10 @@ export default function WishlistPage() {
       <header className="fixed top-0 left-0 right-0 z-50 bg-white">
         <div className="flex items-center justify-between px-4 py-3">
           <div className="h-8">
-            <img
-              src="https://videos.openai.com/vg-assets/assets%2Ftask_01k19z5fmqfkts58jss9s2xgez%2F1753755192_img_0.webp?st=2025-07-29T00%3A42%3A58Z&se=2025-08-04T01%3A42%3A58Z&sks=b&skt=2025-07-29T00%3A42%3A58Z&ske=2025-08-04T01%3A42%3A58Z&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&skv=2019-02-02&sv=2018-11-09&sr=b&sp=r&spr=https%2Chttp&sig=9sPPeqjj27qmEN6pm1KUsYXfmh%2FqqgwTFedSOy2Tcks%3D&az=oaivgprodscus"
+            <img src="https://readdy.ai/api/search-image?query=Camping%20logo%20design%20with%20tent%20and%20nature%20elements%2C%20modern%20minimalist%20style&width=128&height=32&seq=1&orientation=landscape"
               alt="DaeCamp"
               className="w-32 relative -left-9 -top-2.5"
-            />
+             onError={(e) => { e.target.onerror = null; e.target.src = 'https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?w=800&h=600&fit=crop&auto=format'; }} />
           </div>
           <div className="flex items-center gap-2">
             <Link to="/login">
@@ -142,7 +141,16 @@ export default function WishlistPage() {
                   </div>
                   <div className="flex gap-2">
                     <Link
-                      to={`/shop_detail?title=${encodeURIComponent(item.name)}&region=${encodeURIComponent(item.region)}&price=${item.price}&id=${item.id}&image=${encodeURIComponent(item.image)}`}
+                      to="/shop_detail"
+                      state={{
+                        title: item.name,
+                        region: item.region,
+                        price: item.price,
+                        id: item.id,
+                        image: item.image,
+                        rating: item.rating,
+                        facilities: item.facilities.join(',')
+                      }}
                       className="flex-1 bg-primary text-white py-2 rounded-lg text-center font-medium"
                     >
                       상세보기

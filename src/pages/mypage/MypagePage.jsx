@@ -248,19 +248,19 @@ export default function MypagePage() {
                 <i className="ri-search-line text-xl text-gray-600" />
                 <span>캠핑장 검색</span>
               </Link>
-              <Link to="/shop_list?type=glamping" className="flex items-center gap-3">
+              <Link to="/shop_list" state={{ type: 'glamping' }} className="flex items-center gap-3">
                 <i className="ri-home-smile-line text-xl text-gray-600" />
                 <span>글램핑</span>
               </Link>
-              <Link to="/shop_list?type=caravan" className="flex items-center gap-3">
+              <Link to="/shop_list" state={{ type: 'caravan' }} className="flex items-center gap-3">
                 <i className="ri-caravan-line text-xl text-gray-600" />
                 <span>카라반</span>
               </Link>
-              <Link to="/shop_list?type=pension" className="flex items-center gap-3">
+              <Link to="/shop_list" state={{ type: 'pension' }} className="flex items-center gap-3">
                 <i className="ri-hotel-line text-xl text-gray-600" />
                 <span>펜션</span>
               </Link>
-              <Link to="/shop_list?type=hotel" className="flex items-center gap-3">
+              <Link to="/shop_list" state={{ type: 'hotel' }} className="flex items-center gap-3">
                 <i className="ri-building-line text-xl text-gray-600" />
                 <span>호텔</span>
               </Link>

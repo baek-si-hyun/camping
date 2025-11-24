@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { useNavigate, Link, useSearchParams } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { CAMPING_TYPES, SEASONAL_CAMPSITES, POPULAR_CAMPSITES, ACCORDION_ITEMS } from '../../constants/shopList.js';
 import { useWishlist } from '../../hooks/useWishlist.js';
 import StarRating from '../../components/StarRating.jsx';
@@ -11,9 +11,9 @@ import CommonStyles from '../../components/CommonStyles.jsx';
 
 export default function ShopListPage() {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const { state: locationState } = useLocation();
   const [selectedType, setSelectedType] = useState(() => {
-    const typeParam = searchParams.get('type');
+    const typeParam = locationState?.type;
     return typeParam || 'normal';
   });
   const [sortType, setSortType] = useState('distance');
@@ -26,6 +26,12 @@ export default function ShopListPage() {
     document.title = '캠핑의 모든 것';
   }, []);
 
+  useEffect(() => {
+    if (locationState?.type) {
+      setSelectedType(locationState.type);
+    }
+  }, [locationState?.type]);
+
   const toggleAccordion = (id) => {
     const newSet = new Set(openAccordions);
     if (newSet.has(id)) {
@@ -37,28 +43,32 @@ export default function ShopListPage() {
   };
 
   const handleSeasonalCardClick = (campsite) => {
-    const params = new URLSearchParams();
-    params.append('id', campsite.id);
-    params.append('title', campsite.title);
-    params.append('region', campsite.region);
-    params.append('image', campsite.image);
-    params.append('price', campsite.price.toString());
-    params.append('rating', campsite.rating.toString());
-    params.append('description', campsite.description);
-    params.append('distance', campsite.distance);
-    params.append('facilities', campsite.facilities);
-    params.append('badge', campsite.badge);
-    navigate(`/shop_detail?${params.toString()}`);
+    navigate('/shop_detail', {
+      state: {
+        id: campsite.id,
+        title: campsite.title,
+        region: campsite.region,
+        image: campsite.image,
+        price: campsite.price,
+        rating: campsite.rating,
+        description: campsite.description,
+        distance: campsite.distance,
+        facilities: campsite.facilities,
+        badge: campsite.badge
+      }
+    });
   };
 
   const handleDetailLinkClick = (campsite) => {
-    const params = new URLSearchParams();
-    params.append('id', campsite.id);
-    params.append('title', campsite.title);
-    params.append('region', campsite.region);
-    params.append('image', campsite.image);
-    params.append('price', campsite.price.toString());
-    navigate(`/shop_detail?${params.toString()}`);
+    navigate('/shop_detail', {
+      state: {
+        id: campsite.id,
+        title: campsite.title,
+        region: campsite.region,
+        image: campsite.image,
+        price: campsite.price
+      }
+    });
   };
 
   const sortedCampsites = [...POPULAR_CAMPSITES].sort((a, b) => {

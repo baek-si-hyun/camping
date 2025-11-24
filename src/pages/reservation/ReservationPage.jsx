@@ -1,32 +1,32 @@
 import { useEffect, useState, useRef } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ROOM_TYPES, ROOM_FEATURES } from '../../constants/reservation.js';
 
 export default function ReservationPage() {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const { state: locationState } = useLocation();
+  const parseDateString = (value) => {
+    if (!value) return null;
+    const [y, m, d] = value.split('.').map((v) => parseInt(v, 10));
+    if (!y || !m || !d) return null;
+    return new Date(y, m - 1, d);
+  };
   
   const [checkInDate, setCheckInDate] = useState(() => {
-    const inParam = searchParams.get('checkIn');
-    if (inParam) {
-      const [y, m, d] = inParam.split('.');
-      return new Date(+y, +m - 1, +d);
-    }
+    const parsed = parseDateString(locationState?.checkIn);
+    if (parsed) return parsed;
     return new Date(2025, 6, 8);
   });
   
   const [checkOutDate, setCheckOutDate] = useState(() => {
-    const outParam = searchParams.get('checkOut');
-    if (outParam) {
-      const [y, m, d] = outParam.split('.');
-      return new Date(+y, +m - 1, +d);
-    }
+    const parsed = parseDateString(locationState?.checkOut);
+    if (parsed) return parsed;
     return new Date(2025, 6, 9);
   });
   
   const [currentCalendarDate, setCurrentCalendarDate] = useState(new Date(checkInDate));
   const [selectedRoomType, setSelectedRoomType] = useState(() => {
-    const roomId = searchParams.get('roomId');
+    const roomId = locationState?.roomId;
     return roomId || 'deluxe';
   });
   const [adultCount, setAdultCount] = useState(2);
@@ -60,9 +60,13 @@ export default function ReservationPage() {
     cvc: ''
   });
 
-  const roomPrice = searchParams.get('roomPrice') 
-    ? Number(searchParams.get('roomPrice'))
+  const roomPrice = locationState?.roomPrice !== undefined
+    ? Number(locationState.roomPrice)
     : ROOM_TYPES.find(r => r.id === selectedRoomType)?.price || 130000;
+  const roomNameFromState = locationState?.roomName;
+  const roomImgFromState = locationState?.roomImg;
+  const roomCapacityFromState = locationState?.roomCapacity;
+  const roomAreaFromState = locationState?.roomArea;
 
   const nights = Math.round((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24)) || 1;
   const roomTotalPrice = roomPrice * nights;
@@ -254,6 +258,10 @@ export default function ReservationPage() {
   };
 
   const selectedRoom = ROOM_TYPES.find(r => r.id === selectedRoomType) || ROOM_TYPES[0];
+  const resolvedRoomName = roomNameFromState || selectedRoom.name;
+  const resolvedRoomArea = roomAreaFromState || selectedRoom.area;
+  const resolvedRoomCapacity = roomCapacityFromState || selectedRoom.capacity;
+  const resolvedRoomImg = roomImgFromState || selectedRoom.image;
   const calendarDays = renderCalendar();
 
   return (
@@ -332,13 +340,13 @@ export default function ReservationPage() {
         <section className="mb-6">
           <div className="flex gap-4 p-4 bg-gray-50 rounded-xl">
             <img
-              src={searchParams.get('roomImg') || 'https://readdy.ai/api/search-image?query=Luxury%20glamping%20tent%20in%20forest%20setting%2C%20cozy%20interior%20with%20comfortable%20bed%2C%20warm%20lighting%2C%20natural%20wood%20elements%2C%20high-quality%20professional%20photography%2C%20no%20people%2C%20serene%20atmosphere&width=100&height=100&seq=101&orientation=squarish'}
+              src={resolvedRoomImg || 'https://readdy.ai/api/search-image?query=Luxury%20glamping%20tent%20in%20forest%20setting%2C%20cozy%20interior%20with%20comfortable%20bed%2C%20warm%20lighting%2C%20natural%20wood%20elements%2C%20high-quality%20professional%20photography%2C%20no%20people%2C%20serene%20atmosphere&width=100&height=100&seq=101&orientation=squarish'}
               className="w-[80px] h-[80px] rounded-md object-cover"
               alt="숙소 이미지"
             />
             <div>
               <h2 className="font-medium">
-                {searchParams.get('roomName') || selectedRoom.name}
+                {resolvedRoomName}
               </h2>
               <div className="flex items-center gap-1 mt-1 text-sm">
                 <i className="ri-star-fill text-yellow-400 text-xs" />
@@ -445,18 +453,18 @@ export default function ReservationPage() {
           <div className="bg-white border border-gray-200 rounded-xl p-4">
             <div className="flex gap-3">
               <img
-                src={searchParams.get('roomImg') || 'https://readdy.ai/api/search-image?query=Luxury%20glamping%20tent%20interior%20with%20queen%20size%20bed%2C%20cozy%20lighting%2C%20wooden%20furniture%2C%20professional%20photography%2C%20no%20people&width=120&height=120&seq=301&orientation=squarish'}
+                src={resolvedRoomImg || 'https://readdy.ai/api/search-image?query=Luxury%20glamping%20tent%20interior%20with%20queen%20size%20bed%2C%20cozy%20lighting%2C%20wooden%20furniture%2C%20professional%20photography%2C%20no%20people&width=120&height=120&seq=301&orientation=squarish'}
                 className="w-[80px] h-[80px] rounded-md object-cover"
-                alt={selectedRoom.name}
+                alt={resolvedRoomName}
               />
               <div className="flex-1">
                 <div className="flex items-center gap-2">
-                  <h4 className="font-medium">{selectedRoom.name}</h4>
+                  <h4 className="font-medium">{resolvedRoomName}</h4>
                   <span className="px-2 py-0.5 bg-primary/10 text-primary text-xs rounded-full">선택됨</span>
                 </div>
                 <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1 text-sm text-gray-600">
-                  <span>면적: {selectedRoom.area}</span>
-                  <span>기준 2인 / 최대 {selectedRoom.capacity}인</span>
+                  <span>면적: {resolvedRoomArea}</span>
+                  <span>기준 2인 / 최대 {resolvedRoomCapacity}인</span>
                 </div>
                 <div className="flex flex-wrap gap-x-2 gap-y-1 mt-2">
                   {ROOM_FEATURES[selectedRoomType]?.map((feature, idx) => (
@@ -490,7 +498,7 @@ export default function ReservationPage() {
                 <button
                   className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-full cursor-pointer"
                   onClick={() => {
-                    const maxCapacity = selectedRoom.capacity;
+                    const maxCapacity = resolvedRoomCapacity;
                     if (adultCount + childCount < maxCapacity) {
                       setAdultCount(adultCount + 1);
                     } else {
@@ -518,7 +526,7 @@ export default function ReservationPage() {
                 <button
                   className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-full cursor-pointer"
                   onClick={() => {
-                    const maxCapacity = selectedRoom.capacity;
+                    const maxCapacity = resolvedRoomCapacity;
                     if (adultCount + childCount < maxCapacity) {
                       setChildCount(childCount + 1);
                     } else {

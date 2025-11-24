@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import SafeImage from '../../components/SafeImage.jsx';
 
 export default function IndexPage() {
   const navigate = useNavigate();
@@ -133,25 +134,13 @@ export default function IndexPage() {
       return;
     }
 
-    const params = new URLSearchParams();
-    params.set('query', searchQuery);
-    params.set('location', '전국');
-    params.set('type', '전체');
-
-    navigate(`/search_result?${params.toString()}`);
-  };
-
-  const handleShopDetailClick = (e, href, image) => {
-    e.preventDefault();
-    if (image) {
-      const url = new URL(href, window.location.origin);
-      const params = new URLSearchParams(url.search);
-      params.delete('img');
-      params.set('image', image);
-      navigate(`/shop_detail?${params.toString()}`);
-    } else {
-      navigate(href.replace('.html', ''));
-    }
+    navigate('/search_result', {
+      state: {
+        query: searchQuery,
+        location: '전국',
+        type: '전체'
+      }
+    });
   };
 
   return (
@@ -175,10 +164,12 @@ export default function IndexPage() {
       <header className="fixed top-0 left-0 right-0 z-50 bg-white">
         <div className="flex items-center justify-between px-4 py-3">
           <div className="h-8">
-            <img
-              src="https://videos.openai.com/vg-assets/assets%2Ftask_01k19z5fmqfkts58jss9s2xgez%2F1753755192_img_0.webp?st=2025-07-29T00%3A42%3A58Z&se=2025-08-04T01%3A42%3A58Z&sks=b&skt=2025-07-29T00%3A42%3A58Z&ske=2025-08-04T01%3A42%3A58Z&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&skv=2019-02-02&sv=2018-11-09&sr=b&sp=r&spr=https%2Chttp&sig=9sPPeqjj27qmEN6pm1KUsYXfmh%2FqqgwTFedSOy2Tcks%3D&az=oaivgprodscus"
+            <SafeImage 
+              src="https://readdy.ai/api/search-image?query=Camping%20logo%20design%20with%20tent%20and%20nature%20elements%2C%20modern%20minimalist%20style&width=128&height=32&seq=1&orientation=landscape"
               alt="DaeCamp"
               className="w-32 relative -left-9 -top-2.5"
+              width={128}
+              height={32}
             />
           </div>
           <div className="flex items-center gap-2">
@@ -229,82 +220,98 @@ export default function IndexPage() {
 
       <main className="pt-28 pb-20">
         <div className="grid grid-cols-4 gap-6 px-4 mb-8">
-          <Link to="/shop_list?type=normal" className="flex flex-col items-center gap-2 active:scale-95 transition-transform">
+          <Link to="/shop_list" state={{ type: 'normal' }} className="flex flex-col items-center gap-2 active:scale-95 transition-transform">
             <div className="w-16 h-16 rounded-xl overflow-hidden shadow-sm">
-              <img
+              <SafeImage 
                 src="https://readdy.ai/api/search-image?query=3D%20rendered%20isometric%20camping%20tent%20icon%2C%20minimalist%20design%2C%20soft%20gradient%20colors%2C%20flat%20style%20with%20depth%2C%20centered%20composition%2C%20clean%20white%20background%2C%20modern%20UI%20icon&width=128&height=128&seq=31&orientation=squarish"
                 className="w-full h-full object-cover"
                 alt="캠핑"
+                width={128}
+                height={128}
               />
             </div>
             <span className="text-xs">캠핑</span>
           </Link>
-          <Link to="/shop_list?type=glamping" className="flex flex-col items-center gap-2 active:scale-95 transition-transform">
+          <Link to="/shop_list" state={{ type: 'glamping' }} className="flex flex-col items-center gap-2 active:scale-95 transition-transform">
             <div className="w-16 h-16 rounded-xl overflow-hidden shadow-sm">
-              <img
+              <SafeImage 
                 src="https://readdy.ai/api/search-image?query=3D%20rendered%20isometric%20glamping%20dome%20tent%20icon%2C%20luxury%20camping%2C%20minimalist%20design%2C%20soft%20gradient%20colors%2C%20flat%20style%20with%20depth%2C%20centered%20composition%2C%20clean%20white%20background%2C%20modern%20UI%20icon&width=128&height=128&seq=32&orientation=squarish"
                 className="w-full h-full object-cover"
                 alt="글램핑"
+                width={128}
+                height={128}
               />
             </div>
             <span className="text-xs">글램핑</span>
           </Link>
-          <Link to="/shop_list?type=pet" className="flex flex-col items-center gap-2 active:scale-95 transition-transform">
+          <Link to="/shop_list" state={{ type: 'pet' }} className="flex flex-col items-center gap-2 active:scale-95 transition-transform">
             <div className="w-16 h-16 rounded-xl overflow-hidden shadow-sm">
-              <img
+              <SafeImage 
                 src="https://readdy.ai/api/search-image?query=3D%20rendered%20isometric%20pet%20friendly%20hotel%20icon%2C%20dog%20house%20symbol%2C%20minimalist%20design%2C%20soft%20gradient%20colors%2C%20flat%20style%20with%20depth%2C%20centered%20composition%2C%20clean%20white%20background%2C%20modern%20UI%20icon&width=128&height=128&seq=33&orientation=squarish"
                 className="w-full h-full object-cover"
                 alt="반려동물"
+                width={128}
+                height={128}
               />
             </div>
             <span className="text-xs">반려동물</span>
           </Link>
-          <Link to="/shop_list?type=pension" className="flex flex-col items-center gap-2 active:scale-95 transition-transform">
+          <Link to="/shop_list" state={{ type: 'pension' }} className="flex flex-col items-center gap-2 active:scale-95 transition-transform">
             <div className="w-16 h-16 rounded-xl overflow-hidden shadow-sm">
-              <img
+              <SafeImage 
                 src="https://readdy.ai/api/search-image?query=3D%20rendered%20isometric%20pension%20house%20icon%2C%20korean%20style%20building%2C%20minimalist%20design%2C%20soft%20gradient%20colors%2C%20flat%20style%20with%20depth%2C%20centered%20composition%2C%20clean%20white%20background%2C%20modern%20UI%20icon&width=128&height=128&seq=34&orientation=squarish"
                 className="w-full h-full object-cover"
                 alt="펜션"
+                width={128}
+                height={128}
               />
             </div>
             <span className="text-xs">펜션</span>
           </Link>
-          <Link to="/shop_list?type=hotel" className="flex flex-col items-center gap-2 active:scale-95 transition-transform">
+          <Link to="/shop_list" state={{ type: 'hotel' }} className="flex flex-col items-center gap-2 active:scale-95 transition-transform">
             <div className="w-16 h-16 rounded-xl overflow-hidden shadow-sm">
-              <img
+              <SafeImage 
                 src="https://readdy.ai/api/search-image?query=3D%20rendered%20isometric%20hotel%20building%20icon%2C%20modern%20architecture%2C%20minimalist%20design%2C%20soft%20gradient%20colors%2C%20flat%20style%20with%20depth%2C%20centered%20composition%2C%20clean%20white%20background%2C%20modern%20UI%20icon&width=128&height=128&seq=35&orientation=squarish"
                 className="w-full h-full object-cover"
                 alt="호텔"
+                width={128}
+                height={128}
               />
             </div>
             <span className="text-xs">호텔</span>
           </Link>
-          <Link to="/shop_list?type=sharing" className="flex flex-col items-center gap-2 active:scale-95 transition-transform">
+          <Link to="/shop_list" state={{ type: 'sharing' }} className="flex flex-col items-center gap-2 active:scale-95 transition-transform">
             <div className="w-16 h-16 rounded-xl overflow-hidden shadow-sm">
-              <img
+              <SafeImage 
                 src="https://readdy.ai/api/search-image?query=3D%20rendered%20isometric%20private%20house%20icon%2C%20sharing%20economy%20concept%2C%20minimalist%20design%2C%20soft%20gradient%20colors%2C%20flat%20style%20with%20depth%2C%20centered%20composition%2C%20clean%20white%20background%2C%20modern%20UI%20icon&width=128&height=128&seq=36&orientation=squarish"
                 className="w-full h-full object-cover"
                 alt="공유숙박"
+                width={128}
+                height={128}
               />
             </div>
             <span className="text-xs">공유숙박</span>
           </Link>
-          <Link to="/shop_list?type=hotspring" className="flex flex-col items-center gap-2 active:scale-95 transition-transform">
+          <Link to="/shop_list" state={{ type: 'hotspring' }} className="flex flex-col items-center gap-2 active:scale-95 transition-transform">
             <div className="w-16 h-16 rounded-xl overflow-hidden shadow-sm">
-              <img
+              <SafeImage 
                 src="https://readdy.ai/api/search-image?query=3D%20rendered%20isometric%20hot%20spring%20icon%2C%20wellness%20concept%2C%20minimalist%20design%2C%20soft%20gradient%20colors%2C%20flat%20style%20with%20depth%2C%20centered%20composition%2C%20clean%20white%20background%2C%20modern%20UI%20icon&width=128&height=128&seq=37&orientation=squarish"
                 className="w-full h-full object-cover"
                 alt="온천"
+                width={128}
+                height={128}
               />
             </div>
             <span className="text-xs">온천</span>
           </Link>
-          <Link to="/shop_list?type=resort" className="flex flex-col items-center gap-2 active:scale-95 transition-transform">
+          <Link to="/shop_list" state={{ type: 'resort' }} className="flex flex-col items-center gap-2 active:scale-95 transition-transform">
             <div className="w-16 h-16 rounded-xl overflow-hidden shadow-sm">
-              <img
+              <SafeImage 
                 src="https://readdy.ai/api/search-image?query=3D%20rendered%20isometric%20beach%20resort%20icon%2C%20summer%20vacation%20concept%2C%20minimalist%20design%2C%20soft%20gradient%20colors%2C%20flat%20style%20with%20depth%2C%20centered%20composition%2C%20clean%20white%20background%2C%20modern%20UI%20icon&width=128&height=128&seq=38&orientation=squarish"
                 className="w-full h-full object-cover"
                 alt="리조트"
+                width={128}
+                height={128}
               />
             </div>
             <span className="text-xs">리조트</span>
@@ -332,13 +339,26 @@ export default function IndexPage() {
               <h2 className="text-2xl font-medium text-white mb-2">캠핑의 모든 것</h2>
               <p className="text-white/90 text-sm mb-4">자연 속에서 특별한 순간을 만나보세요</p>
               <div className="flex gap-3">
-                <a
-                  href="/shop_detail?title=숲속 글램핑 리조트&region=경기도 가평군 청평면 대성리&price=130000&id=forest-glamping&rating=4.8&description=자연 속에서 특별한 순간을 만나보세요. 럭셔리 글램핑으로 힐링하는 완벽한 휴식&distance=45km&facilities=글램핑,데크,바베큐장,샤워실,주차장&badge=프리미엄 글램핑&image=https%3A//readdy.ai/api/search-image%3Fquery%3DBeautiful%2520camping%2520site%2520in%2520nature%2520with%2520tent%2520and%2520campfire%2520at%2520sunset%252C%2520cinematic%2520shot%252C%25204k%2520quality%26width%3D800%26height%3D600%26seq%3D10%26orientation%3Dlandscape"
+                <Link
+                  to="/shop_detail"
+                  state={{
+                    title: '숲속 글램핑 리조트',
+                    region: '경기도 가평군 청평면 대성리',
+                    price: 130000,
+                    id: 'forest-glamping',
+                    rating: 4.8,
+                    description: '자연 속에서 특별한 순간을 만나보세요. 럭셔리 글램핑으로 힐링하는 완벽한 휴식',
+                    distance: '45km',
+                    facilities: '글램핑,데크,바베큐장,샤워실,주차장',
+                    badge: '프리미엄 글램핑',
+                    image:
+                      "https://readdy.ai/api/search-image?query=Beautiful%20camping%20site%20in%20nature%20with%20tent%20and%20campfire%20at%20sunset%2C%20cinematic%20shot%2C%204k%20quality&width=800&height=600&seq=10&orientation=landscape"
+                  }}
                   className="px-6 py-2 bg-primary text-white !rounded-button flex items-center gap-2"
                 >
                   <i className="ri-play-fill" />
                   <span>둘러보기</span>
-                </a>
+                </Link>
                 <button className="px-6 py-2 bg-white/20 backdrop-blur-sm text-white !rounded-button flex items-center gap-2">
                   <i className="ri-information-line" />
                   <span>자세히</span>
@@ -430,15 +450,24 @@ export default function IndexPage() {
               <h3 className="text-lg font-medium">프리미엄 글램핑</h3>
             </div>
             <div className="flex gap-3 overflow-x-auto pb-2">
-              <a
-                href="/shop_detail?title=프리미엄 글램핑 A&region=경기도 가평군 청평면 대성리&price=280000&id=premium-a&img=premium-a-img&image=https%3A//readdy.ai/api/search-image%3Fquery%3DLuxury%2520glamping%2520tent%2520interior%2520with%2520king%2520size%2520bed%252C%2520warm%2520lighting%252C%2520premium%2520camping%2520experience%252C%2520cozy%2520atmosphere%26width%3D560%26height%3D300%26seq%3D17%26orientation%3Dlandscape"
+              <Link
+                to="/shop_detail"
+                state={{
+                  title: '프리미엄 글램핑 A',
+                  region: '경기도 가평군 청평면 대성리',
+                  price: 280000,
+                  id: 'premium-a',
+                  image:
+                    "https://readdy.ai/api/search-image?query=Luxury%20glamping%20tent%20interior%20with%20king%20size%20bed%2C%20warm%20lighting%2C%20premium%20camping%20experience%2C%20cozy%20atmosphere&width=560&height=300&seq=17&orientation=landscape"
+                }}
                 className="min-w-[280px] bg-white rounded-xl overflow-hidden shadow-sm transition-transform hover:scale-[0.98] active:scale-95"
               >
                 <div className="relative">
-                  <img
+                  <SafeImage
                     src="https://readdy.ai/api/search-image?query=Luxury%20glamping%20tent%20interior%20with%20king%20size%20bed%2C%20warm%20lighting%2C%20premium%20camping%20experience%2C%20cozy%20atmosphere&width=560&height=300&seq=17&orientation=landscape"
                     className="w-full h-36 object-cover"
                     alt="프리미엄 글램핑"
+                    fallbackSrc="https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?w=560&h=300&fit=crop&auto=format"
                   />
                   <span className="absolute top-2 right-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full">온라인예약</span>
                 </div>
@@ -446,16 +475,26 @@ export default function IndexPage() {
                   <h4 className="font-medium mb-1">프리미엄 글램핑 A</h4>
                   <p className="text-sm text-gray-600">₩280,000 부터</p>
                 </div>
-              </a>
-              <a
-                href="/shop_detail?title=글램핑 돔 B&region=경기도 양평군 양서면 용담리&price=250000&id=dome-b&img=dome-b-img&image=https%3A//readdy.ai/api/search-image%3Fquery%3DModern%2520glamping%2520dome%2520with%2520panoramic%2520windows%252C%2520forest%2520view%252C%2520luxury%2520camping%2520setup%26width%3D560%26height%3D300%26seq%3D18%26orientation%3Dlandscape"
+              </Link>
+              <Link
+                to="/shop_detail"
+                state={{
+                  title: '글램핑 돔 B',
+                  region: '경기도 양평군 양서면 용담리',
+                  price: 250000,
+                  id: 'dome-b',
+                  image:
+                    "https://readdy.ai/api/search-image?query=Modern%20glamping%20dome%20with%20panoramic%20windows%2C%20forest%20view%2C%20luxury%20camping%20setup&width=560&height=300&seq=18&orientation=landscape"
+                }}
                 className="min-w-[280px] bg-white rounded-xl overflow-hidden shadow-sm transition-transform hover:scale-[0.98] active:scale-95"
               >
                 <div className="relative">
-                  <img
+                  <SafeImage 
                     src="https://readdy.ai/api/search-image?query=Modern%20glamping%20dome%20with%20panoramic%20windows%2C%20forest%20view%2C%20luxury%20camping%20setup&width=560&height=300&seq=18&orientation=landscape"
                     className="w-full h-36 object-cover"
                     alt="글램핑"
+                    width={560}
+                    height={300}
                   />
                   <span className="absolute top-2 right-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full">온라인예약</span>
                 </div>
@@ -463,7 +502,7 @@ export default function IndexPage() {
                   <h4 className="font-medium mb-1">글램핑 돔 B</h4>
                   <p className="text-sm text-gray-600">₩250,000 부터</p>
                 </div>
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -473,15 +512,25 @@ export default function IndexPage() {
               <h3 className="text-lg font-medium">반려견 동반 풀빌라</h3>
             </div>
             <div className="flex gap-3 overflow-x-auto pb-2">
-              <a
-                href="/shop_detail?title=프리미엄 펫 풀빌라&region=경기도 포천시 영중면 영평리&price=320000&id=pet-villa&img=pet-villa-img&image=https%3A//readdy.ai/api/search-image%3Fquery%3DLuxury%2520pet-friendly%2520villa%2520with%2520private%2520pool%252C%2520modern%2520design%252C%2520spacious%2520outdoor%2520area%252C%2520perfect%2520for%2520dogs%26width%3D560%26height%3D300%26seq%3D19%26orientation%3Dlandscape"
+              <Link
+                to="/shop_detail"
+                state={{
+                  title: '프리미엄 펫 풀빌라',
+                  region: '경기도 포천시 영중면 영평리',
+                  price: 320000,
+                  id: 'pet-villa',
+                  image:
+                    "https://readdy.ai/api/search-image?query=Luxury%20pet-friendly%20villa%20with%20private%20pool%2C%20modern%20design%2C%20spacious%20outdoor%20area%2C%20perfect%20for%20dogs&width=560&height=300&seq=19&orientation=landscape"
+                }}
                 className="min-w-[280px] bg-white rounded-xl overflow-hidden shadow-sm transition-transform hover:scale-[0.98] active:scale-95"
               >
                 <div className="relative">
-                  <img
+                  <SafeImage 
                     src="https://readdy.ai/api/search-image?query=Luxury%20pet-friendly%20villa%20with%20private%20pool%2C%20modern%20design%2C%20spacious%20outdoor%20area%2C%20perfect%20for%20dogs&width=560&height=300&seq=19&orientation=landscape"
                     className="w-full h-36 object-cover"
                     alt="반려견 동반 풀빌라"
+                    width={560}
+                    height={300}
                   />
                   <span className="absolute top-2 right-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full">온라인예약</span>
                 </div>
@@ -489,16 +538,26 @@ export default function IndexPage() {
                   <h4 className="font-medium mb-1">프리미엄 펫 풀빌라</h4>
                   <p className="text-sm text-gray-600">₩320,000 부터</p>
                 </div>
-              </a>
-              <a
-                href="/shop_detail?title=디럭스 펫 룸&region=경기도 용인시 처인구 백암면 백암리&price=270000&id=pet-room&img=pet-room-img&image=https%3A//readdy.ai/api/search-image%3Fquery%3DPet-friendly%2520luxury%2520accommodation%2520with%2520garden%2520view%252C%2520dog%2520amenities%252C%2520modern%2520interior%26width%3D560%26height%3D300%26seq%3D20%26orientation%3Dlandscape"
+              </Link>
+              <Link
+                to="/shop_detail"
+                state={{
+                  title: '디럭스 펫 룸',
+                  region: '경기도 용인시 처인구 백암면 백암리',
+                  price: 270000,
+                  id: 'pet-room',
+                  image:
+                    "https://readdy.ai/api/search-image?query=Pet-friendly%20luxury%20accommodation%20with%20garden%20view%2C%20dog%20amenities%2C%20modern%20interior&width=560&height=300&seq=20&orientation=landscape"
+                }}
                 className="min-w-[280px] bg-white rounded-xl overflow-hidden shadow-sm transition-transform hover:scale-[0.98] active:scale-95"
               >
                 <div className="relative">
-                  <img
+                  <SafeImage 
                     src="https://readdy.ai/api/search-image?query=Pet-friendly%20luxury%20accommodation%20with%20garden%20view%2C%20dog%20amenities%2C%20modern%20interior&width=560&height=300&seq=20&orientation=landscape"
                     className="w-full h-36 object-cover"
                     alt="반려견 동반 숙소"
+                    width={560}
+                    height={300}
                   />
                   <span className="absolute top-2 right-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full">온라인예약</span>
                 </div>
@@ -506,7 +565,7 @@ export default function IndexPage() {
                   <h4 className="font-medium mb-1">디럭스 펫 룸</h4>
                   <p className="text-sm text-gray-600">₩270,000 부터</p>
                 </div>
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -535,12 +594,20 @@ export default function IndexPage() {
             </div>
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-medium">실시간 리뷰</h3>
-              <a
-                href="/shop_detail?title=프리미엄 펫 풀빌라&region=경기도 포천시 영중면 영평리&price=320000&id=pet-villa&img=pet-villa-img&image=https%3A//readdy.ai/api/search-image%3Fquery%3DLuxury%2520pet-friendly%2520villa%2520with%2520private%2520pool%252C%2520modern%2520design%252C%2520spacious%2520outdoor%2520area%252C%2520perfect%2520for%2520dogs%26width%3D560%26height%3D300%26seq%3D19%26orientation%3Dlandscape"
+              <Link
+                to="/shop_detail"
+                state={{
+                  title: '프리미엄 펫 풀빌라',
+                  region: '경기도 포천시 영중면 영평리',
+                  price: 320000,
+                  id: 'pet-villa',
+                  image:
+                    "https://readdy.ai/api/search-image?query=Luxury%20pet-friendly%20villa%20with%20private%20pool%2C%20modern%20design%2C%20spacious%20outdoor%20area%2C%20perfect%20for%20dogs&width=560&height=300&seq=19&orientation=landscape"
+                }}
                 className="text-sm text-primary"
               >
                 전체보기
-              </a>
+              </Link>
             </div>
             <div className="space-y-4">
               <div className="bg-white rounded-xl p-4 shadow-sm">
@@ -561,20 +628,26 @@ export default function IndexPage() {
                   </div>
                 </div>
                 <div className="grid grid-cols-3 gap-2">
-                  <img
+                  <SafeImage 
                     src="https://readdy.ai/api/search-image?query=Hotel%20room%20view%20of%20city%20skyline%20at%20sunset&width=200&height=200&seq=21&orientation=squarish"
                     className="w-full h-24 object-cover rounded-lg"
                     alt="리뷰사진"
+                    width={200}
+                    height={200}
                   />
-                  <img
+                  <SafeImage 
                     src="https://readdy.ai/api/search-image?query=Luxury%20hotel%20breakfast%20spread%20with%20fresh%20fruits&width=200&height=200&seq=22&orientation=squarish"
                     className="w-full h-24 object-cover rounded-lg"
                     alt="리뷰사진"
+                    width={200}
+                    height={200}
                   />
-                  <img
+                  <SafeImage 
                     src="https://readdy.ai/api/search-image?query=Modern%20hotel%20bathroom%20with%20premium%20amenities&width=200&height=200&seq=23&orientation=squarish"
                     className="w-full h-24 object-cover rounded-lg"
                     alt="리뷰사진"
+                    width={200}
+                    height={200}
                   />
                 </div>
               </div>
@@ -585,14 +658,23 @@ export default function IndexPage() {
         <div className="mb-8 px-4">
           <h3 className="text-lg font-medium mb-4">추천 캠핑장</h3>
           <div className="space-y-4">
-            <a
-              href="/shop_detail?title=서울 글램핑 파크&region=서울시 강동구 천호동&price=120000&id=seoul-glamping&img=seoul-glamping-img&image=https%3A//readdy.ai/api/search-image%3Fquery%3DLuxurious%2520camping%2520site%2520at%2520night%2520with%2520warm%2520lighting%252C%2520comfortable%2520tents%252C%2520and%2520natural%2520surroundings%252C%2520professional%2520photography%26width%3D800%26height%3D400%26seq%3D11%26orientation%3Dlandscape"
+            <Link
+              to="/shop_detail"
+              state={{
+                title: '서울 글램핑 파크',
+                region: '서울시 강동구 천호동',
+                price: 120000,
+                id: 'seoul-glamping',
+                image:
+                  "https://readdy.ai/api/search-image?query=Luxurious%20camping%20site%20at%20night%20with%20warm%20lighting%2C%20comfortable%20tents%2C%20and%20natural%20surroundings%2C%20professional%20photography&width=800&height=400&seq=11&orientation=landscape"
+              }}
               className="block bg-white rounded-xl overflow-hidden shadow-sm"
             >
-              <img
+              <SafeImage
                 src="https://readdy.ai/api/search-image?query=Luxurious%20camping%20site%20at%20night%20with%20warm%20lighting%2C%20comfortable%20tents%2C%20and%20natural%20surroundings%2C%20professional%20photography&width=800&height=400&seq=11&orientation=landscape"
                 className="w-full h-48 object-cover"
                 alt="캠핑장"
+                fallbackSrc="https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?w=800&h=400&fit=crop&auto=format"
               />
               <div className="p-4">
                 <div className="flex justify-between items-start mb-2">
@@ -605,15 +687,25 @@ export default function IndexPage() {
                   <span>서울시 강동구 천호동</span>
                 </div>
               </div>
-            </a>
-            <a
-              href="/shop_detail?title=가평 숲속 캠핑장&region=경기도 가평군 청평면 대성리&price=80000&id=gapyeong-camping&img=gapyeong-camping-img&image=https%3A//readdy.ai/api/search-image%3Fquery%3DScenic%2520mountain%2520camping%2520ground%2520with%2520modern%2520facilities%252C%2520tents%2520surrounded%2520by%2520pine%2520trees%252C%2520morning%2520atmosphere%26width%3D800%26height%3D400%26seq%3D12%26orientation%3Dlandscape"
+            </Link>
+            <Link
+              to="/shop_detail"
+              state={{
+                title: '가평 숲속 캠핑장',
+                region: '경기도 가평군 청평면 대성리',
+                price: 80000,
+                id: 'gapyeong-camping',
+                image:
+                  "https://readdy.ai/api/search-image?query=Scenic%20mountain%20camping%20ground%20with%20modern%20facilities%2C%20tents%20surrounded%20by%20pine%20trees%2C%20morning%20atmosphere&width=800&height=400&seq=12&orientation=landscape"
+              }}
               className="block bg-white rounded-xl overflow-hidden shadow-sm"
             >
-              <img
+              <SafeImage 
                 src="https://readdy.ai/api/search-image?query=Scenic%20mountain%20camping%20ground%20with%20modern%20facilities%2C%20tents%20surrounded%20by%20pine%20trees%2C%20morning%20atmosphere&width=800&height=400&seq=12&orientation=landscape"
                 className="w-full h-48 object-cover"
                 alt="캠핑장"
+                width={800}
+                height={400}
               />
               <div className="p-4">
                 <div className="flex justify-between items-start mb-2">
@@ -626,61 +718,91 @@ export default function IndexPage() {
                   <span>경기도 가평군 청평면 대성리</span>
                 </div>
               </div>
-            </a>
+            </Link>
           </div>
         </div>
 
         <div className="mb-8 px-4">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-medium">인기 카라반</h3>
-            <Link to="/shop_list?type=caravan" className="text-sm text-primary">
+            <Link to="/shop_list" state={{ type: 'caravan' }} className="text-sm text-primary">
               전체보기
             </Link>
           </div>
           <div className="flex gap-3 overflow-x-auto pb-2">
-            <a
-              href="/shop_detail?title=프리미엄 카라반 A동&region=경기도 가평군 청평면 대성리&price=180000&id=caravan-a&img=caravan-a-img&image=https%3A//readdy.ai/api/search-image%3Fquery%3DModern%2520luxury%2520caravan%2520camping%252C%2520stylish%2520interior%2520and%2520exterior%2520view%252C%2520sunset%2520lighting%26width%3D560%26height%3D300%26seq%3D13%26orientation%3Dlandscape"
+            <Link
+              to="/shop_detail"
+              state={{
+                title: '프리미엄 카라반 A동',
+                region: '경기도 가평군 청평면 대성리',
+                price: 180000,
+                id: 'caravan-a',
+                image:
+                  "https://readdy.ai/api/search-image?query=Modern%20luxury%20caravan%20camping%2C%20stylish%20interior%20and%20exterior%20view%2C%20sunset%20lighting&width=560&height=300&seq=13&orientation=landscape"
+              }}
               className="min-w-[280px] bg-white rounded-xl overflow-hidden shadow-sm transition-transform hover:scale-[0.98] active:scale-95"
             >
-              <img
+              <SafeImage 
                 src="https://readdy.ai/api/search-image?query=Modern%20luxury%20caravan%20camping%2C%20stylish%20interior%20and%20exterior%20view%2C%20sunset%20lighting&width=560&height=300&seq=13&orientation=landscape"
                 className="w-full h-36 object-cover"
                 alt="카라반"
+                width={560}
+                height={300}
               />
               <div className="p-4">
                 <h4 className="font-medium mb-1">프리미엄 카라반 A동</h4>
                 <p className="text-sm text-gray-600">최대 4인 / 취사가능</p>
               </div>
-            </a>
-            <a
-              href="/shop_detail?title=디럭스 카라반 B동&region=경기도 양평군 양서면 용담리&price=150000&id=caravan-b&img=caravan-b-img&image=https%3A//readdy.ai/api/search-image%3Fquery%3DCozy%2520caravan%2520interior%2520with%2520modern%2520amenities%252C%2520warm%2520lighting%252C%2520comfortable%2520living%2520space%26width%3D560%26height%3D300%26seq%3D14%26orientation%3Dlandscape"
+            </Link>
+            <Link
+              to="/shop_detail"
+              state={{
+                title: '디럭스 카라반 B동',
+                region: '경기도 양평군 양서면 용담리',
+                price: 150000,
+                id: 'caravan-b',
+                image:
+                  "https://readdy.ai/api/search-image?query=Cozy%20caravan%20interior%20with%20modern%20amenities%2C%20warm%20lighting%2C%20comfortable%20living%20space&width=560&height=300&seq=14&orientation=landscape"
+              }}
               className="min-w-[280px] bg-white rounded-xl overflow-hidden shadow-sm transition-transform hover:scale-[0.98] active:scale-95"
             >
-              <img
+              <SafeImage 
                 src="https://readdy.ai/api/search-image?query=Cozy%20caravan%20interior%20with%20modern%20amenities%2C%20warm%20lighting%2C%20comfortable%20living%20space&width=560&height=300&seq=14&orientation=landscape"
                 className="w-full h-36 object-cover"
                 alt="카라반"
+                width={560}
+                height={300}
               />
               <div className="p-4">
                 <h4 className="font-medium mb-1">디럭스 카라반 B동</h4>
                 <p className="text-sm text-gray-600">최대 6인 / 바베큐존</p>
               </div>
-            </a>
+            </Link>
           </div>
         </div>
 
         <div className="mb-8 px-4">
           <h3 className="text-lg font-medium mb-4">이번주 특가</h3>
           <div className="grid grid-cols-2 gap-3">
-            <a
-              href="/shop_detail?title=양평 리버뷰&region=경기도 양평군 양서면 용담리&price=70000&id=yangpyeong-river&img=yangpyeong-river-img&image=https%3A//readdy.ai/api/search-image%3Fquery%3DPeaceful%2520lakeside%2520camping%2520spot%2520with%2520tent%2520and%2520campfire%252C%2520evening%2520atmosphere%26width%3D400%26height%3D300%26seq%3D15%26orientation%3Dlandscape"
+            <Link
+              to="/shop_detail"
+              state={{
+                title: '양평 리버뷰',
+                region: '경기도 양평군 양서면 용담리',
+                price: 70000,
+                id: 'yangpyeong-river',
+                image:
+                  "https://readdy.ai/api/search-image?query=Peaceful%20lakeside%20camping%20spot%20with%20tent%20and%20campfire%2C%20evening%20atmosphere&width=400&height=300&seq=15&orientation=landscape"
+              }}
               className="bg-white rounded-xl overflow-hidden shadow-sm transition-transform hover:scale-[0.98] active:scale-95"
             >
               <div className="relative">
-                <img
+                <SafeImage 
                   src="https://readdy.ai/api/search-image?query=Peaceful%20lakeside%20camping%20spot%20with%20tent%20and%20campfire%2C%20evening%20atmosphere&width=400&height=300&seq=15&orientation=landscape"
                   className="w-full h-32 object-cover"
                   alt="캠핑장"
+                  width={400}
+                  height={300}
                 />
                 <span className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">30% OFF</span>
               </div>
@@ -692,16 +814,26 @@ export default function IndexPage() {
                   <span>경기도 양평군 양서면 용담리</span>
                 </div>
               </div>
-            </a>
-            <a
-              href="/shop_detail?title=포천 숲속캠핑&region=경기도 포천시 영중면 영평리&price=60000&id=pocheon-forest&img=pocheon-forest-img&image=https%3A//readdy.ai/api/search-image%3Fquery%3DForest%2520camping%2520ground%2520with%2520wooden%2520deck%252C%2520morning%2520mist%2520atmosphere%26width%3D400%26height%3D300%26seq%3D16%26orientation%3Dlandscape"
+            </Link>
+            <Link
+              to="/shop_detail"
+              state={{
+                title: '포천 숲속캠핑',
+                region: '경기도 포천시 영중면 영평리',
+                price: 60000,
+                id: 'pocheon-forest',
+                image:
+                  "https://readdy.ai/api/search-image?query=Forest%20camping%20ground%20with%20wooden%20deck%2C%20morning%20mist%20atmosphere&width=400&height=300&seq=16&orientation=landscape"
+              }}
               className="bg-white rounded-xl overflow-hidden shadow-sm transition-transform hover:scale-[0.98] active:scale-95"
             >
               <div className="relative">
-                <img
+                <SafeImage 
                   src="https://readdy.ai/api/search-image?query=Forest%20camping%20ground%20with%20wooden%20deck%2C%20morning%20mist%20atmosphere&width=400&height=300&seq=16&orientation=landscape"
                   className="w-full h-32 object-cover"
                   alt="캠핑장"
+                  width={400}
+                  height={300}
                 />
                 <span className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">20% OFF</span>
               </div>
@@ -713,14 +845,14 @@ export default function IndexPage() {
                   <span>경기도 포천시 영중면 영평리</span>
                 </div>
               </div>
-            </a>
+            </Link>
           </div>
         </div>
       </main>
 
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t">
         <div className="grid grid-cols-6 py-1">
-          <Link to="/search_map?from=nearby" className="flex flex-col items-center gap-1 group">
+          <Link to="/search_map" state={{ from: 'nearby' }} className="flex flex-col items-center gap-1 group">
             <div className="w-6 h-6 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
               <i className="ri-map-pin-2-fill text-lg group-hover:text-primary transition-colors duration-300" />
             </div>
@@ -795,19 +927,19 @@ export default function IndexPage() {
               <i className="ri-search-line text-xl text-gray-600" />
               <span>캠핑장 검색</span>
             </Link>
-            <Link to="/shop_list?type=glamping" className="flex items-center gap-3">
+            <Link to="/shop_list" state={{ type: 'glamping' }} className="flex items-center gap-3">
               <i className="ri-home-smile-line text-xl text-gray-600" />
               <span>글램핑</span>
             </Link>
-            <Link to="/shop_list?type=caravan" className="flex items-center gap-3">
+            <Link to="/shop_list" state={{ type: 'caravan' }} className="flex items-center gap-3">
               <i className="ri-caravan-line text-xl text-gray-600" />
               <span>카라반</span>
             </Link>
-            <Link to="/shop_list?type=pension" className="flex items-center gap-3">
+            <Link to="/shop_list" state={{ type: 'pension' }} className="flex items-center gap-3">
               <i className="ri-hotel-line text-xl text-gray-600" />
               <span>펜션</span>
             </Link>
-            <Link to="/shop_list?type=hotel" className="flex items-center gap-3">
+            <Link to="/shop_list" state={{ type: 'hotel' }} className="flex items-center gap-3">
               <i className="ri-building-line text-xl text-gray-600" />
               <span>호텔</span>
             </Link>

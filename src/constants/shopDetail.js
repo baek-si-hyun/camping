@@ -111,3 +111,13 @@ export const QUERIES = [
     answer: '특정 펫 전용 텐트에서만 반려동물 동반이 가능합니다.'
   }
 ];
+
+export const IMAGE_QUERIES = [
+  { seq: 1, text: 'Luxury glamping tent interior with comfortable bed and modern amenities, cozy atmosphere, premium camping experience' },
+  { seq: 2, text: 'Beautiful glamping campsite with tents surrounded by nature, evening lighting, peaceful atmosphere' },
+  { seq: 3, text: 'Modern glamping dome with panoramic windows, forest view, luxury outdoor accommodation' },
+  { seq: 4, text: 'Cozy glamping tent exterior with wooden deck, mountain view, sunset lighting' },
+  { seq: 5, text: 'Premium camping site with comfortable tents and natural surroundings, morning atmosphere' },
+  { seq: 6, text: 'Luxury glamping accommodation with outdoor fire pit, starry night sky, romantic setting' },
+  { seq: 7, text: 'Beautiful camping ground with modern facilities, tents surrounded by pine trees, scenic view' }
+];
