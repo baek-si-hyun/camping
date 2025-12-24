@@ -22,19 +22,6 @@ export default function MypagePage() {
 
   return (
     <div className="min-h-[762px] mx-auto bg-white">
-      <style>{`
-        :where([class^="ri-"])::before {
-          content: "\\f3c2";
-        }
-        ::-webkit-scrollbar {
-          display: none;
-        }
-        * {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}</style>
-
       <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b">
         <div className="flex items-center justify-between px-4 py-3">
           <div className="w-8 h-8" />

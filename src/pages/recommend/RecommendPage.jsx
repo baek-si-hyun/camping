@@ -224,67 +224,6 @@ export default function RecommendPage() {
 
   return (
     <div className="min-h-[762px] mx-auto bg-gray-50">
-      <style>{`
-        :where([class^="ri-"])::before {
-          content: "\\f3c2";
-        }
-        .progress-bar {
-          transition: width 0.3s ease;
-        }
-        .step-transition {
-          transition: transform 0.3s ease, opacity 0.3s ease;
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          z-index: 1;
-        }
-        .step-hidden {
-          transform: translateX(100%);
-          opacity: 0;
-          z-index: 0;
-        }
-        .step-visible {
-          transform: translateX(0);
-          opacity: 1;
-          z-index: 10;
-        }
-        .step-slide-left {
-          transform: translateX(-100%);
-          opacity: 0;
-          z-index: 0;
-        }
-        .result-card {
-          animation: slideUp 0.5s ease-out;
-        }
-        @keyframes slideUp {
-          from {
-            transform: translateY(20px);
-            opacity: 0;
-          }
-          to {
-            transform: translateY(0);
-            opacity: 1;
-          }
-        }
-        @keyframes shimmer {
-          0% {
-            transform: translateX(-100%);
-          }
-          100% {
-            transform: translateX(100%);
-          }
-        }
-        ::-webkit-scrollbar {
-          display: none;
-        }
-        * {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}</style>
-
       <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
         <div className="flex items-center justify-between px-4 py-3">
           <button

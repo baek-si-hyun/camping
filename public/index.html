@@ -20,6 +20,7 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="%PUBLIC_URL%/inline-replacements.css" />
     <script src="https://cdn.tailwindcss.com/3.4.16"></script>
     <script>
       tailwind.config = {
@@ -45,11 +46,6 @@
         },
       };
     </script>
-    <style>
-      :where([class^='ri-'])::before {
-        content: '\f3c2';
-      }
-    </style>
   </head>
   <body>
     <noscript>이 앱을 사용하려면 JavaScript를 활성화해야 합니다.</noscript>

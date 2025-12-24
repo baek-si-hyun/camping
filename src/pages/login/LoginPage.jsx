@@ -153,41 +153,6 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-[762px] mx-auto bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
-      <style>{`
-        :where([class^="ri-"])::before {
-          content: "\\f3c2";
-        }
-        .social-btn {
-          transition: all 0.3s ease;
-          transform-style: preserve-3d;
-          perspective: 1000px;
-        }
-        .social-btn:hover {
-          transform: translateY(-2px) scale(1.02);
-          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-        .glass-effect {
-          background: rgba(255, 255, 255, 0.7);
-          backdrop-filter: blur(10px);
-          border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .logo-3d {
-          filter: drop-shadow(2px 2px 4px rgba(74, 144, 226, 0.3)) drop-shadow(4px 4px 8px rgba(74, 144, 226, 0.2));
-          transform-style: preserve-3d;
-          transition: all 0.3s ease;
-        }
-        .logo-3d:hover {
-          transform: translateZ(20px) rotateX(10deg);
-        }
-        ::-webkit-scrollbar {
-          display: none;
-        }
-        * {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}</style>
-
       <main className="w-full min-h-screen flex flex-col items-center justify-start px-6 pt-24 pb-12 relative overflow-hidden">
         <div
           className="absolute inset-0 bg-[url('https://readdy.ai/api/search-image?query=modern%20abstract%203d%20background%20with%20flowing%20gradients%20and%20geometric%20elements%2C%20soft%20pastel%20colors%2C%20premium%20luxury%20design%2C%20clean%20minimal%20style&width=375&height=762&seq=1&orientation=portrait')] opacity-40 bg-cover bg-center"

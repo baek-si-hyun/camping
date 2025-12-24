@@ -550,37 +550,6 @@ export default function SearchMapPage() {
 
   return (
     <div className="bg-[#F8F7FF] min-h-[762px]">
-      <style>{`
-        .calendar-grid {
-          display: grid;
-          grid-template-columns: repeat(7, 1fr);
-        }
-        .calendar-day {
-          aspect-ratio: 1/1;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          margin: 1px;
-          transition: all 0.2s;
-        }
-        .calendar-day:hover:not(.disabled) {
-          background-color: rgba(124, 58, 237, 0.1);
-        }
-        .calendar-day.selected {
-          background-color: #7C3AED;
-          color: white;
-        }
-        .calendar-day.in-range {
-          background-color: rgba(124, 58, 237, 0.1);
-        }
-        .calendar-day.disabled {
-          color: #D1D5DB;
-          pointer-events: none;
-          cursor: not-allowed;
-        }
-      `}</style>
-
       <nav className="fixed top-0 left-0 right-0 bg-white z-50 shadow-sm">
         <div className="flex items-center px-4 h-16">
           <button

@@ -7,7 +7,6 @@ import WishlistButton from '../../components/WishlistButton.jsx';
 import BottomNav from '../../components/BottomNav.jsx';
 import SideMenu from '../../components/SideMenu.jsx';
 import PageHeader from '../../components/PageHeader.jsx';
-import CommonStyles from '../../components/CommonStyles.jsx';
 
 export default function ShopListPage() {
   const navigate = useNavigate();
@@ -82,43 +81,6 @@ export default function ShopListPage() {
 
   return (
     <div className="min-h-[762px] mx-auto bg-white">
-      <CommonStyles />
-      <style>{`
-        .tab-active {
-          color: #FF7A45;
-          border-bottom: 2px solid #FF7A45;
-        }
-        .accordion-content {
-          max-height: 0;
-          overflow: hidden;
-          transition: max-height 0.3s ease-out, opacity 0.3s ease-out, padding-bottom 0.3s ease-out;
-          opacity: 0;
-          padding-bottom: 0;
-        }
-        .accordion-content.active {
-          opacity: 1;
-          padding-bottom: 1.5rem;
-        }
-        @keyframes bounce {
-          0%, 100% {
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(-4px);
-          }
-        }
-        .hover-bounce:hover {
-          animation: bounce 0.8s infinite;
-        }
-        .scroll-smooth {
-          scroll-behavior: smooth;
-          -webkit-overflow-scrolling: touch;
-        }
-        .scroll-smooth::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
-
       <PageHeader 
         title="캠핑의 모든 것"
         rightLink="/search"

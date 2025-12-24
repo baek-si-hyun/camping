@@ -38,52 +38,6 @@ export default function SettingsPage() {
 
   return (
     <div className="min-h-[762px] mx-auto bg-gray-50">
-      <style>{`
-        :where([class^="ri-"])::before {
-          content: "\\f3c2";
-        }
-        ::-webkit-scrollbar {
-          display: none;
-        }
-        * {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-        .setting-item {
-          transition: all 0.2s ease;
-        }
-        .setting-item:hover {
-          transform: translateY(-1px);
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        .toggle-switch {
-          position: relative;
-          width: 44px;
-          height: 24px;
-          background-color: #e5e7eb;
-          border-radius: 12px;
-          transition: background-color 0.3s ease;
-          cursor: pointer;
-        }
-        .toggle-switch.active {
-          background-color: #FF7A45;
-        }
-        .toggle-switch::after {
-          content: '';
-          position: absolute;
-          top: 2px;
-          left: 2px;
-          width: 20px;
-          height: 20px;
-          background-color: white;
-          border-radius: 50%;
-          transition: transform 0.3s ease;
-        }
-        .toggle-switch.active::after {
-          transform: translateX(20px);
-        }
-      `}</style>
-
       <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b">
         <div className="flex items-center justify-between px-4 py-3">
           <div className="w-8 h-8" />
@@ -158,7 +112,7 @@ export default function SettingsPage() {
                   </div>
                 </div>
                 <div
-                  className={`toggle-switch ${toggles.push ? 'active' : ''}`}
+                  className={`settings-toggle-switch ${toggles.push ? 'active' : ''}`}
                   onClick={() => handleToggle('push')}
                 />
               </div>
@@ -175,7 +129,7 @@ export default function SettingsPage() {
                   </div>
                 </div>
                 <div
-                  className={`toggle-switch ${toggles.email ? 'active' : ''}`}
+                  className={`settings-toggle-switch ${toggles.email ? 'active' : ''}`}
                   onClick={() => handleToggle('email')}
                 />
               </div>
@@ -192,7 +146,7 @@ export default function SettingsPage() {
                   </div>
                 </div>
                 <div
-                  className={`toggle-switch ${toggles.sms ? 'active' : ''}`}
+                  className={`settings-toggle-switch ${toggles.sms ? 'active' : ''}`}
                   onClick={() => handleToggle('sms')}
                 />
               </div>
@@ -215,7 +169,7 @@ export default function SettingsPage() {
                   </div>
                 </div>
                 <div
-                  className={`toggle-switch ${toggles.darkMode ? 'active' : ''}`}
+                  className={`settings-toggle-switch ${toggles.darkMode ? 'active' : ''}`}
                   onClick={() => handleToggle('darkMode')}
                 />
               </div>
@@ -246,7 +200,7 @@ export default function SettingsPage() {
                   </div>
                 </div>
                 <div
-                  className={`toggle-switch ${toggles.location ? 'active' : ''}`}
+                  className={`settings-toggle-switch ${toggles.location ? 'active' : ''}`}
                   onClick={() => handleToggle('location')}
                 />
               </div>

@@ -167,41 +167,6 @@ export default function SearchResultPage() {
 
   return (
     <div className="bg-[#F8F7FF] min-h-[762px]">
-      <style>{`
-        :where([class^="ri-"])::before {
-          content: "\\f3c2";
-        }
-        .wishlist-btn {
-          transition: all 0.3s ease;
-        }
-        .wishlist-btn:hover {
-          transform: scale(1.1);
-        }
-        .wishlist-btn.active {
-          color: #ef4444 !important;
-          transform: scale(1.2);
-        }
-        .wishlist-btn i {
-          transition: all 0.2s ease;
-        }
-        ::-webkit-scrollbar {
-          display: none;
-        }
-        * {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-        button i[class*="ri-heart"] {
-          transition: all 0.2s ease;
-        }
-        button:has(i[class*="ri-heart"]) {
-          transition: transform 0.15s ease;
-        }
-        button:has(i[class*="ri-heart"]):hover {
-          transform: scale(1.05);
-        }
-      `}</style>
-
       <nav className="fixed top-0 left-0 right-0 bg-white z-50 shadow-sm">
         <div className="flex items-center px-4 h-16">
           <button

@@ -219,35 +219,6 @@ export default function RecomendCourseTmapPage() {
 
   return (
     <div className="min-h-[762px] bg-gray-50">
-      <style>{`
-        .map-marker {
-          animation: bounce 2s infinite;
-        }
-        @keyframes bounce {
-          0%, 20%, 50%, 80%, 100% {
-            transform: translateY(0);
-          }
-          40% {
-            transform: translateY(-10px);
-          }
-          60% {
-            transform: translateY(-5px);
-          }
-        }
-        .attraction-card {
-          scroll-snap-align: start;
-        }
-        .attraction-scroll {
-          scroll-snap-type: x mandatory;
-        }
-        .filter-active {
-          background: linear-gradient(135deg, #FF7A45 0%, #FF6B35 100%);
-        }
-        .mbti-tag {
-          background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
-        }
-      `}</style>
-
       <PageHeader
         title="T맵 연동 관광 코스"
         onBack={() => navigate(-1)}
@@ -299,7 +270,7 @@ export default function RecomendCourseTmapPage() {
                 key={category.name}
                 className={`flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium whitespace-nowrap cursor-pointer ${
                   currentFilter === category.name
-                    ? 'filter-active bg-primary text-white'
+                    ? 'tmap-filter-active bg-primary text-white'
                     : 'bg-white border border-gray-200'
                 }`}
                 onClick={() => setCurrentFilter(category.name)}

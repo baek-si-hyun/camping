@@ -533,129 +533,6 @@ const sideMenu = (
     <div className="min-h-[762px] mx-auto bg-gray-50">
       {header}
       <div>
-      <style>{`
-        :where([class^="ri-"])::before {
-          content: "\\f3c2";
-        }
-
-        .filter-dropdown {
-          transform: translateY(-10px);
-          opacity: 0;
-          transition: all 0.3s ease;
-        }
-
-        .filter-dropdown.show {
-          transform: translateY(0);
-          opacity: 1;
-        }
-
-        .accommodation-card {
-          transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .accommodation-card:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .map-view {
-          transition: all 0.3s ease;
-        }
-
-        .heart-animation {
-          animation: heartPulse 0.3s ease;
-        }
-
-        @keyframes heartPulse {
-          0% {
-            transform: scale(1);
-          }
-          50% {
-            transform: scale(1.2);
-          }
-          100% {
-            transform: scale(1);
-          }
-        }
-
-        .sort-dropdown {
-          display: none;
-          max-height: 0;
-          overflow: hidden;
-          transition: max-height 0.3s ease;
-        }
-
-        .sort-dropdown.show {
-          display: block;
-          max-height: 200px;
-        }
-
-        .wishlist-btn {
-          transition: all 0.3s ease;
-        }
-
-        .wishlist-btn:hover {
-          transform: scale(1.1);
-        }
-
-        .wishlist-btn.active {
-          color: #ef4444 !important;
-          transform: scale(1.2);
-        }
-
-        .wishlist-btn i {
-          transition: all 0.2s ease;
-        }
-
-        ::-webkit-scrollbar {
-          display: none;
-        }
-
-        * {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-
-        #listView,
-        #mapView {
-          position: absolute;
-          top: 200px;
-          left: 0;
-          right: 0;
-          height: calc(100vh - 253px);
-          transition: opacity 0.3s ease;
-        }
-
-        #listView {
-          opacity: ${viewMode === 'list' ? 1 : 0};
-          z-index: ${viewMode === 'list' ? 20 : 10};
-          pointer-events: ${viewMode === 'list' ? 'auto' : 'none'};
-          overflow-y: auto;
-        }
-
-        #mapView {
-          opacity: ${viewMode === 'map' ? 1 : 0};
-          z-index: ${viewMode === 'map' ? 20 : 10};
-          pointer-events: ${viewMode === 'map' ? 'auto' : 'none'};
-          overflow: hidden;
-        }
-
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .animate-fadeIn {
-          animation: fadeIn 0.5s ease-out forwards;
-        }
-      `}</style>
-
       <main className="pt-16 pb-14 relative min-h-screen">
         <div className="px-4 py-4 bg-white border-b h-[137px]">
           <div className="flex items-center justify-between mb-3">
@@ -733,7 +610,10 @@ const sideMenu = (
           </div>
         </div>
 
-        <div id="listView" className="px-4 py-4 space-y-4">
+        <div
+          id="listView"
+          className={`view-panel list px-4 py-4 space-y-4 ${viewMode === 'list' ? 'active' : ''}`}
+        >
           {ACCOMMODATIONS.map((acc) => (
             <div key={acc.id} className="accommodation-card bg-white rounded-xl overflow-hidden shadow-sm cursor-pointer block">
             <div className="relative">
@@ -821,7 +701,7 @@ const sideMenu = (
           </div>
         </div>
 
-        <div id="mapView" className={viewMode === 'map' ? 'show' : ''}>
+        <div id="mapView" className={`view-panel map ${viewMode === 'map' ? 'active' : ''}`}>
           <div className="relative h-full">
             <div ref={mapRef} id="map" className="w-full h-full bg-gray-100" />
             <div className="absolute top-4 left-4 right-4 z-10">

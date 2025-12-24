@@ -315,58 +315,6 @@ export default function RecommendSeasonPage() {
 
   return (
     <div className="min-h-[762px] mx-auto bg-white">
-      <style>{`
-        :where([class^="ri-"])::before {
-          content: "\\f3c2";
-        }
-        .season-tab-active {
-          color: #FF7A45;
-          border-bottom: 2px solid #FF7A45;
-        }
-        .accordion-content {
-          max-height: 0;
-          overflow: hidden;
-          transition: max-height 0.3s ease-out, opacity 0.3s ease-out, padding-bottom 0.3s ease-out;
-          opacity: 0;
-          padding-bottom: 0;
-        }
-        .accordion-content.active {
-          opacity: 1;
-          padding-bottom: 1.5rem;
-        }
-        @keyframes pulse {
-          0%, 100% {
-            transform: scale(1);
-          }
-          50% {
-            transform: scale(1.05);
-          }
-        }
-        .pulse-on-hover:hover {
-          animation: pulse 1s infinite;
-        }
-        ::-webkit-scrollbar {
-          display: none;
-        }
-        * {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-        .wishlist-btn {
-          transition: all 0.3s ease;
-        }
-        .wishlist-btn:hover {
-          transform: scale(1.1);
-        }
-        .wishlist-btn.active {
-          color: #ef4444 !important;
-          transform: scale(1.2);
-        }
-        .wishlist-btn i {
-          transition: all 0.2s ease;
-        }
-      `}</style>
-
       <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-2">

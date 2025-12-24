@@ -5,7 +5,6 @@ import StarRating from '../../components/StarRating.jsx';
 import WishlistButton from '../../components/WishlistButton.jsx';
 import BottomNav from '../../components/BottomNav.jsx';
 import SideMenu from '../../components/SideMenu.jsx';
-import CommonStyles from '../../components/CommonStyles.jsx';
 
 export default function WishlistPage() {
   const navigate = useNavigate();
@@ -30,20 +29,6 @@ export default function WishlistPage() {
 
   return (
     <div className="min-h-[762px] mx-auto bg-white">
-      <CommonStyles />
-      <style>{`
-        @keyframes fadeOut {
-          from {
-            opacity: 1;
-            transform: translateY(0);
-          }
-          to {
-            opacity: 0;
-            transform: translateY(-10px);
-          }
-        }
-      `}</style>
-
       <header className="fixed top-0 left-0 right-0 z-50 bg-white">
         <div className="flex items-center justify-between px-4 py-3">
           <div className="h-8">

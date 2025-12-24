@@ -266,63 +266,6 @@ export default function ReservationPage() {
 
   return (
     <div className="bg-white min-h-[762px] pb-24">
-      <style>{`
-        :where([class^="ri-"])::before {
-          content: "\\f3c2";
-        }
-        input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button {
-          -webkit-appearance: none;
-          margin: 0;
-        }
-        .calendar-day {
-          width: 40px;
-          height: 40px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          border-radius: 50%;
-          position: relative;
-        }
-        .calendar-day.selected {
-          background-color: #7C3AED;
-          color: white;
-        }
-        .calendar-day.range {
-          background-color: #EDE9FE;
-          color: #7C3AED;
-          border-radius: 0;
-        }
-        .calendar-day.range-start {
-          background-color: #7C3AED;
-          color: white;
-          border-top-left-radius: 50%;
-          border-bottom-left-radius: 50%;
-          border-top-right-radius: 0;
-          border-bottom-right-radius: 0;
-        }
-        .calendar-day.range-end {
-          background-color: #7C3AED;
-          color: white;
-          border-top-right-radius: 50%;
-          border-bottom-right-radius: 50%;
-          border-top-left-radius: 0;
-          border-bottom-left-radius: 0;
-        }
-        .calendar-day.disabled {
-          color: #D1D5DB;
-          cursor: not-allowed;
-        }
-        ::-webkit-scrollbar {
-          display: none;
-        }
-        * {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}</style>
-
       <nav className="fixed top-0 left-0 right-0 bg-white z-50 shadow-sm">
         <div className="flex items-center px-4 h-16 relative">
           <button
@@ -414,7 +357,7 @@ export default function ReservationPage() {
               {calendarDays.map((dayData, index) => (
                 <div
                   key={index}
-                  className={`calendar-day ${
+                  className={`reservation-calendar-day ${
                     dayData.disabled
                       ? 'disabled'
                       : dayData.selected

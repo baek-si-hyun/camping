@@ -1,6 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useEffect } from 'react';
-import CommonStyles from './components/CommonStyles.jsx';
 import AdminPage from './pages/admin/AdminPage.jsx';
 import CustomerServicePage from './pages/customer_service/CustomerServicePage.jsx';
 import EquipmentPage from './pages/equipment/EquipmentPage.jsx';
@@ -47,7 +46,6 @@ export default function App() {
 
   return (
     <>
-      <CommonStyles />
       <Routes>
         <Route path="/" element={<IndexPage />} />
         <Route path="/admin" element={<AdminPage />} />

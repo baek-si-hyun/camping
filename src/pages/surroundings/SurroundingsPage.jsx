@@ -226,64 +226,6 @@ export default function SurroundingsPage() {
 
   return (
     <div className="min-h-[762px] bg-gray-50">
-      <style>{`
-        :where([class^="ri-"])::before {
-          content: "\\f3c2";
-        }
-        .search-input::-webkit-search-cancel-button {
-          display: none;
-        }
-        ::-webkit-scrollbar {
-          display: none;
-        }
-        * {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-        .restaurant-card {
-          transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .restaurant-card:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-        }
-        .map-marker {
-          animation: bounce 2s infinite;
-        }
-        .restaurant-card.focused {
-          box-shadow: 0 0 0 2px rgba(255, 122, 69, 0.6), 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-        @keyframes bounce {
-          0%, 20%, 50%, 80%, 100% {
-            transform: translateY(0);
-          }
-          40% {
-            transform: translateY(-10px);
-          }
-          60% {
-            transform: translateY(-5px);
-          }
-        }
-        .waiting-pulse {
-          animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        .filter-slide {
-          transform: translateY(-100%);
-          transition: transform 0.3s ease;
-        }
-        .filter-slide.active {
-          transform: translateY(0);
-        }
-        @keyframes pulse {
-          0%, 100% {
-            opacity: 1;
-          }
-          50% {
-            opacity: 0.5;
-          }
-        }
-      `}</style>
-
       <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
         <div className="flex items-center justify-between px-4 py-3">
           <button

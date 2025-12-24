@@ -157,160 +157,6 @@ export default function AdminPage() {
 
   return (
     <div className="flex bg-gray-50 min-h-screen">
-      <style>{`
-        :where([class^="ri-"])::before {
-          content: "\\f3c2";
-        }
-
-        body {
-          font-family: 'Noto Sans KR', sans-serif;
-        }
-
-        .sidebar-item.active {
-          background-color: rgba(79, 70, 229, 0.1);
-          color: #4F46E5;
-          border-left: 3px solid #4F46E5;
-        }
-
-        .custom-checkbox {
-          position: relative;
-          display: inline-block;
-          width: 20px;
-          height: 20px;
-          margin-right: 8px;
-        }
-
-        .custom-checkbox input {
-          opacity: 0;
-          width: 0;
-          height: 0;
-        }
-
-        .checkmark {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 20px;
-          height: 20px;
-          background-color: #fff;
-          border: 2px solid #d1d5db;
-          border-radius: 4px;
-        }
-
-        .custom-checkbox input:checked~.checkmark {
-          background-color: #4F46E5;
-          border-color: #4F46E5;
-        }
-
-        .checkmark:after {
-          content: "";
-          position: absolute;
-          display: none;
-        }
-
-        .custom-checkbox input:checked~.checkmark:after {
-          display: block;
-        }
-
-        .custom-checkbox .checkmark:after {
-          left: 6px;
-          top: 2px;
-          width: 6px;
-          height: 12px;
-          border: solid white;
-          border-width: 0 2px 2px 0;
-          transform: rotate(45deg);
-        }
-
-        .toggle-switch {
-          position: relative;
-          display: inline-block;
-          width: 48px;
-          height: 24px;
-        }
-
-        .toggle-switch input {
-          opacity: 0;
-          width: 0;
-          height: 0;
-        }
-
-        .toggle-slider {
-          position: absolute;
-          cursor: pointer;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background-color: #e5e7eb;
-          transition: .4s;
-          border-radius: 24px;
-        }
-
-        .toggle-slider:before {
-          position: absolute;
-          content: "";
-          height: 18px;
-          width: 18px;
-          left: 3px;
-          bottom: 3px;
-          background-color: white;
-          transition: .4s;
-          border-radius: 50%;
-        }
-
-        input:checked+.toggle-slider {
-          background-color: #4F46E5;
-        }
-
-        input:checked+.toggle-slider:before {
-          transform: translateX(24px);
-        }
-
-        .custom-select {
-          position: relative;
-          display: inline-block;
-        }
-
-        .custom-select-options {
-          position: absolute;
-          top: 100%;
-          left: 0;
-          right: 0;
-          z-index: 10;
-          margin-top: 4px;
-          border: 1px solid #e5e7eb;
-          border-radius: 8px;
-          background-color: white;
-          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-          display: none;
-        }
-
-        .custom-select.active .custom-select-options {
-          display: block;
-        }
-
-        .custom-select-option {
-          padding: 0.5rem 1rem;
-          cursor: pointer;
-        }
-
-        .custom-select-option:hover {
-          background-color: #f3f4f6;
-        }
-
-        .tab-active {
-          color: #4F46E5;
-          border-bottom: 2px solid #4F46E5;
-        }
-
-        input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button {
-          -webkit-appearance: none;
-          margin: 0;
-        }
-      `}</style>
-
       {/* 사이드바 */}
       <div className="w-64 bg-white shadow-lg h-screen fixed left-0 top-0 overflow-y-auto">
         <div className="p-6 flex items-center space-x-3">
@@ -561,7 +407,7 @@ export default function AdminPage() {
                         key={tab}
                         onClick={() => setActiveMemberTab(tab)}
                         className={`py-2 px-4 bg-white border border-gray-300 text-gray-700 rounded-lg flex items-center space-x-2 hover:bg-gray-50 transition whitespace-nowrap ${
-                          activeMemberTab === tab ? 'tab-active' : ''
+                          activeMemberTab === tab ? 'admin-tab-active' : ''
                         }`}
                       >
                         <span>
@@ -713,7 +559,7 @@ export default function AdminPage() {
                         key={tab}
                         onClick={() => setActivePaymentTab(tab)}
                         className={`py-2 px-4 bg-white border border-gray-300 text-gray-700 rounded-lg flex items-center space-x-2 hover:bg-gray-50 transition whitespace-nowrap ${
-                          activePaymentTab === tab ? 'tab-active' : ''
+                          activePaymentTab === tab ? 'admin-tab-active' : ''
                         }`}
                       >
                         <span>
@@ -850,7 +696,7 @@ export default function AdminPage() {
                   <div className="bg-gray-50 rounded-lg p-6">
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="text-lg font-medium">AI 홍보글 생성</h3>
-                      <div className="toggle-switch">
+                      <div className="admin-toggle-switch">
                         <input
                           type="checkbox"
                           id="ai-content-toggle"
@@ -881,7 +727,7 @@ export default function AdminPage() {
                   <div className="bg-gray-50 rounded-lg p-6">
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="text-lg font-medium">이미지 자동 최적화</h3>
-                      <div className="toggle-switch">
+                      <div className="admin-toggle-switch">
                         <input
                           type="checkbox"
                           id="image-optimize-toggle"

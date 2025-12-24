@@ -117,22 +117,6 @@ export default function WeatherPage() {
 
   return (
     <div className="min-h-[762px] mx-auto bg-gray-50">
-      <style>{`
-        :where([class^="ri-"])::before {
-          content: "\\f3c2";
-        }
-        .search-input::-webkit-search-cancel-button {
-          display: none;
-        }
-        ::-webkit-scrollbar {
-          display: none;
-        }
-        * {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}</style>
-
       <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
         <div className="flex items-center justify-between px-4 py-3">
           <button

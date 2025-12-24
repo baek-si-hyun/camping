@@ -13,6 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap"
     rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="%PUBLIC_URL%/inline-replacements.css" />
   <script src="https://cdn.tailwindcss.com/3.4.16"></script>
   <script>
     tailwind.config = {
@@ -38,11 +39,6 @@
       },
     };
   </script>
-  <style>
-    :where([class^='ri-'])::before {
-      content: '\f3c2';
-    }
-  </style>
   <script>
     // GitHub Pages에서 SPA 라우팅을 위한 리다이렉트
     // basename "/camping"을 고려한 리다이렉트
